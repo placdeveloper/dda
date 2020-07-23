@@ -69,7 +69,7 @@
 		<!-- Libs Sicoob -->
 
 		<!-- Libs UTILs -->
-		<commons-beanutils.version>1.9.3</commons-beanutils.version>
+		<commons-beanutils.version>1.9.4</commons-beanutils.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-lang.version>2.6</commons-lang.version>
 		<commons-logging.version>1.2</commons-logging.version>
