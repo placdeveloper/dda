@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CanvasBancoob width="100%" height="100%"
+			   xmlns:mx="http://www.adobe.com/2006/mxml"
+			   xmlns="br.com.bancoob.componentes.containers.*">
+	<mx:Tree width="100%" height="100%" id="tree"            
+			 defaultLeafIcon="{null}" folderClosedIcon="{null}" folderOpenIcon="{null}"
+			 itemRenderer="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CheckTreeRendererAC"/>
+</CanvasBancoob>

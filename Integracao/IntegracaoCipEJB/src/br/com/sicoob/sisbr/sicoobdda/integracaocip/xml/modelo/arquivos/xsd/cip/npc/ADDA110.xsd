@@ -1,0 +1,972 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDA110"
+	xmlns="http://www.bcb.gov.br/ARQ/ADDA110.xsd" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" 
+	targetNamespace="http://www.bcb.gov.br/ARQ/ADDA110.xsd" 
+	elementFormDefault="qualified" version="9.2.0">
+
+	<!-- Definição dos Tipos Globais -->
+	<xs:include schemaLocation="ADDATIPOS.xsd"/>
+
+	<!-- Definicao da mensagem -->
+	<xs:element name="ADDADOC" type="ADDADOCComplexType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfEvento>
+					<cat:Evento>ADDA110 – Participante solicita consulta para pagamento</cat:Evento>
+					<cat:Descricao>Destinado ao Participante Recebedor consultar Titulo para Pagamento em lote.</cat:Descricao>
+					<cat:Observacao>
+					</cat:Observacao>
+					<cat:Servico>Consultas DDA</cat:Servico>
+					<cat:TipoFluxo>Fluxo3</cat:TipoFluxo>
+				</cat:InfEvento>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="ADDADOCComplexType">
+		<xs:sequence>
+			<xs:element name="BCARQ" type="BCARQComplexType"/>
+			<xs:element name="SISARQ" type="SISARQComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definição do SISARQ -->
+	<xs:complexType name="SISARQComplexType">
+		<xs:choice>
+			<xs:element name="ADDA110" type="ADDA110ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>Participante solicita consulta para pagamento na base de títulos</cat:Mensagem>
+							<cat:Emissor>Participante Recebedor</cat:Emissor>
+							<cat:Destinatario>DDA</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADDA110RET" type="ADDA110RETComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>DDA informa alteração em dados para pagamento e/ou recibo</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante Recebedor</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA110ComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA110_Tit" type="Grupo_ADDA110_TitComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo de Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+ 
+	<xs:complexType name="Grupo_ADDA110_TitComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle Requisição Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCodBarras" type="NumCodBarras_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Código Barras</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA110RETComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA110RET_TitActo" type="Grupo_ADDA110RET_TitActoComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Titulo Aceito</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110RET_TitRecsd" type="Grupo_ADDA110_TitComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo de Título Recusado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110RET_TitActoComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle Requisição Participante </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Recebedor Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Recebedor Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcTit" type="NumIdentcTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Identificação Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlCadTit" type="NumRefCad" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Referência Atual Cadastro Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzCadTit" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Sequência Atualização Cadastro Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitTit" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Hora Situação Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartDestinatario" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Destinatário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodPartDestinatario" type="CodIF" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Código Participante Destinatário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaBenfcrioOr" type="TpPessoa">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Pessoa Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFBenfcrioOr" type="CNPJ_CPF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>CNPJ ou CPF Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nom_RzSocBenfcrioOr" type="Nom_RzSoc">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome ou Razão Social Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomFantsBenfcrioOr" type="Nome" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome Fantasia Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LogradBenfcrioOr" type="RuaRem" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Logradouro Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CidBenfcrioOr" type="CidEnd" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Cidade do Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UFBenfcrioOr" type="UF" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>UF Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CEPBenfcrioOr" type="CEP" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>CEP Beneficiário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaBenfcrioFinl" type="TpPessoa" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Pessoa Beneficiário Final</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFBenfcrioFinl" type="CNPJ_CPF" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>CNPJ ou CPF Beneficiário Final</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nom_RzSocBenfcrioFinl" type="Nom_RzSoc" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome ou Razão Social Beneficiário Final</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomFantsBenfcrioFinl" type="Nome" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome Fantasia Beneficiário Final</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaPagdr" type="TpPessoa">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Pessoa Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFPagdr" type="CNPJ_CPF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>CPF ou CNPJ Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nom_RzSocPagdr" type="Nom_RzSoc">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome ou Razão Social Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomFantsPagdr" type="Nome" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome Fantasia Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name='TpIdentcSacdrAvalst' type='TpIdentcSacdrAvalst' minOccurs='0'>
+			  <xs:annotation>
+				<xs:documentation>
+				  <cat:InfCampo>
+					<cat:NomeCampo>Tipo Identificação Sacador Avalista</cat:NomeCampo>
+					<cat:DescricaoCampo>Tipo de identificação do sacador avalista.</cat:DescricaoCampo>
+				  </cat:InfCampo>
+				</xs:documentation>
+			  </xs:annotation>
+			</xs:element>
+			<xs:element name='IdentcSacdrAvalst' type='IdentcSacdrAvalst' minOccurs='0'>
+			  <xs:annotation>
+				<xs:documentation>
+				  <cat:InfCampo>
+					<cat:NomeCampo>Identificação Sacador Avalista</cat:NomeCampo>
+					<cat:DescricaoCampo>Identificação do sacador avalista.</cat:DescricaoCampo>
+				  </cat:InfCampo>
+				</xs:documentation>
+			  </xs:annotation>
+			</xs:element>
+			<xs:element name='Nom_RzSocSacdrAvalst' type='Nom_RzSoc' minOccurs='0'>
+			  <xs:annotation>
+				<xs:documentation>
+				  <cat:InfCampo>
+					<cat:NomeCampo>Nome ou Razão Social Sacador Avalista</cat:NomeCampo>
+					<cat:DescricaoCampo>Nome ou Razão Social do Sacador Avalista</cat:DescricaoCampo>
+				  </cat:InfCampo>
+				</xs:documentation>
+			  </xs:annotation>
+			</xs:element>		
+			<xs:element name="CodMoedaCNAB" type="CodMoedaCNAB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Código Moeda CNAB</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCodBarras" type="NumCodBarras">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Código de Barras</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumLinhaDigtvl" type="NumLinhaDigtvl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Linha Digitável</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtVencTit" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Vencimento Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrTit" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Valor Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodEspTit" type="CodEspTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Código Espécie Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QtdDiaPrott" type="QtdDias" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Quantidade Dias de Protesto</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtLimPgtoTit" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Limite Pagamento Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrBloqPgto" type="Indr">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Bloqueio Pagamento</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrPgtoParcl" type="Indr">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Pagamento Parcial</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QtdPgtoParcl" type="QtdParcl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Quantidade Pagamento Parcial</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrAbattTit" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Valor Abatimento Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_JurosTit" type="Grupo_ADDA110_JurosTitComplexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Juros Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_MultaTit" type="Grupo_ADDA110_MultaTitComplexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Multa Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_DesctTit" type="Grupo_ADDA110_DesctTitComplexType" minOccurs="0" maxOccurs="3">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Desconto Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpVlr_PercMinTit" type="TpVlr_Perc" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Valor ou Percentual Mínimo Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vlr_PercMinTit" type="Vlr_PercDDA" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Valor ou Percentual Mínimo do Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpVlr_PercMaxTit" type="TpVlr_Perc" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Valor ou Percentual Máximo Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vlr_PercMaxTit" type="Vlr_PercDDA" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Valor ou Percentual Máximo do Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpModlCalc" type="TpModlCalc">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Modelo Cálculo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpAutcRecbtVlrDivgte" type="TpAutcRecbtVlrDivgte">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Autorização Recebimento Valor Divergente</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_Calc" type="Grupo_ADDA110_CalcComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Cálculo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QtdPgtoParclRegtd" type="QtdParcl" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Quantidade Pagamento Parcial Registrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrSldTotAtlPgtoTit" type="Valor" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Valor Saldo Total Atual Pagamento Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_BaixaOperac" type="Grupo_ADDA110_BaixaOperacComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Última Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA110_BaixaEft" type="Grupo_ADDA110_BaixaEftComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SitTitPgto" type="SitTitPgto">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Situação Título Pagamento</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_JurosTitComplexType">
+		<xs:sequence>
+			<xs:element name="DtJurosTit" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Juros Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodJurosTit" type="CodJurosTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Código Juros Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vlr_PercJurosTit" type="Vlr_PercDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor ou Percentual Juros Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_MultaTitComplexType">
+		<xs:sequence>
+			<xs:element name="DtMultaTit" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Multa Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodMultaTit" type="CodMultaTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Código Multa Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vlr_PercMultaTit" type="Vlr_PercDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor ou Percentual Multa Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_DesctTitComplexType">
+		<xs:sequence>
+			<xs:element name="DtDesctTit" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Desconto Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodDesctTit" type="CodDesctTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Código Desconto Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vlr_PercDesctTit" type="Vlr_PercDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor ou Percentual Desconto Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_CalcComplexType">
+		<xs:sequence>
+			<xs:element name="VlrCalcdJuros" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Calculado Juros</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrCalcdMulta" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Calculado Multa</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrCalcdDesct" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Calculado Desconto</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrTotCobrar" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Total a Cobrar</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtValiddCalc" type="Data">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Validade Cálculo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_BaixaOperacComplexType">
+		<xs:sequence>
+			<xs:element name="NumIdentcBaixaOperac" type="NumIdentcTit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlBaixaOperac" type="NumRefCad" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência  Atual Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzBaixaOperac" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Sequência Atualização Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtProcBaixaOperac" type="Data">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Processamento Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrProcBaixaOperac" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Processamento Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitBaixaOperac" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Situação Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrBaixaOperacTit" type="Valor">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Baixa Operacional Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCodBarrasBaixaOperac" type="NumCodBarras">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Código de Barras Baixa Operacional</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA110_BaixaEftComplexType">
+		<xs:sequence>
+			<xs:element name="NumIdentcBaixaEft" type="NumIdentcTit" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlBaixaEft" type="NumRefCad" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência Atual Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzBaixaEft" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Sequência Atualização Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtProcBaixaEft" type="Data">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Processamento Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrProcBaixaEft" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Processamento Baixa</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VlrBaixaEftTit" type="Valor" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Valor Baixa Efetiva Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCodBarrasBaixaEft" type="NumCodBarras" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Código de Barras Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CanPgto" type="CanPgto" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Canal de Pagamento</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MeioPgto" type="MeioPgto" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Meio de Pagamento</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitBaixaEft" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Situação Baixa Efetiva</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

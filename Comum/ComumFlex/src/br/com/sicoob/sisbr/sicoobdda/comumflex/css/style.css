@@ -1,0 +1,151 @@
+.Radio {
+	fontFamily: ArialEmbedded;
+	fontSize: 10px;
+}
+
+.botaoCopiar {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiar');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiar');
+}
+
+.botaoCopiarChave {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarChaveDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarChaveOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarChave');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btCopiarChave');
+}
+
+.botaoGerarHtml {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btGerarHtmlDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btGerarHtmlOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btGerarHtml');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btGerarHtml');
+}
+
+.botaoAtivar {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAtivarDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAtivarOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAtivar');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAtivar');
+}
+
+.botaoInativar {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btInativarDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btInativarOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btInativar');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btInativar');
+}
+
+.botaoImprimir {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimir');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimir');
+}
+
+.botaoImprimirContrato {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirContratoDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirContratoOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirContrato');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btImprimirContrato');
+}
+
+.botaoAlterarSituacao {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAlterarSituacaoDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAlterarSituacaoOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAlterarSituacao');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btAlterarSituacao');
+}
+
+.botaoProcurar {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf', symbol='btProcurarDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf', symbol='btProcurarOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf', symbol='btProcurar');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf', symbol='btProcurar');
+}
+
+.botaoHistorico {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btHistoricoDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btHistoricoOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btHistorico');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btHistorico');
+}
+
+.botaoSetaDireita {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaDesabDireita');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaOverDireita');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaDireita');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaDireita');
+}
+
+.botaoSetaEsquerda {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaDesabEsquerda');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaOverEsquerda');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaEsquerda');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btSetaEsquerda');
+}
+
+.botaoReceita {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btReceitaDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btReceitaOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btReceita');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btReceita');
+}
+
+.botaoLimpar {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btLimparDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btLimparOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btLimpar');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btLimpar');
+}
+
+.botaoCancelarTime {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btTimerCancelDesab');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btTimerCancelOver');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btTimerCancel');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf', symbol='btTimerCancel');
+}
+
+.iconeStatusAmarelo {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png');
+}
+
+.iconeStatusVerde {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png');
+}
+
+.iconeStatusVermelho {
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png');
+}
+
+.iconeStatusAzul{
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png');
+}
+
+.iconeStatusLaranja{
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png');
+}
+
+.iconeStatusCinza{
+	disabledSkin:	Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png');
+	overSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png');
+	upSkin:			Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png');
+	downSkin:		Embed(source='/br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png');
+}

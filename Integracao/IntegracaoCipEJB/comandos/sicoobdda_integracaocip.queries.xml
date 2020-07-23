@@ -1,0 +1,930 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="OBTER_OPERACOES">
+	    <use-case name="Obter Operacoes DDA Legado"></use-case>
+	    <description>Obter Operacoes DDA Legado</description>
+	    <command>
+				<![CDATA[
+					FROM  DDAOperacao
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGENS_PARA_ENVIO_CIP">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Lista as mensagens para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT A.CODTIPOMENSAGEMDDA, A.IDMENSAGEMDDA
+					FROM DDA.TMPENVIOMENSAGEMDDAAPOIO A
+					INNER JOIN DDA.MENSAGEMDDA M ON M.IDMENSAGEMDDA = A.IDMENSAGEMDDA
+							AND M.BOLMENSAGEMPENDENTE = 1
+							AND M.CODSITUACAOMENSAGEMDDA = 1
+					WHERE A.BOLMENSAGEMPRIORITARIA = <bancoob:valor valor="${bolMensagemPrioritaria}"/>
+					AND A.NUMAGRUPAMENTOSTEP = <bancoob:valor valor="${numAgrupamentoSteps}"/> 
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_MENSAGEMDDA_POSTADA">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario para envio.</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDA
+					   SET dataHoraMensagem = CURRENT TIMESTAMP, 
+					   xmlMensagem = <bancoob:valor valor="${xml}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_XML_MENSAGEMDDA">
+		<use-case name="ATUALIZAR_XML_MENSAGEMDDA"></use-case>
+	    <description>Atualiza o xml da mensagen DDA.</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDA
+					   SET xmlMensagem = <bancoob:valor valor="${xml}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_TIPO_MENSAGEM_DDA">
+		<use-case name="Atualizar Tipo Mensagem DDA"></use-case>
+	    <description>Atualizar Tipo Mensagem DDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDA
+					   SET codTipoMensagemDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_MENSAGEMDDA_BENEFICIARIO_CPF_CNPJ">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario por cpf cnpj.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				        mb.IDMENSAGEMDDA,
+				        mb.NUMCPFCNPJBENEFICIARIO,
+				        mb.CODTIPOPESSOABENEFICIARIO,
+				        mb.NOMEBENEFICIARIO,
+				        mb.NOMEFANTASIABENEFICIARIO,
+				        mb.CODSITUACAOBENEFICIARIO,
+				        mb.DATAHORASITUACAO,
+				        mb.CODSITUACAORELACIONAMENTOBENEFICIARIO,
+				        mb.DATAINICIORELACIONAMENTO,
+				        mb.DATAFIMRELACIONAMENTO
+					FROM 
+        				DDA.MENSAGEMDDABENEFICIARIO mb
+					WHERE 
+						mb.NUMCPFCNPJBENEFICIARIO = <bancoob:valor valor="${numCpfCnpj}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_MENSAGEM_DDA">
+		<use-case name="Obter Mensagem DDA"></use-case>
+	    <description>Obter a mensagen do DDA.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				        m.IDMENSAGEMDDA, 
+				        M.IDMENSAGEMDDAORIGEM,
+				       	M.CODTIPOMENSAGEMDDA,
+				        M.DATAMOVIMENTO, 
+				        M.DATAHORAMENSAGEM, 
+				        M.QTDTOTREG, 
+				        M.DATAHORAPROTOCOLO,
+				        M.NUMOPERACAO, 
+				        M.DESCERROPROTOCOLO, 
+				        M.XMLMENSAGEM, 
+				        M.BOLORIGEMSICOOB,
+				        M.DATAHORACADASTRO,
+				        M.NUMPRIORIDADEENVIO,
+				        M.NUMCONTROLEDDA,
+				        M.BOLEXCEDEUSLA,
+				        M.IDCANAL,
+				        M.IDINSTITUICAOSOLICITANTE,
+				        M.IDUSUARIOSOLICITANTE
+					FROM 
+        				DDA.MENSAGEMDDA M
+					WHERE 
+						M.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_NUM_REF_ATUAL_ACEITE_BOLETO">
+		<use-case name="Mensagem Aceite Boleto DDA"></use-case>
+	    <description>Obter o NumRefAtlActe do aceite do boleto do DDA.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				       b.numRefAtualCadAceite
+					FROM 
+        				BoletoDDA b
+					WHERE 
+						b.numIdentificadorBoletoCip = <bancoob:valorOql valor="${numIdentificadorBoletoCip}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_PAGADOR_BOLETO">
+		<use-case name="Mensagem Terceiro Autorizado"></use-case>
+	    <description>Obter o pagador do do boleto.</description>
+	    <command>
+				<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDA(b.id, b.codTipoPessoaPagador, b.numCpfCnpjPagador)
+					FROM 
+        				BoletoDDA b
+					WHERE 
+						b.numIdentificadorBoletoCip = <bancoob:valorOql valor="${numIdentificadorBoletoCip}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_ARQUIVOS_CIP">
+		<use-case name="Motor de recebimento de arquivos da CIP"></use-case>
+	    <description>Obter os nomes dos arquivos disponibilizados pela CIP em função do seu status de processamento.</description>
+	    <command>
+				<![CDATA[
+					select IDLOGRECEBIMENTOOARQUIVODDA, DESCNOMEARQUIVORECEBIDO 
+					from dda.LOGRECEBIMENTOOARQUIVODDA where stArquivo = <bancoob:valorOql valor="${statusArquivoCIP}"/>
+				]]>
+	    </command>
+	</query>
+
+	<query name="CRIA_TABELA_TEMPORARIA_ENVIO_ARQUIVO">
+		<use-case name="CRIA_TABELA_TEMPORARIA_ENVIO_ARQUIVO"></use-case>
+		<description>Cria tabela temporária com os IDs de mensagens para o envio de arquivo</description>
+		<command>
+			<![CDATA[
+			/*Criacao da tabela temporaria para gravar os IDs das mensagens que serao arquivadas*/
+			DECLARE GLOBAL TEMPORARY TABLE SESSION.TMP_MENSAGENS_ENVIO_ARQUIVO_DDA ( IDMENSAGEMDDA           BIGINT,
+			                                                                         NUMAGRUPAMENTO_ARQ      BIGINT,
+			                                                                         NUMAGRUPAMENTO_LOOP     BIGINT,
+			                                                                         DATAMOVIMENTO           DATE,
+			                                                                         CODTIPOMENSAGEMDDA      VARCHAR(10) )
+			ON COMMIT PRESERVE ROWS
+			NOT LOGGED ON ROLLBACK DELETE ROWS
+			WITH REPLACE
+			]]>
+		</command>
+	</query>
+
+	
+	<query name="CRIA_INDICE_TABELA_TEMPORARIA_ENVIO_ARQUIVO">
+		<use-case name="CRIA_INDICE_TABELA_TEMPORARIA_ENVIO_ARQUIVO"></use-case>
+		<description>Cria um índice na tabela temporária por agrupamento e tipo de mensagem</description>
+		<command>
+			<![CDATA[
+			CREATE INDEX SESSION.TEMP_IDX_ENVIO_ARQUIVO_DDA ON SESSION.TMP_MENSAGENS_ENVIO_ARQUIVO_DDA(NUMAGRUPAMENTO_LOOP ASC, DATAMOVIMENTO ASC, CODTIPOMENSAGEMDDA ASC) ALLOW REVERSE SCANS
+			]]>
+		</command>
+	</query>
+
+	<query name="RUNSTATS_TABELA_TEMPORARIA_ENVIO_ARQUIVO">
+		<use-case name="RUNSTATS_TABELA_TEMPORARIA_ENVIO_ARQUIVO"></use-case>
+		<description>Executa a atualização das estatisticas da tabela temporária</description>
+		<command>
+			<![CDATA[
+			CALL ADMIN_CMD ('RUNSTATS ON TABLE SESSION.TMP_MENSAGENS_ENVIO_ARQUIVO_DDA WITH DISTRIBUTION AND DETAILED INDEXES ALL')
+			]]>
+		</command>
+	</query>
+	
+	<query name="CURSOR_ENVIO_ARQUIVO">
+		<use-case name="CURSOR_ENVIO_ARQUIVO"></use-case>
+		<description>Cursor para realizar o LOOP de inclusão dos arquivos de envio</description>
+		<command>
+			<![CDATA[
+            SELECT DISTINCT TMP_MSG.DATAMOVIMENTO,
+                            TMP_MSG.CODTIPOMENSAGEMDDA,
+                            TMP_MSG.NUMAGRUPAMENTO_LOOP
+            FROM SESSION.TMP_MENSAGENS_ENVIO_ARQUIVO_DDA TMP_MSG
+            ORDER BY TMP_MSG.DATAMOVIMENTO, TMP_MSG.CODTIPOMENSAGEMDDA, TMP_MSG.NUMAGRUPAMENTO_LOOP
+			]]>
+		</command>
+	</query>
+
+
+	
+	<query name="ATUALIZAR_DATA_HORA_ARQUIVO">
+		<use-case name="Atualizar a DataHora Arquivo"></use-case>
+	    <description>Atualizar a DataHora Arquivo da tabela DDA.LOGENVIOARQUIVODDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.LOGENVIOARQUIVODDA
+					   SET dataHoraArquivo = CURRENT TIMESTAMP
+					WHERE idLogEnvioArquivoDDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_LOG_ENVIO_ARQUIVO_DDA">
+		<use-case name="Obter LOG ENVIO ARQUIVO DDA"></use-case>
+	    <description>Obter Boleto DDA Baixa Operacional pelo codigo de barras.</description>
+	    <command>
+				<![CDATA[
+				SELECT
+					logEnvioArquivoDDA.IDLOGENVIOARQUIVODDA, logEnvioArquivoDDA.DESCNOMEARQUIVOENVIADO, logEnvioArquivoDDA.DATAHORAARQUIVO, logEnvioArquivoDDA.DATAMOVIMENTO, logEnvioArquivoDDA.CODTIPOMENSAGEM, logEnvioArquivoDDA.DATAHORAENVIO 
+				FROM DDA.LOGENVIOARQUIVODDA as logEnvioArquivoDDA
+				WHERE 
+					logEnvioArquivoDDA.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_ULTIMO_SEQUENCIAL_ARQUIVO">
+		<use-case name="Obter Ultimo Sequencial do arquivo"></use-case>
+	    <description>Obter Ultimo Sequencial do arquivo, utilizado no tratamento de mensagens </description>
+	    <command>
+				<![CDATA[
+					SELECT COALESCE((SELECT MAX(RIGHT(LOG.DESCNOMEARQUIVOENVIADO,5))
+					          FROM DDA.LOGENVIOARQUIVODDA LOG
+					    					  WHERE LOG.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>
+					    					  	 AND LOG.CODTIPOMENSAGEM    = <bancoob:valor valor="${codTipoMensagem}"/>),0) AS ULTIMO 
+					FROM DDA.LOGENVIOARQUIVODDA LOGE
+					WHERE LOGE.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>
+					      AND LOGE.CODTIPOMENSAGEM    = <bancoob:valor valor="${codTipoMensagem}"/>
+    				FETCH FIRST 1 ROWS ONLY
+				]]>
+	    </command>
+	</query>
+	
+	
+	
+	<query name="ATUALIZAR_DATA_HORA_ENVIO">
+		<use-case name="Atualizar a DataHora Envio"></use-case>
+	    <description>Atualizar a DataHora Envio da tabela DDA.LOGENVIOARQUIVODDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.LOGENVIOARQUIVODDA
+					   SET dataHoraEnvio = CURRENT TIMESTAMP
+					WHERE idLogEnvioArquivoDDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_DATAMOVIMENTO_TITULODDA">
+		<use-case name="Motor de Carga de Msgs"></use-case>
+	    <description>"Atualizar data de movimento TituloDDA por idOperacaoLeg</description>
+	    <command>
+				<![CDATA[
+					UPDATE TITULODDA 
+   					   SET DATAMOVIMENTO = (SELECT DATAPROXMOVIMENTO FROM PRODUTO WHERE IDPRODUTO = 9)
+					 WHERE IDOPERACAOLEG = <bancoob:valor valor="${idOperacaoLeg}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_DATAEVENTO_EVENTOTITULODDA">
+		<use-case name="Motor de Carga de Msgs"></use-case>
+	    <description>"Atualizar dataEvento de EventoTituloDDA por idEventoTituloDDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE EVENTOTITULODDA 
+				       SET DATAEVENTO = (SELECT DATAPROXMOVIMENTO FROM PRODUTO WHERE IDPRODUTO = 9)
+					WHERE IDEVENTOTITULODDA = <bancoob:valor valor="${id}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_DATAEVENTO_EVENTODDA">
+		<use-case name="Motor de Carga de Msgs"></use-case>
+	    <description>"Atualizar dataEvento de EventoDDA por idEventoDDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE EVENTODDA 
+				       SET DATAEVENTO = (SELECT DATAPROXMOVIMENTO FROM PRODUTO WHERE IDPRODUTO = 9)
+					WHERE IDEVENTODDA = <bancoob:valor valor="${id}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_MENSAGEMDDA_POR_NUMOPERACAO">
+		<use-case name="Recebimento de Mensagens CIP"></use-case>
+	    <description>"Obter MensagemDDA por numOperacao</description>
+	    <command>
+				<![CDATA[
+					FROM MensagemDDA m
+					WHERE m.numOperacao = <bancoob:valorOql valor="${numOperacao}"/>
+					ORDER BY m.id
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_DATA_HORA_MENSAGEM">
+		<use-case name="Atualziar a dataHoraMensagem"></use-case>
+	    <description>"Atualizar a dataHoraMensagem de acordo com o range da idMensagemDDA</description>
+	    <command>
+				<![CDATA[
+				 UPDATE DDA.MENSAGEMDDA as M
+				 	 set M.DATAHORAMENSAGEM = current TIMESTAMP,
+				 	 M.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+                  WHERE idMensagemdda in (select idMensagemdda from DDA.LOGDETALHEENVIOARQUIVODDA where idLogEnvioArquivoDDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>)
+				]]>
+	    </command>
+	</query>
+
+	<query name="EXCLUIR_GRADE_HORARIA">
+		<use-case name="exclui grade horaria"></use-case>
+		<description>exclui grade horaria</description>
+		<command>
+				<![CDATA[
+					DELETE FROM DDA.GRADEHORARIA 
+					WHERE CODTIPOGRADEHORARIA = <bancoob:valor valor="${codTipoGradeHoraria}" /> 
+					AND DATAREFERENCIA = <bancoob:valor valor="${dataReferencia}" tipo="Date" />
+				]]>
+		</command>
+	</query>
+	
+	<query name="ATUALIZAR_GRADE_HORARIA">
+		<use-case name="Atualizar grade horaria"></use-case>
+		<description>atualiza grade horaria</description>
+		<command>
+				<![CDATA[
+					UPDATE DDA.GRADEHORARIA as gh
+					<j:if test="${dataAbertura != null}">
+						SET  gh.DATAHORAABERTURA = <bancoob:valor valor="${dataAbertura}" tipo="Date" />
+					</j:if>
+					<j:if test="${dataFechamento != null}">
+					 	SET  gh.DATAHORAFECHAMENTO = <bancoob:valor valor="${dataFechamento}" tipo="Date" />
+					</j:if> 
+					WHERE gh.CODTIPOGRADEHORARIA = <bancoob:valor valor="${codTipoGradeHoraria}" /> 
+					AND gh.DATAREFERENCIA = <bancoob:valor valor="${dataReferencia}" tipo="Date" />
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_LOG_ENVIO_ARQUIVO_POR_NOME">
+	    <use-case name="Carga de LogEnvioArquivo"></use-case>
+	    <description>Recupera o BeneficiarioDDa pelo numIdent.</description>
+	    <command>
+			<![CDATA[
+				FROM 
+					LogEnvioArquivoDDA b
+				WHERE 
+					b.descNomeArquivoEnviado = <bancoob:valorOql valor="${descNomeArquivoEnviado}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_STATUS_SITUACAO_PROCESSAMENTO">
+		<use-case name="Atualizar situação do arquivo da cip"></use-case>
+	    <description>Atualizar a DataHora Envio da tabela DDA.LOGENVIOARQUIVODDA</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.LOGRECEBIMENTOOARQUIVODDA
+					   SET CODSITUACAOPROCESSAMENTOARQUIVO = <bancoob:valor valor="${idSituacaoProcessamento}"/>,
+					       DATAHORAPROCESSAMENTO = CASE WHEN <bancoob:valor valor="${idSituacaoProcessamento}"/> = 5 THEN CURRENT TIMESTAMP END
+					WHERE IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/>
+				]]>
+	    </command>
+	</query>
+  
+	<query name="OBTER_MENSAGEM_ERRO_LOCK_REGISTRO">
+		<use-case name="Obter detalhe mensagem com lock"></use-case>
+	    <description>Obter detalhe mensagem com lock.</description>
+	    <command>
+			<![CDATA[
+				SELECT M.IDMENSAGEMDDA,
+		        	   M.XMLMENSAGEM
+				FROM DDA.MENSAGEMDDA M
+				WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				FOR UPDATE WITH RS
+			]]>
+	    </command>
+	</query>
+	
+	<query name="RECUPERA_MENSAGENS_DE_ENVIO">
+		<use-case name="recuperar todas as mensagens originadas a partir de um arquivo de envio"></use-case>
+	    <description>Recuperar as mensagens de envio para alteração do campo de protocolo ou erro</description>
+	    <command>
+				<![CDATA[
+					
+					SELECT ld.IDMENSAGEMDDA 
+					FROM DDA.LOGDETALHEENVIOARQUIVODDA ld 
+					WHERE ld.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/> 
+					
+				]]>									  
+	    </command>
+	</query>
+	
+	<query name="OBTER_TIPO_MENSAGEM_LOCK_REGISTRO">
+		<use-case name="Obter tipo mensagem com lock"></use-case>
+	    <description>Obter tipo mensagem com lock.</description>
+	    <command>
+			<![CDATA[
+				SELECT V.CODTIPOMENSAGEMDDA
+				FROM DDA.MENSAGEMDDA V
+				WHERE V.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				  AND V.DATAHORAMENSAGEM IS NULL
+				FOR UPDATE WITH RS
+			]]>
+	    </command>
+	</query>
+	
+	
+	<query name="EXLUIR_RANGE_DETALHE_ARQUIVO_RECEBIDO">
+		<use-case name="excluir detalhes"></use-case>
+	    <description>excluir detalhes de um range.</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA T 
+				WHERE                                
+					T.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/> AND 
+					T.NUMORDEMPROCESSAMENTO  BETWEEN <bancoob:valor valor="${ordemInicial}"/> AND <bancoob:valor valor="${ordemFinal}"/>
+			]]>
+	    </command>
+	</query>
+
+	<query name="RECUPERA_DETALHES_PARA_PROCESSAMENTO_DO_STEP_ARQUIVO">
+		<use-case name="RECUPERA OS DETALHES DE ARQUIVOS PARA PROCESSAMENTO PELO STEP"></use-case>
+	    <description>RECUPERA OS DETALHES DE ARQUIVOS PARA PROCESSAMENTO PELO STEP</description>
+	    <command>
+				<![CDATA[
+					SELECT L.IDLOGDETRECEBIMENTOOARQUIVODDA, L.DESCXMLMENSAGEMRECEBIDA
+					FROM dda.LOGDETRECEBIMENTOOARQUIVODDA L  
+					WHERE 	L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/>
+  							AND L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${inicio}"/> AND <bancoob:valor valor="${fim}"/>
+  							AND L.BOLPROCESSADO = 0
+					ORDER BY  L.NUMORDEMPROCESSAMENTO
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_STATUS_DO_DETALHE_RECEBIDO">
+		<use-case name="ATUALIZAR_STATUS_DO_DETALHE_RECEBIDO"></use-case>
+	    <description>"atualiza o status do detalhe do arquivo recebido</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA L 
+					   SET L.BOLPROCESSADO = 1,
+					       L.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP 
+					WHERE L.IDLOGDETRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogDetalheArquivo}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="POSSUI_MENSAGEM_DDA_PARA_ENVIO">
+		<use-case name="POSSUI_MENSAGEM_DDA_PARA_ENVIO"></use-case>
+	    <description>Verifica se possui MensagemDDA para envio</description>
+	    <command>
+				<![CDATA[
+					SELECT COUNT(*)
+					FROM DDA.MENSAGEMDDA M
+					WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagemDDA}"/>
+					AND M.CODSITUACAOMENSAGEMDDA = 1
+				]]>
+	    </command>
+	</query>
+	
+	
+	<query name="GRAVAR_DETALHE_EM_LOTE">
+		<use-case name="GRAVA OS DETALHES EM LOTE"></use-case>
+	    <description>Executa a gravação dos detalhes em lote</description>
+	    <command>
+				<![CDATA[
+					INSERT INTO  dda.LOGDETRECEBIMENTOOARQUIVODDA ( 
+        					IDLOGRECEBIMENTOOARQUIVODDA,
+        					DESCXMLMENSAGEMRECEBIDA,
+        					BOLPROCESSADO, 
+        					NUMORDEMPROCESSAMENTO)
+					VALUES(?,?,?,?)  
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_MENAGENS_COM_PROTOCOLO">
+		<use-case name="ATUALIZA AS MENSAGENS ENVIADAS EM LOTE COM OS DADOS DO ARQUIVO DE PROTOCOLO"></use-case>
+	    <description>Atualiza as menagens com os dados do arquivo de protocolo</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDA 
+					   SET DATAHORAPROTOCOLO = CURRENT TIMESTAMP,
+      					   NUMOPERACAO = ?
+					 WHERE IDMENSAGEMDDA = ?
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_MENAGENS_COM_ERRO_PROTOCOLO">
+		<use-case name="ATUALIZA AS MENSAGENS ENVIADAS EM LOTE COM OS DADOS DO ARQUIVO DE ERRO"></use-case>
+	    <description>Atualiza as menagens com os dados do arquivo de ERRO</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDA 
+					SET DATAHORAPROTOCOLO = CURRENT TIMESTAMP,
+						DESCERROPROTOCOLO = ?
+				  WHERE IDMENSAGEMDDA = ?
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_TIPO_GRADE_HORARIA">
+		<use-case name="Atualziar a dataHoraMensagem"></use-case>
+	    <description>"Atualizar a dataHoraMensagem de acordo com o range da idMensagemDDA</description>
+	    <command>
+				<![CDATA[
+				 UPDATE DDA.TIPOGRADEHORARIA as TGH
+				 	 set TGH.DATAHORAABERTURAPADRAO = <bancoob:valor valor="${dataHoraAberturaPadrao}"  tipo="Date"/>,
+				 	 TGH.DATAHORAFECHAMENTOPADRAO = <bancoob:valor valor="${dataHoraFechamentoPadrao}"  tipo="Date"/>
+                  WHERE TGH.codTipoGradeHoraria  = <bancoob:valor valor="${codTipoGradeHoraria}"/>
+				]]>
+	    </command>
+	</query>
+	
+	
+	<query name="OBTER_QUANTIDADE_MENSAGENS_PENDENTES">
+		<use-case name="Obter a quantidade de mensagens pendentes"></use-case>
+	    <description>"Obtem a quantidade de mensagens pendentes a serem enviadas em uma determinada data</description>
+	    <command>
+				<![CDATA[
+				 SELECT COUNT(MSG.CODTIPOMENSAGEMDDA)   
+				 FROM DDA.MENSAGEMDDA MSG
+				 WHERE MSG.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagem}"/>
+				 AND MSG.CODSITUACAOMENSAGEMDDA = 1
+				 AND MSG.BOLMENSAGEMPENDENTE = 1
+				]]>
+	    </command>
+	</query>
+	
+	
+	<query name="LISTAR_MESAGEM_TESTE_CONECTIVIDADE">
+	<use-case name="Listar menagens de arquivos de teste de conectividade "></use-case>
+	    <description>Listar Listar Mensagem DDA de teste de conectividade para utilização via arquivo</description>
+	    <command>
+				<![CDATA[
+				    select * from dda.mensagemdda md 
+					inner join dda.LOGDETALHEENVIOARQUIVODDA lge on lge.idmensagemdda = md.idmensagemdda
+					where lge.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+					order by md.idmensagemDDA
+					FETCH first 1 ROWS ONLY
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_DETALHES_ARQUIVO_PROCESSADOS">
+		<use-case name="Motor de Recebimento de Arquivos"></use-case>
+	    <description>"Atualizar os detalhes de arquivos recebidos como processados.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA 
+				   SET BOLPROCESSADO = 1,
+				       DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+				 WHERE IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+				   AND IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+			]]>
+	    </command>
+	</query>
+
+	<query name="INCLUIR_REPLICACAO_PAGADOR_ELETRONICO_EM_LOTE">
+		<use-case name="INCLUIR_REPLICACAO_PAGADOR_ELETRONICO_EM_LOTE"></use-case>
+		<description>Inclui Replicacao pagador eletronico em Lote</description>
+		<command>
+			<![CDATA[
+				INSERT INTO DDA.DDAPAGADORELETRONICO (NUMCPFCNPJ, NUMCOOPERATIVA, BOLSACADOELETRONICO) VALUES (?, ?, ?)
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_REGISTROS_ARQUIVO">
+		<use-case name="OBTER_QTD_REGISTROS_ARQUIVO"></use-case>
+	    <description>OBTER_QTD_REGISTROS_ARQUIVO</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					L.qtdRegistroArquivo
+				FROM LogRecebimentoArquivoDDA L
+				WHERE L.id = <bancoob:valorOql valor="${idArquivoRecebido}"/>
+			]]>
+	    </command>
+	</query>
+
+	<query name="CONTAR_DET_LOG_RECEBIDO">
+		<use-case name="CONTAR_DET_LOG_RECEBIDO"></use-case>
+	    <description>CONTAR_DET_LOG_RECEBIDO</description>
+	    <command>
+				<![CDATA[
+				 SELECT COUNT(LD.IDLOGDETRECEBIMENTOOARQUIVODDA)   
+				 	FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA LD
+				 WHERE LD.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivoRecebido}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="LISTAR_TIPO_SIT_BOLETO">
+		<use-case name="LISTAR_TIPO_SIT_BOLETO"></use-case>
+	    <description>LISTAR_TIPO_SIT_BOLETO</description>
+	    <command>
+			<![CDATA[
+				FROM SituacaoBoleto s
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_TIPO_BOLETO_CONSULTADO">
+		<use-case name="LISTAR_TIPO_BOLETO_CONSULTADO"></use-case>
+	    <description>LISTAR_TIPO_BOLETO_CONSULTADO</description>
+	    <command>
+			<![CDATA[
+				FROM TipoBoletoConsultado t
+			]]>
+	    </command>
+	</query>
+	
+	<query name="REPLICAR_PAGADOR_ELETRONICO">
+		<use-case name="Processar Detalhes Arquivo Recebido CIP"></use-case>
+	    <description>Replicar Manutenção de Clientes Pagador Eletrônico</description>
+	    <command>
+			<![CDATA[
+					MERGE INTO DBO.DDAPAGADORELETRONICO AS DDAPAG
+						USING (
+							SELECT CAST(? AS VARCHAR(14)) AS NUMCPFCNPJ, ? AS BOLSACADOELETRONICO, ? AS NUMCOOPERATIVA
+						) AS DDAREPLIC
+					ON (DDAPAG.NUMCPFCNPJ = DDAREPLIC.NUMCPFCNPJ)
+					WHEN NOT MATCHED THEN
+						INSERT (NUMCPFCNPJ, NUMCOOPERATIVA, BOLSACADOELETRONICO) VALUES (DDAREPLIC.NUMCPFCNPJ, DDAREPLIC.NUMCOOPERATIVA, DDAREPLIC.BOLSACADOELETRONICO)
+					WHEN MATCHED THEN
+						UPDATE SET DDAPAG.NUMCOOPERATIVA = DDAREPLIC.NUMCOOPERATIVA, DDAPAG.BOLSACADOELETRONICO = DDAREPLIC.BOLSACADOELETRONICO
+					;
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ID_MENSAGENS_DDA_SLA_EXCEDIDO">
+		<use-case name="Lista Id Mensagens DDA com SLA Excedido"></use-case>
+	    <description>Lista Id Mensagens DDA com SLA Excedido</description>
+	    <command>
+				<![CDATA[
+					SELECT M.IDMENSAGEMDDA
+					  FROM DDA.MENSAGEMDDA M
+					    WHERE M.DATAHORAMENSAGEM IS NOT NULL
+					    AND M.BOLEXCEDEUSLA = 1
+					    AND M.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+					    AND M.CODSITUACAOMENSAGEMDDA = 3
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_DATA_HORA_PROCESSAMENTO_LOG_RECEB_ARQ">
+		<use-case name="ATUALIZA DATA HORA PROCESSAMENTO"></use-case>
+	    <description>"atualiza data hora processamento</description>
+	    <command>
+				<![CDATA[
+					UPDATE
+					    DDA.LOGRECEBIMENTOOARQUIVODDA L
+					SET
+					    L.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+					WHERE
+					    L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivoRecebido}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_DATA_REFERENCIA">
+		<use-case name="OBTER DATA REFERENCIA"></use-case>
+	    <description>"obtenho a data de referencia de acordo com a data hora abertura e data hora fechamento</description>
+	    <command>
+				<![CDATA[
+						SELECT DISTINCT
+							CASE WHEN (GH.DATAHORAABERTURA &lt;= CURRENT TIMESTAMP AND GH.DATAHORAFECHAMENTO &gt;= CURRENT TIMESTAMP) THEN 
+								GH.DATAREFERENCIA
+							ELSE GH2.DATAREFERENCIA END AS DATAREFERENCIA
+					
+						FROM DDA.TIPOMENSAGEMDDA TM
+							 LEFT  JOIN DDA.GRADEHORARIA GH ON GH.CODTIPOGRADEHORARIA = TM.CODTIPOGRADEHORARIA
+							 LEFT JOIN DDA.GRADEHORARIA GH2 ON GH2.CODTIPOGRADEHORARIA = TM.CODTIPOGRADEHORARIA
+							 									AND GH2.DATAREFERENCIA = CURRENT DATE + 1 DAY 
+						WHERE 	 
+							TM.CODTIPOMENSAGEMDDA =  <bancoob:valor valor="${codTipoMensagemDDA}"/> 
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_LOG_ENVIO_ARQUIVO_DDA">
+		<use-case name="ATUALIZAR log envio arquivo DDA"></use-case>
+	    <description>Utilizado no SWS de Tratamento de envio de arquivos</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.LOGENVIOARQUIVODDA 
+					SET dataHoraArquivo = NULL,
+						dataHoraEnvio   = NULL,
+						dataMovimento =   <bancoob:valor valor="${dataMovimento}" tipo="Date"/>,
+						descNomeArquivoEnviado = <bancoob:valor valor="${descNomeArquivoEnviado}"/> 
+				  WHERE IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/> 
+				]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGENS_TABELA_TEMPORARIA">
+		<use-case name="EXCLUIR registros da tabela temporaria"></use-case>
+	    <description>Utilizado no SWS de Envio de Mensagens</description>
+	    <command>
+				<![CDATA[
+					DELETE FROM DDA.TMPENVIOMENSAGEMDDAAPOIO
+				]]>
+	    </command>
+	</query>
+	
+	<query name="INSERIR_TABELA_TEMPORARIA_MENSAGEM">
+		<use-case name="Inserir mensagens na tabela Temporaria TmpEnvioMensagemDDAApoio"></use-case>
+	    <description>Utilizado no SWS de Envio de Mensagens</description>
+	    <command>
+				<![CDATA[
+				INSERT INTO DDA.TMPENVIOMENSAGEMDDAAPOIO
+						SELECT X.IDMENSAGEMDDA,
+						       X.CODTIPOMENSAGEMDDA,
+						       X.BOLMENSAGEMPRIORITARIA,
+						       /*Nesse ponto sera passado um parametro para definir a quantidade de mensagens que cada step poderá ter*/
+						       DENSE_RANK() OVER (PARTITION BY X.BOLMENSAGEMPRIORITARIA
+						                          ORDER BY CASE
+						                                   /*Na variável {$NumPrioridadeConsiderada} deve ser informado o valor do parametro 24 com a prioridade a ser considerada*/
+						                                   WHEN X.NUMPRIORIDADEENVIO &lt;= <bancoob:valor valor="${numPrioridadeConsiderada}"/> THEN
+						                                      X.NUMPRIORIDADEENVIO
+						                                   ELSE
+						                                      <bancoob:valor valor="${numPrioridadeConsideradaMais1}"/>
+						                                   END,
+						                                   /*Na variável {$qtdRegistrosPorStep} deve ser informado o valor do parametro 22 com a qtd de registros que cada STEP pode ter*/
+						                                   INT(X.NUMERO_LINHA/<bancoob:valor valor="${qtdMaxRegistrosPorStep}"/>) ) NUMAGRUPAMENTOSTEP
+						FROM ( SELECT MSG.IDMENSAGEMDDA,
+								      MSG.CODTIPOMENSAGEMDDA,
+						              MSG.NUMPRIORIDADEENVIO,
+						              CASE
+						              /*Na variável {$NumPrioridadeConsiderada} deve ser informado o valor do parametro 24 com a prioridade a ser considerada*/
+						              WHEN MSG.NUMPRIORIDADEENVIO &lt;= <bancoob:valor valor="${numPrioridadeConsiderada}"/> THEN 
+						                 1
+						              ELSE
+						                 0
+						              END BOLMENSAGEMPRIORITARIA,
+						              /*Ordenando as mensagens por código de mensagem e depois idmensagemdda*/
+						              ROWNUMBER() OVER (PARTITION BY CASE
+						                                             /*Na variável {$NumPrioridadeConsiderada} deve ser informado o valor do parametro 24 com a prioridade a ser considerada*/
+						                                             WHEN MSG.NUMPRIORIDADEENVIO &lt;= <bancoob:valor valor="${numPrioridadeConsiderada}"/> THEN
+						                                                MSG.NUMPRIORIDADEENVIO
+						                                             ELSE
+						                                                 <bancoob:valor valor="${numPrioridadeConsideradaMais1}"/>
+						                                             END
+						                                /*Na geração da ordem é levado a ordem em que as mensagens foram criadas pelo ID da mensagem*/
+						                                ORDER BY MSG.IDMENSAGEMDDA) - 1 AS NUMERO_LINHA
+						       FROM DDA.MENSAGEMDDA MSG
+						       LEFT JOIN DDA.MENSAGEMDDABOLETO MBOL           ON MBOL.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						       LEFT JOIN DDA.MENSAGEMDDABAIXAOPERACIONAL MBXO ON MBXO.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						       LEFT JOIN DDA.MENSAGEMDDABAIXAEFETIVA MBXE     ON MBXE.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						       LEFT JOIN DDA.MENSAGEMDDABENEFICIARIO MBEN     ON MBEN.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						       LEFT JOIN DDA.MENSAGEMDDAPAGADOR MPAG          ON MPAG.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						       JOIN DDA.TIPOMENSAGEMDDA TM1                   ON TM1.CODTIPOMENSAGEMDDA = MSG.CODTIPOMENSAGEMDDA AND
+						                                                         TM1.CODCATEGORIAMENSAGEMDDA = 'E'
+						       JOIN DDA.GRADEHORARIA GH                       ON GH.CODTIPOGRADEHORARIA = TM1.CODTIPOGRADEHORARIA AND
+						                                                         CURRENT_TIMESTAMP BETWEEN GH.DATAHORAABERTURA AND GH.DATAHORAFECHAMENTO AND
+						                                                         GH.DATAREFERENCIA = MSG.DATAMOVIMENTO
+						       WHERE MSG.BOLMENSAGEMPENDENTE    = 1
+						       AND   MSG.CODSITUACAOMENSAGEMDDA = 1
+						       /*Verificacão do parametro de contingência*/
+						       AND EXISTS (SELECT 1 FROM DDA.PARAMETRO PA WHERE PA.IDPARAMETRO = 26 AND PA.VALORBASEPARAMETRO = 0)
+						       /*Somente retornará se a mensagens for OUTROS ou se não houver nenhuma mensagem pendente que a mensagem avaliada seja dependente*/
+						       AND (CASE
+						            WHEN MBEN.IDMENSAGEMDDA IS NOT NULL AND TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BENEFICIARIO'
+						            WHEN MPAG.IDMENSAGEMDDA IS NOT NULL AND TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'PAGADOR'
+						            WHEN MBOL.IDMENSAGEMDDA IS NOT NULL AND TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BOLETO'
+						            WHEN MBXO.IDMENSAGEMDDA IS NOT NULL AND TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA OPERACIONAL'
+						            WHEN MBXE.IDMENSAGEMDDA IS NOT NULL AND TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA EFETIVA'
+						            ELSE 'OUTROS'
+						            END = 'OUTROS'
+						            OR
+						            MSG.IDMENSAGEMDDA = CASE
+						                                WHEN TM1.BOLEXIGEMENSAGEMRETORNO = 1 THEN
+						                                   /* Usando o LEAST para verifcar entre os vários valores qual é o menor
+						                                    * Buscando o menor IDMENSAGEMDDA existente para cada possibilidade de envio de MENSAGEMDDA
+						                                    * para verificar a prioridade entre as mensagens
+						                                    */
+						                                   LEAST (CASE
+						                                          /*Nesse caso somente busca o MIN na tabela beneficiário se a mensagem avaliada for de beneficiário*/
+						                                          WHEN MBEN.IDMENSAGEMDDA IS NOT NULL THEN 
+						                                             (SELECT COALESCE(MIN(MBEN2.IDMENSAGEMDDA),MSG.IDMENSAGEMDDA + 1)
+						                                              FROM DDA.MENSAGEMDDABENEFICIARIO MBEN2
+						                                              JOIN DDA.MENSAGEMDDA MSG2 ON MSG2.IDMENSAGEMDDA = MBEN2.IDMENSAGEMDDA AND
+						                                                                           MSG2.BOLMENSAGEMPENDENTE = 1
+						                                              WHERE MBEN2.NUMCPFCNPJBENEFICIARIO = MBEN.NUMCPFCNPJBENEFICIARIO )
+						                                          /*Esse ELSE serve para retornar o mesmo ID somados a 1 para que o NULL não seja retornado no LEAST*/
+						                                          ELSE MSG.IDMENSAGEMDDA + 1
+						                                          END,
+						                                          CASE
+						                                          /*Nesse caso somente busca o MIN na tabela pagadores se a mensagem avaliada for de pagador*/
+						                                          WHEN MPAG.IDMENSAGEMDDA IS NOT NULL THEN
+						                                             (SELECT COALESCE(MIN(MPAG2.IDMENSAGEMDDA),MSG.IDMENSAGEMDDA + 1)
+						                                              FROM DDA.MENSAGEMDDAPAGADOR MPAG2
+						                                              JOIN DDA.MENSAGEMDDA MSG2 ON MSG2.IDMENSAGEMDDA = MPAG2.IDMENSAGEMDDA AND
+						                                                                           MSG2.BOLMENSAGEMPENDENTE = 1
+						                                              WHERE MPAG2.NUMCPFCNPJPAGADOR = MPAG.NUMCPFCNPJPAGADOR)
+						                                          ELSE MSG.IDMENSAGEMDDA + 1
+						                                          END,
+						                                          CASE
+						                                          /*Nesse caso somente busca o MIN na tabela de boleto se a mensagem avaliada for de Boleto, Baixa Operacional ou Baixa Efetiva*/
+						                                          WHEN COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA) IS NOT NULL THEN
+						                                             (SELECT COALESCE(MIN(MBOL2.IDMENSAGEMDDA),MSG.IDMENSAGEMDDA + 1)
+						                                              FROM DDA.MENSAGEMDDABOLETO MBOL2
+						                                              JOIN DDA.MENSAGEMDDA MSG2 ON MSG2.IDMENSAGEMDDA = MBOL2.IDMENSAGEMDDA AND
+						                                                                           MSG2.BOLMENSAGEMPENDENTE = 1
+						                                              WHERE MBOL2.NUMCODIGOBARRA = COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA))
+						                                          ELSE MSG.IDMENSAGEMDDA + 1
+						                                          END,
+						                                          CASE
+						                                          /*Nesse caso somente busca o MIN na tabela de baixa operacional se a mensagem avaliada for de Boleto, Baixa Operacional ou Baixa Efetiva*/
+						                                          WHEN COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA) IS NOT NULL THEN
+						                                             (SELECT COALESCE(MIN(MBXO2.IDMENSAGEMDDA),MSG.IDMENSAGEMDDA + 1)
+						                                              FROM DDA.MENSAGEMDDABAIXAOPERACIONAL MBXO2
+						                                              JOIN DDA.MENSAGEMDDA MSG2 ON MSG2.IDMENSAGEMDDA = MBXO2.IDMENSAGEMDDA AND
+						                                                                           MSG2.BOLMENSAGEMPENDENTE = 1
+						                                              WHERE MBXO2.NUMCODIGOBARRA = COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA))
+						                                          ELSE MSG.IDMENSAGEMDDA + 1
+						                                          END,
+						                                          CASE
+						                                          /*Nesse caso somente busca o MIN na tabela de baixa efetiva se a mensagem avaliada for de Boleto, Baixa Operacional ou Baixa Efetiva*/
+						                                          WHEN COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA) IS NOT NULL THEN
+						                                             (SELECT COALESCE(MIN(MBXE2.IDMENSAGEMDDA),MSG.IDMENSAGEMDDA + 1)
+						                                              FROM DDA.MENSAGEMDDABAIXAEFETIVA MBXE2
+						                                              JOIN DDA.MENSAGEMDDA MSG2 ON MSG2.IDMENSAGEMDDA = MBXE2.IDMENSAGEMDDA AND
+						                                                                           MSG2.BOLMENSAGEMPENDENTE = 1
+						                                              WHERE MBXE2.NUMCODIGOBARRA = COALESCE(MBOL.NUMCODIGOBARRA,MBXO.NUMCODIGOBARRA,MBXE.NUMCODIGOBARRA))
+						                                          ELSE MSG.IDMENSAGEMDDA + 1
+						                                          END
+						                                         )
+						                                ELSE MSG.IDMENSAGEMDDA
+						                                END)
+						     ) X
+						WHERE X.CODTIPOMENSAGEMDDA NOT IN ('DDA0110')       
+						/*Ordena pela pela linha que é gerada levando em conta o ID mesagem*/
+						ORDER BY X.NUMERO_LINHA
+						/*Na variável {$QtdMaximaRegistrosNaFila} deve ser informado o valor do parametro 20 com a quantidade máxima que um envio pode ter*/
+						FETCH FIRST ${qtdParametroMensagensEnviadasPorRajada} ROWS ONLY
+				]]>
+	    </command>
+	</query>
+	
+	<query name="RUNSTATS_TABELA_TEMPORARIA_ENVIO_MENSAGENS">
+		<use-case name="RUNSTATS_TABELA_TEMPORARIA_ENVIO_MENSAGENS"></use-case>
+		<description>Executa a atualização dos runstats na tabela temporária do motor de envio de msgs</description>
+		<command>
+			<![CDATA[
+			CALL SYSPROC.ADMIN_CMD ('RUNSTATS ON TABLE DDA.TMPENVIOMENSAGEMDDAAPOIO ON ALL COLUMNS WITH DISTRIBUTION DEFAULT NUM_FREQVALUES 200 NUM_QUANTILES 200 AND DETAILED INDEXES ALL ALLOW WRITE ACCESS TABLESAMPLE SYSTEM(1) INDEXSAMPLE SYSTEM(1)')
+			]]>
+		</command>
+	</query>
+	
+		<query name="VERIFICAR_INATIVIDADE_MOTOR_ENVIO_ARQUIVO">
+		<use-case name="VERIFICAR_INATIVIDADE_MOTOR_ENVIO_ARQUIVO"></use-case>
+		<description>Verificar inatividade do motor de envio de arquivo</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM DDA.GRADEHORARIA GH
+				WHERE GH.CODTIPOGRADEHORARIA IN (${listaGradeHoraria})
+					AND CURRENT_TIMESTAMP BETWEEN  GH.DATAHORAABERTURA AND GH.DATAHORAFECHAMENTO
+					AND ( CURRENT_TIMESTAMP BETWEEN  GH.DATAHORAFECHAMENTO - ${tempoInativoMotorEnvioArquivo} MINUTES AND GH.DATAHORAFECHAMENTO + ${tempoInativoMotorEnvioArquivo} MINUTES OR
+				      	  CURRENT_TIMESTAMP BETWEEN  GH.DATAHORAABERTURA - ${tempoInativoMotorEnvioArquivo} MINUTES AND GH.DATAHORAABERTURA + ${tempoInativoMotorEnvioArquivo} MINUTES )
+			]]>
+		</command>
+	</query>
+	
+	
+	
+	
+</queries>

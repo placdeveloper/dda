@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 xmlns:bancoob="br.com.bancoob.componentes.*"
+		 height="50" 
+		 horizontalGap="2">
+	<mx:Script>
+		<![CDATA[
+			
+			[Bindable]
+			protected var _corFundo:Number;
+			
+			[Bindable]
+			protected var _titulo:String;
+			
+			[Bindable]
+			protected var _legenda:String;
+			
+			[Bindable]
+			protected var _exibirInformativo:Boolean = false;
+			
+			[Bindable]
+			protected var _exibirLegenda:Boolean = false;
+			
+			[Bindable]
+			protected var _fontWeightTitulo:String = "normal";
+			
+		]]>
+	</mx:Script>
+	<mx:Canvas width="50" height="50">
+		<mx:Canvas id="iconeLegenda" backgroundColor="{_corFundo}" top="5" bottom="5" left="5" right="5" width="100%" height="100%" borderThickness="1" borderStyle="solid" cornerRadius="5"/>
+	</mx:Canvas>
+	<mx:VBox verticalGap="0" height="100%" width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" verticalAlign="middle">
+		<bancoob:Rotulo id="txtTitulo" fontWeight="{_fontWeightTitulo}" text="{_titulo}" height="15"/>
+		<bancoob:Rotulo id="txtLegenda" fontStyle="italic" text="{_legenda}" includeInLayout="{_exibirLegenda}" height="15" visible="{_exibirLegenda}"/>
+		<bancoob:Rotulo id="txtInformativo" fontWeight="bold" text="Favor entrar em contato com a equipe do Cobrança Bancária" includeInLayout="{_exibirInformativo}" visible="{_exibirInformativo}" height="15"/>
+	</mx:VBox>
+</mx:HBox>

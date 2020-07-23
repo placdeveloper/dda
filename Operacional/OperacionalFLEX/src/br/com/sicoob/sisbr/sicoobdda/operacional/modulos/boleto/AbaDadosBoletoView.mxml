@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="550" height="700" layout="absolute"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:campos="br.com.bancoob.componentes.campos.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+								 xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								 xmlns:consultaBoleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.boleto.*" 
+								 verticalScrollPolicy="off" paddingLeft="1" paddingRight="1">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			protected var _allLabelWidth:Number = 110;
+			
+			[Bindable]
+			protected var _yInit:Number = 5;
+			
+			[Bindable]
+			protected var _ySpace:Number = 35;
+			
+			[Bindable]
+			protected var _xLeftLabel:Number = 16;
+			
+			[Bindable]
+			protected var _xLeftField:Number = 128;
+			
+			[Bindable]
+			protected var _xCenterLabel:Number = 300;
+			
+			[Bindable]
+			protected var _xCenterField:Number = 418;
+			
+			[Bindable]
+			protected var _xRightLabel:Number = 540;
+			
+			[Bindable]
+			protected var _xRightField:Number = 658;
+				
+		]]>
+	</mx:Script>
+	
+	<containers:CanvasBancoob id="cvInformacoesDadosBoleto" width="100%" x="0" y="5">
+		<Rotulo text="Banco:" x="{_xLeftLabel}" y="{_yInit}" width="{_allLabelWidth}" fontWeight="bold"/>
+		<Rotulo id="txtBanco" x="{_xLeftField}" y="{_yInit}" selectable="true" width="350"/>
+		
+		<!-- ###################################################################### -->
+
+		<Rotulo text="Código de Barras:" x="{_xLeftLabel}" y="{txtBanco.y + _ySpace}" width="{_allLabelWidth}" fontWeight="bold"/>
+		<Rotulo id="txtCodigoBarras" x="{_xLeftField}" y="{txtBanco.y + _ySpace}" width="310" selectable="true"/>
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Linha Digitável:" x="{_xLeftLabel}" y="{txtCodigoBarras.y + _ySpace}" width="{_allLabelWidth}" fontWeight="bold"/>
+		<Rotulo id="txtLinhaDigitavel" x="{_xLeftField}"  y="{txtCodigoBarras.y + _ySpace}" width="310" selectable="true"/>
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Data Emissão:" x="{_xLeftLabel}" y="{txtLinhaDigitavel.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtEmissao" x="{_xLeftField}" y="{txtLinhaDigitavel.y + _ySpace}" width="150" selectable="true"/>
+		
+		<Rotulo text="Data Vencimento:" x="{_xCenterLabel}" y="{txtLinhaDigitavel.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtVencimento" x="{_xCenterField}" y="{txtLinhaDigitavel.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="Data Limite Pgto.:" x="{_xRightLabel}" y="{txtLinhaDigitavel.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="dtLimitePgto" x="{_xRightField}" y="{txtLinhaDigitavel.y + _ySpace}" width="150" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Valor do Boleto:" x="{_xLeftLabel}" y="{dtLimitePgto.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="vlrBoleto" x="{_xLeftField}" y="{dtLimitePgto.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="Valor Abatimento:" x="{_xCenterLabel}" y="{dtLimitePgto.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="vlrAbatimento" x="{_xCenterField}" y="{dtLimitePgto.y + _ySpace}" selectable="true"/>
+		
+		
+		<Rotulo text="Carteira:" x="{_xRightLabel}" y="{dtLimitePgto.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="nrCarteira" x="{_xRightField}" y="{dtLimitePgto.y + _ySpace}" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Nosso Número:" x="{_xLeftLabel}" y="{nrCarteira.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtNossoNumero" x="{_xLeftField}" y="{nrCarteira.y + _ySpace}" />
+		
+		<Rotulo text="Seu Número:" x="{_xCenterLabel}" y="{nrCarteira.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtSeuNumero" x="{_xCenterField}" y="{nrCarteira.y + _ySpace}" />
+		
+		<Rotulo text="Código Moeda:" x="{_xRightLabel}" y="{nrCarteira.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="nrCodigoMoeda" x="{_xRightField}" y="{nrCarteira.y + _ySpace}" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Situação Boleto:" x="{_xLeftLabel}" y="{nrCodigoMoeda.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtSituacaoBoleto" x="{_xLeftField}" y="{nrCodigoMoeda.y + _ySpace}" width="187" selectable="true"/>
+		<Rotulo id="txtSituacaoBoleto2" x="{_xLeftField}" y="{nrCodigoMoeda.y + _ySpace + 12}" width="187" selectable="true"/>
+		
+		<Rotulo text="Situação Boleto Pgto.:" x="{_xCenterLabel}" y="{nrCodigoMoeda.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="txtSituacaoBoletoPagamento" x="{_xCenterField}" y="{nrCodigoMoeda.y + _ySpace}" selectable="true"/>
+		<Rotulo id="txtSituacaoBoletoPagamento2" x="{_xCenterField}" y="{nrCodigoMoeda.y + _ySpace + 12}" selectable="true"/>
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Espécie Documento:" x="{_xLeftLabel}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtEspecieDocumento" x="{_xLeftField}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="Número Parcela:" x="{_xCenterLabel}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="nrParcela" x="{_xCenterField}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" />
+		
+		<Rotulo text="Qtd. Total Parcelas:" x="{_xRightLabel}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="qtdTotalParcelas" x="{_xRightField}" y="{txtSituacaoBoletoPagamento.y + _ySpace}" />
+	
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Tipo Pgto.:" x="{_xLeftLabel}" y="{qtdTotalParcelas.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="codTipoPgto" x="{_xLeftField}" y="{qtdTotalParcelas.y + _ySpace}" />
+		
+		<Rotulo text="Tipo Modelo Cálculo:" x="{_xCenterLabel}" y="{qtdTotalParcelas.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpModeloCal" x="{_xCenterField}" y="{qtdTotalParcelas.y + _ySpace}" selectable="true"/>
+		<Rotulo id="tpModeloCal2" x="{_xCenterField}" y="{qtdTotalParcelas.y + _ySpace + 12}" selectable="true"/>
+
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Dias de Protesto:" x="{_xLeftLabel}" y="{tpModeloCal.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtDiasProtesto" x="{_xLeftField}" y="{tpModeloCal.y + _ySpace}" />
+		
+		<Rotulo text="Autorização Valor Divergente:" x="{_xCenterLabel}" y="{tpModeloCal.y + _ySpace}" width="170" fontWeight="bold"/>
+		<Rotulo id="txtAutorizaValorDivergente" x="{_xCenterField + 38}" y="{tpModeloCal.y + _ySpace}" width="230" selectable="true"/>
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Titulo Negociado:" x="{_xLeftLabel}" y="{txtAutorizaValorDivergente.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="bolTitNegociado" x="{_xLeftField}" y="{txtAutorizaValorDivergente.y + _ySpace}" />
+		
+		<Rotulo text="Pgto. Parcial:" x="{_xCenterLabel}" y="{txtAutorizaValorDivergente.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="bolPgtoParcial" x="{_xCenterField}" y="{txtAutorizaValorDivergente.y + _ySpace}" />
+		
+		<Rotulo text="Qtd. Pgto. Parcial:" x="{_xRightLabel}" y="{txtAutorizaValorDivergente.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="qtdPgtoParcial" x="{_xRightField}" y="{txtAutorizaValorDivergente.y + _ySpace}" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Ind. Valor Mínimo:" x="{_xLeftLabel}" y="{qtdPgtoParcial.y + _ySpace}" width="130" fontWeight="bold"/>
+		<Rotulo id="indrValorMinimo" x="{_xLeftField}" y="{qtdPgtoParcial.y + _ySpace}" />
+		
+		<Rotulo text="Valor Mínimo:" x="{_xCenterLabel}" y="{qtdPgtoParcial.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="vlrMinimo" x="{_xCenterField}" y="{qtdPgtoParcial.y + _ySpace}" />
+		
+		<Rotulo text="Bloqueio Pgto.:" x="{_xRightLabel}" y="{qtdPgtoParcial.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="bolBloqueioPgto" x="{_xRightField}" y="{qtdPgtoParcial.y + _ySpace}" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Ind. Valor Máximo:" x="{_xLeftLabel}" y="{bolBloqueioPgto.y + _ySpace}" width="130" fontWeight="bold"/>
+		<Rotulo id="indrValorMaximo" x="{_xLeftField}" y="{bolBloqueioPgto.y + _ySpace}" />
+		
+		<Rotulo text="Valor Máximo:" x="{_xCenterLabel}" y="{bolBloqueioPgto.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="vlrMaximo" x="{_xCenterField}" y="{bolBloqueioPgto.y + _ySpace}" />
+		
+		<!-- ###################################################################### -->
+		
+		<Rotulo text="Num. Ident. Boleto:" x="{_xLeftLabel}" y="{vlrMaximo.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="numIdentBoleto" x="{_xLeftField}" y="{vlrMaximo.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="Num. Ref Atual Boleto:" x="{_xCenterLabel}" y="{vlrMaximo.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="numRefAtualBoleto" x="{_xCenterField}" y="{vlrMaximo.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="Num. Seq. Atual Boleto:" x="{_xRightLabel}" y="{vlrMaximo.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="numSeqAtualBoleto" x="{_xRightField}" y="{vlrMaximo.y + _ySpace}" selectable="true"/>
+	</containers:CanvasBancoob>
+	
+</cadastro:FormularioCadastroView>

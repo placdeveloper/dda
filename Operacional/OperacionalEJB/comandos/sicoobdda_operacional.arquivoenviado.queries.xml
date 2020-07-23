@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="PESQUISAR_ARQUIVO_ENVIADO">
+		<use-case name="Pesquisar Situação Arquivo"></use-case>
+		<description>Pesquisar situação dos arquivos por filtros</description>
+		<command>
+			<![CDATA[
+			SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.ArquivoEnviadoDto(
+				lea.id, 
+				lea.descNomeArquivoEnviado,
+				lea.tipoMensagem.codTipoMensagem,
+				lea.dataHoraArquivo,
+				lea.dataMovimento,
+				lea.dataHoraEnvio
+				)FROM LogEnvioArquivoDDA lea
+					WHERE 1=1
+					<j:if test="${criterios.filtro.dataArquivoInicio != null}"> 
+						AND TIMESTAMP(lea.dataHoraArquivo) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataArquivoInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataArquivoFim}" tipo="DateTime" />
+					</j:if>
+					<j:if test="${criterios.filtro.dataEnvioInicio != null}"> 
+						AND TIMESTAMP(lea.dataHoraEnvio) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataEnvioInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataEnvioFim}" tipo="DateTime" />
+					</j:if>
+			    	<j:if test="${criterios.filtro.codTipoMensagem != null}">
+			    		AND lea.tipoMensagem.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.descNomeArquivoEnviado != null}">
+			    		AND lea.descNomeArquivoEnviado like <bancoob:valorOql valor="${criterios.filtro.descNomeArquivoEnviado}" tipo="LikeDireitaEsquerda"/>
+			    	</j:if>
+					<j:if test="${criterios.filtro.dataMovimento != null}"> 
+						AND lea.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+					</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_ARQUIVO_ENVIADO">
+		<use-case name="Obtendo Situação Arquivo"></use-case>
+		<description>Obter total de situações dos arquivos por filtros</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM LogEnvioArquivoDDA lea
+							WHERE 1=1
+							<j:if test="${criterios.filtro.dataArquivoInicio != null}"> 
+								AND TIMESTAMP(lea.dataHoraArquivo) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataArquivoInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataArquivoFim}" tipo="DateTime" />
+							</j:if>
+							<j:if test="${criterios.filtro.dataEnvioInicio != null}"> 
+								AND TIMESTAMP(lea.dataHoraEnvio) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataEnvioInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataEnvioFim}" tipo="DateTime" />
+							</j:if>
+					    	<j:if test="${criterios.filtro.codTipoMensagem != null}">
+					    		AND lea.tipoMensagem.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+					    	</j:if>
+					    	<j:if test="${criterios.filtro.descNomeArquivoEnviado != null}">
+					    		AND lea.descNomeArquivoEnviado like <bancoob:valorOql valor="${criterios.filtro.descNomeArquivoEnviado}" tipo="LikeDireitaEsquerda"/>
+					    	</j:if>
+							<j:if test="${criterios.filtro.dataMovimento != null}"> 
+								AND lea.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+							</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_ENVIO_ARQUIVO">
+		<use-case name="Listar Situação Arquivo"></use-case>
+		<description>Lista as situações dos arquivos</description>
+		<command>
+			<![CDATA[
+				FROM LogEnvioArquivoDDA lea WHERE lea.id = <bancoob:valorOql valor="${idLogEnvioArquivodda}" />
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_TIPO_MENSAGEM_AGEN_ADDA">
+		<use-case name="LISTAR TIPO MENSAGEM AGEN ADDA"></use-case>
+		<description>Listar Categoria mensagem ADDA e AGEN</description>
+		<command>
+				<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.entidades.TipoMensagemDDA(tm.codTipoMensagem, tm.descTipoMensagem) 
+						FROM TipoMensagemDDA tm, LogEnvioArquivoDDA l
+							WHERE l.tipoMensagem.codTipoMensagem = tm.codTipoMensagem
+							        GROUP BY tm.codTipoMensagem, tm.descTipoMensagem
+				]]>
+		</command>
+	</query>
+</queries>

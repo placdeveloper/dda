@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+<queries>
+
+	<query name="OBTER_LANCAMENTO_RATEIODDA">
+		<use-case name="OBTER_LANCAMENTO"></use-case>
+		<description>obter lancamento</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.VisualizaRateioTarifaDto(
+					rl.id,
+					rl.idInstituicaoTransferenciaDebito,
+					(
+					SELECT
+					    CASE
+					        WHEN id = 1
+					        THEN 1
+					        ELSE coalesce(idInstituicao,0)
+					    END
+					FROM
+					    ViewInstituicao
+					WHERE
+					    codTipoUnidade = 1
+					AND id = rl.idInstituicao
+					),
+					(
+					SELECT
+					    CASE
+					        WHEN id = 1
+					        THEN 1
+					        ELSE coalesce(numCooperativa,0)
+					    END
+					FROM
+					    ViewInstituicao
+					WHERE
+					    codTipoUnidade = 1
+					AND id = CASE WHEN rl.idInstituicaoTransferenciaDebito IS NOT NULL THEN rl.idInstituicaoTransferenciaDebito ELSE rl.idInstituicao END
+					),
+					rl.numSeqLancamentoCCO,
+					rl.dataMovimentoLoteLancamentoCCO,
+					rl.numContaLancamentoCCO,
+					rl.eventoTarifavelDDA.descEventoTarifavelExtrato,
+					rl.valorTotalRateio,
+					rl.dataHoraLancamentoCCO,
+					rl.situacaoRateioLancamento.descSituacaoRateioLancamento,
+					rl.rateioDDA.id,
+					rl.rateioDDA.idUsuarioAprovacao,
+					rl.situacaoRateioLancamento.codSituacaoRateioLancamento,
+					rl.descErroLancamentoCCO,
+					rl.codErroLancamentoCCO
+				)FROM RateioDDALancamento rl
+					where rl.id = <bancoob:valorOql valor="${idRateioLancamento}" />
+	
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_LANCAMENTOS_TARIFAS">
+		<use-case name="LISTA LANCAMENTOS TARIFAS"></use-case>
+		<description>lista lancamentos tarifas</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.VisualizaRateioTarifaDto(
+					(
+					SELECT
+					    CASE
+					        WHEN id = 1
+					        THEN 1
+					        ELSE coalesce(numCooperativa,0)
+					    END
+					FROM
+					    ViewInstituicao
+					WHERE
+					    codTipoUnidade = 1
+					AND id = CASE WHEN rl.idInstituicaoTransferenciaDebito IS NOT NULL THEN rl.idInstituicaoTransferenciaDebito ELSE rl.idInstituicao END
+					) as cooperativa,
+					rl.dataMovimentoLoteLancamentoCCO,
+					rl.rateioDDA.id,
+					rl.numContaLancamentoCCO,
+					rl.numSeqLancamentoCCO,
+					rl.eventoTarifavelDDA.descEventoTarifavelExtrato,
+					rl.valorTotalRateio,
+					rl.situacaoRateioLancamento.descSituacaoRateioLancamento,
+					rl.id,
+			        rl.idInstituicao,
+			        rl.idInstituicaoTransferenciaDebito,
+			        rl.qtdMensagemTotalRateio
+				)FROM RateioDDALancamento rl 
+				
+				where 1=1 
+				
+				<j:if test="${dto.selecionadoTodos == false}">
+					and rl.rateioDDA.id in (<bancoob:valorOql valor="${dto.listaIdRateio}" />)
+				</j:if>
+		
+				<j:if test="${dto.codSituacaoRateioLancamento != null}">
+					and rl.situacaoRateioLancamento.codSituacaoRateioLancamento = <bancoob:valorOql valor="${dto.codSituacaoRateioLancamento}" /> 
+				</j:if>
+				
+				<j:if test="${dto.idInstituicaoSingular != null}">
+					and rl.idInstituicao = <bancoob:valorOql valor="${dto.idInstituicaoSingular}" /> 
+				</j:if>
+				 
+				order by rl.rateioDDA.id asc 
+	
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_DADOS_RATEIO_TARIFAS">
+		<use-case name="LISTA DADOS RATEIO TARIFAS"></use-case>
+		<description>Lista dados rateio Tarifas</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.VisualizaRateioTarifaDto(
+				        ec.rateioDDA.id,
+				        ec.dataMovimento,
+						ec.eventoTarifavelDDA.descEventoTarifavelExtrato,
+				        ec.valorTarifaCIP,
+				        ec.qtdApuradoSicoob,
+				        (ec.valorTarifaCIP * ec.qtdApuradoSicoob),
+				        ec.qtdApuradoCIP,
+				        (ec.qtdApuradoCIP * ec.valorTarifaCIP),
+				        ec.valorTarifaBancoob,
+				        (ec.qtdApuradoSicoob * ec.valorTarifaBancoob)
+				)FROM EventoConsolidadoDDA ec
+						join ec.eventoTarifavelDDA et 
+						join et.listaEventoTarifavelDDATarifa ett
+						where ec.rateioDDA.id is not null and ec.rateioDDA.dataHoraInclusao is not null
+						and ec.valorTarifaBancoob is not null
+						and ec.valorTarifaCIP is not null
+						<j:if test="${dto.selecionadoTodos == false}">
+							and ec.rateioDDA.id in (<bancoob:valorOql valor="${dto.listaIdRateio}" />)
+						</j:if>
+							
+						and ett.dataInicioVigencia &lt;= ec.dataHoraInclusaoRateio 
+					 <j:if test="${dto.codEventoTarifavel != 0}">
+				 		and ec.eventoTarifavelDDA.codEventoTarifavel = <bancoob:valorOql valor="${dto.codEventoTarifavel}" /> 
+					</j:if>
+					group by        
+						ec.rateioDDA.id,
+						ec.dataMovimento,
+						ec.eventoTarifavelDDA.descEventoTarifavelExtrato,
+						ec.valorTarifaCIP,
+						ec.qtdApuradoSicoob,
+						ec.valorTarifaBancoob,
+						ec.qtdApuradoCIP
+					order by ec.rateioDDA.id, ec.dataMovimento asc 
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_TOTALIZADORES_RATEIO_TARIFAS">
+		<use-case name="OBTER TOTALIZADORES RATEIO TARIFAS"></use-case>
+		<description>obter totalizadores rateio tarifas</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.VisualizaRateioTarifaDto(
+				        COALESCE (ec.qtdApuradoSicoob,0),
+				        COALESCE (ec.qtdApuradoCIP,0),
+				        COALESCE (ec.valorTarifaCIP,0),
+				        COALESCE (ec.valorTarifaBancoob,0)
+				 )FROM EventoConsolidadoDDA ec
+				       where 1=1
+				       <j:if test="${dto.selecionadoTodos == false}">
+				       		and ec.rateioDDA.id in (<bancoob:valorOql valor="${dto.listaIdRateio}" />)
+						</j:if>
+				<j:if test="${dto.codEventoTarifavel != 0 }">
+						and ec.eventoTarifavelDDA.codEventoTarifavel = <bancoob:valorOql valor="${dto.codEventoTarifavel}" /> 
+				</j:if>
+			]]>
+		</command>
+	</query>
+	
+
+	<query name="PESQUISA_RATEIO_PAGINADA">
+		<use-case name="CONSOLIDAR EVENTOS TARIFAVEIS"></use-case>
+		<description>Consolidar eventos DDA e PCR tarifáveis</description>
+		<command>
+			<![CDATA[
+					SELECT * FROM (
+					       SELECT ROWNUMBER() OVER () AS linha, R.IDRATEIODDA, R.DATAHORAINCLUSAO, SR.DESCSITUACAORATEIO,R.DATAHORAAPROVACAO, 
+					       (SELECT SUM(EC2.QTDAPURADOSICOOB) FROM DDA.EVENTOCONSOLIDADODDA EC2 WHERE EC2.IDRATEIODDA = R.IDRATEIODDA) QTDTOTAL,  
+					       (SELECT SUM(EC3.VALORTARIFABANCOOB * EC3.QTDAPURADOSICOOB) FROM DDA.EVENTOCONSOLIDADODDA EC3 WHERE EC3.IDRATEIODDA = R.IDRATEIODDA) VALORTOTAL,
+					       (select EC4.datamovimento from dda.EVENTOCONSOLIDADODDA EC4 where EC4.IDRATEIODDA  = R.IDRATEIODDA order by EC4.DATAMOVIMENTO asc fetch first 1 row only) dataInicioEvento,
+					       (select EC5.datamovimento from dda.EVENTOCONSOLIDADODDA EC5 where EC5.IDRATEIODDA = R.IDRATEIODDA order by EC5.DATAMOVIMENTO DESC fetch first 1 row only) dataFimEvento
+					FROM DDA.RATEIODDA R
+					       inner JOIN DDA.EVENTOCONSOLIDADODDA EC  ON EC.IDRATEIODDA = R.IDRATEIODDA
+					       inner JOIN DDA.SITUACAORATEIO SR ON SR.CODSITUACAORATEIO = R.CODSITUACAORATEIO
+					       
+					       WHERE 1 = 1
+					       
+					       <j:if test="${consultaDto.codSituacaoRateio != null}">
+						       AND r.CODSITUACAORATEIO = <bancoob:valor valor="${consultaDto.codSituacaoRateio}" />
+					       </j:if>
+					       
+							<j:if test="${consultaDto.codTipoDataEvento == 1}">
+							   AND date(R.DATAHORAINCLUSAO) between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+					       </j:if>
+						   
+						    <j:if test="${consultaDto.codTipoDataEvento == 2}">
+						    	AND date(R.DATAHORAAPROVACAO) between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+					       </j:if>
+						   
+						    <j:if test="${consultaDto.codTipoDataEvento == 3}">   
+						       AND EC.DATAMOVIMENTO between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+							</j:if>		      
+       
+       
+					       GROUP BY  R.IDRATEIODDA, R.DATAHORAINCLUSAO, SR.DESCSITUACAORATEIO, R.DATAHORAAPROVACAO order by R.DATAHORAINCLUSAO desc
+					) as resultado
+				<j:if test="${pagina != null and tamanhoPagina != null}">
+					WHERE resultado.linha &gt; <bancoob:valor valor="${pagina * tamanhoPagina}" />
+					FETCH FIRST ${tamanhoPagina} ROWS ONLY
+				</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_COUNT_RATEIO_PAGINADA">
+		<use-case name="CONSOLIDAR EVENTOS TARIFAVEIS"></use-case>
+		<description>Consolidar eventos DDA e PCR tarifáveis</description>
+		<command>
+			<![CDATA[
+			SELECT count(1) FROM (
+					       SELECT ROWNUMBER() OVER () AS linha, R.IDRATEIODDA, R.DATAHORAINCLUSAO, SR.DESCSITUACAORATEIO,R.DATAHORAAPROVACAO, 
+					       (SELECT SUM(EC2.QTDAPURADOSICOOB) FROM DDA.EVENTOCONSOLIDADODDA EC2 WHERE EC2.IDRATEIODDA = R.IDRATEIODDA) QTDTOTAL,  
+					       (SELECT SUM(EC3.VALORTARIFABANCOOB * EC3.QTDAPURADOSICOOB) FROM DDA.EVENTOCONSOLIDADODDA EC3 WHERE EC3.IDRATEIODDA = R.IDRATEIODDA) VALORTOTAL,
+					       (select EC4.datamovimento from dda.EVENTOCONSOLIDADODDA EC4 where EC4.IDRATEIODDA  = R.IDRATEIODDA order by EC4.DATAMOVIMENTO asc fetch first 1 row only) dataInicioEvento,
+					       (select EC5.datamovimento from dda.EVENTOCONSOLIDADODDA EC5 where EC5.IDRATEIODDA = R.IDRATEIODDA order by EC5.DATAMOVIMENTO DESC fetch first 1 row only) dataFimEvento
+							FROM DDA.RATEIODDA R
+					       inner JOIN DDA.EVENTOCONSOLIDADODDA EC  ON EC.IDRATEIODDA = R.IDRATEIODDA
+					       inner JOIN DDA.SITUACAORATEIO SR ON SR.CODSITUACAORATEIO = R.CODSITUACAORATEIO
+					       
+					       WHERE 1 = 1
+					       
+					       <j:if test="${consultaDto.codSituacaoRateio != null}">
+						       AND r.CODSITUACAORATEIO = <bancoob:valor valor="${consultaDto.codSituacaoRateio}" />
+					       </j:if>
+					       
+							<j:if test="${consultaDto.codTipoDataEvento == 1}">
+							   AND date(R.DATAHORAINCLUSAO) between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+					       </j:if>
+						   
+						    <j:if test="${consultaDto.codTipoDataEvento == 2}">
+						    	AND date(R.DATAHORAAPROVACAO) between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+					       </j:if>
+						   
+						    <j:if test="${consultaDto.codTipoDataEvento == 3}">   
+						       AND EC.DATAMOVIMENTO between <bancoob:valor valor="${consultaDto.dataInicio}"  tipo="Date"/> and <bancoob:valor valor="${consultaDto.dataFim}"  tipo="Date"/>
+							</j:if>	
+							
+					       GROUP BY  R.IDRATEIODDA, R.DATAHORAINCLUSAO, SR.DESCSITUACAORATEIO, R.DATAHORAAPROVACAO order by R.DATAHORAINCLUSAO desc
+					) 
+
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTA_SITUACAO_RATEIO">
+		<use-case name="Consolidar Eventos Tarifaveis"></use-case>
+		<description>Consolidar eventos DDA e PCR tarifáveis</description>
+		<command>
+			<![CDATA[
+					FROM SituacaoRateio
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_RATEIO_ATUAL">
+		<use-case name="OBTER_RATEIO_ATUAL"></use-case>
+		<description>Obtém o rateio atual</description>
+		<command>
+			<![CDATA[
+				FROM RateioDDA rateio
+				WHERE rateio.situacaoRateio.codSituacaoRateio in (<bancoob:valorOql valor="${listaSituacaoRateio}" />)
+				ORDER BY rateio.dataHoraInclusao
+			]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_EVENTOS_DISPONIVEIS">
+		<use-case name="PESQUISAR_EVENTOS_DISPONIVEIS"></use-case>
+		<description>Pesquisa os eventos disponíveis para rateio</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.EventoRateioDto(eventoConsolidado.id, eventoConsolidado.dataMovimento, eventoTarifavel.descEventoTarifavelExtrato,
+					tarifa.valorBancoob, tarifa.valorCIP, eventoConsolidado.qtdApuradoSicoob, eventoConsolidado.qtdApuradoCIP)
+				FROM EventoConsolidadoDDA eventoConsolidado
+				JOIN eventoConsolidado.eventoTarifavelDDA eventoTarifavel
+				JOIN eventoTarifavel.listaEventoTarifavelDDATarifa tarifa
+				WHERE tarifa.dataInicioVigencia &lt;= eventoConsolidado.dataMovimento AND (tarifa.dataFimVigencia is null OR tarifa.dataFimVigencia &gt;= eventoConsolidado.dataMovimento)
+				AND eventoTarifavel.bolTarifavel = 1 AND eventoTarifavel.bolAtivo = 1
+				AND eventoConsolidado.rateioDDA is null
+				<j:if test="${dto.codEventoTarifavel != null}">
+					AND eventoTarifavel.id = <bancoob:valorOql valor="${dto.codEventoTarifavel}" />
+				</j:if>
+				<j:if test="${dto.dataInicial != null and dto.dataFinal != null}">
+					AND eventoConsolidado.dataMovimento BETWEEN <bancoob:valorOql valor="${dto.dataInicial}" /> AND <bancoob:valorOql valor="${dto.dataFinal}" />
+				</j:if>
+				ORDER BY eventoConsolidado.dataMovimento, eventoTarifavel.descEventoTarifavelExtrato
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_EVENTOS_RATEIO">
+		<use-case name="LISTAR_EVENTOS_RATEIO"></use-case>
+		<description>Lista os eventos do rateio informado</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.EventoRateioDto(eventoConsolidado.id, eventoConsolidado.dataMovimento, eventoTarifavel.descEventoTarifavelExtrato,
+					eventoConsolidado.valorTarifaBancoob, eventoConsolidado.valorTarifaCIP, eventoConsolidado.qtdApuradoSicoob, eventoConsolidado.qtdApuradoCIP)
+				FROM EventoConsolidadoDDA eventoConsolidado
+				JOIN eventoConsolidado.rateioDDA rateio
+				JOIN eventoConsolidado.eventoTarifavelDDA eventoTarifavel
+				WHERE eventoTarifavel.bolTarifavel = 1 AND eventoTarifavel.bolAtivo = 1
+					AND rateio.id = <bancoob:valorOql valor="${idRateio}" />
+				ORDER BY eventoConsolidado.dataMovimento, eventoTarifavel.descEventoTarifavelExtrato
+			]]>
+		</command>
+	</query>
+	
+	<query name="CONSOLIDAR_LANCAMENTOS_CCO">
+		<use-case name="CONSOLIDAR_LANCAMENTOS_CCO"></use-case>
+		<description>Consolidar lançamentos a serem efetivados no CCO</description>
+		<command>
+			<![CDATA[
+					WITH
+					SEL_LANCAMENTO AS ( 
+					SELECT RAT.IDRATEIODDA,
+					       EVDET.IDINSTITUICAO,
+					       EVEN.CODEVENTOTARIFAVEL,
+					       SUM(EVDET.QTDMENSAGEMAPURADO) AS QTDMENSAGEMTOTALRATEIO,
+					       SUM(EVEN.VALORTARIFABANCOOB * EVDET.QTDMENSAGEMAPURADO) AS VALORTOTALRATEIO,
+					       INST.NUMCONTACONVENIO AS NUMCONTALANCAMENTOCCO
+					FROM DDA.RATEIODDA RAT
+					JOIN DDA.EVENTOCONSOLIDADODDA EVEN ON EVEN.IDRATEIODDA = RAT.IDRATEIODDA
+					JOIN DDA.EVENTOCONSOLIDADODDADETALHE EVDET ON EVDET.IDEVENTOCONSOLIDADODDA = EVEN.IDEVENTOCONSOLIDADODDA
+					LEFT OUTER JOIN SCI.VIW_INSTITUICAO INST ON INST.IDINSTITUICAO = EVDET.IDINSTITUICAO AND INST.CODTIPOUNIDADE = 1
+					WHERE EVEN.VALORTARIFABANCOOB > 0
+					AND RAT.CODSITUACAORATEIO = 2
+					GROUP BY RAT.IDRATEIODDA, 
+					         EVDET.IDINSTITUICAO,
+					         EVEN.CODEVENTOTARIFAVEL,
+					         INST.NUMCONTACONVENIO ),
+					/*INS_LANCAMENTO: Insere a tabela DDA.RATEIODDALANCAMENTO baseado nos dados das tabelas de consolidação das mensagens (SEL_LANCAMENTO)*/
+					INS_LANCAMENTO AS ( SELECT COUNT(*) AS QTD_INS_LANCAMENTO
+					                    FROM FINAL TABLE ( INSERT
+					                                       INTO DDA.RATEIODDALANCAMENTO ( IDRATEIODDA,
+					                                                                      IDINSTITUICAO,
+					                                                                      CODEVENTOTARIFAVEL,
+					                                                                      QTDMENSAGEMTOTALRATEIO,
+					                                                                      VALORTOTALRATEIO,
+					                                                                      CODSITUACAORATEIOLANCAMENTO,
+					                                                                      NUMCONTALANCAMENTOCCO,
+					                                                                      IDINSTITUICAOUSUARIOLOGADO,
+					                                                                      IDUSUARIOLOGADO,
+					                                                                      CODTIPOOPERACAOLOG,
+					                                                                      DATAMOVIMENTOLOTELANCAMENTOCCO,
+					                                                                      DATAHORALANCAMENTOCCO)
+					                                       SELECT IDRATEIODDA,
+					                                              IDINSTITUICAO,
+					                                              CODEVENTOTARIFAVEL,
+					                                              QTDMENSAGEMTOTALRATEIO,
+					                                              VALORTOTALRATEIO,
+					                                              CASE
+					                                                WHEN IDINSTITUICAO IN (1, 2) THEN
+					                                                  6
+					                                                ELSE
+					                                                  1
+					                                              END AS CODSITUACAORATEIOLANCAMENTO,
+					                                              CASE
+					                                                WHEN IDINSTITUICAO IN (1, 2) THEN
+					                                                  NULL
+					                                                ELSE
+					                                                  NUMCONTALANCAMENTOCCO
+					                                              END AS NUMCONTALANCAMENTOCCO,
+					                                              2 AS IDINSTITUICAOUSUARIOLOGADO,
+					                                              'SWS-DDA' AS IDUSUARIOLOGADO,
+					                                              'I' AS CODTIPOOPERACAOLOG,
+					                                              CASE
+					                                                WHEN IDINSTITUICAO IN (1, 2) THEN
+					                                                  CURRENT DATE
+					                                                ELSE
+					                                                  NULL
+					                                              END AS DATAMOVIMENTOLOTELANCAMENTOCCO,
+					                                              CASE
+					                                                WHEN IDINSTITUICAO IN (1, 2) THEN
+					                                                  CURRENT TIMESTAMP
+					                                                ELSE
+					                                                  NULL
+					                                              END AS DATAHORALANCAMENTOCCO
+					                                       FROM SEL_LANCAMENTO LANC ) ),
+					/*Esse UPDATE realiza alteração da situação do rateio para 3 (Processando Efetivacao)*/
+					UPD_RATEIO AS ( SELECT COUNT(*) QTD_UPD_RATEIO
+					                FROM FINAL TABLE ( UPDATE DDA.RATEIODDA RAT
+					                                   SET RAT.CODSITUACAORATEIO = 3
+					                                   WHERE RAT.IDRATEIODDA IN ( SELECT DISTINCT LANC.IDRATEIODDA FROM SEL_LANCAMENTO LANC ) ) )
+					/*
+					Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+					SELECT QTD_UPD_RATEIO, QTD_INS_LANCAMENTO FROM INS_LANCAMENTO X1, UPD_RATEIO X2
+					*/
+					SELECT 1 FROM SYSIBM.SYSDUMMY1
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_LANCAMENTOS_RATEIO_CCO">
+		<use-case name="LISTAR_LANCAMENTOS_RATEIO_CCO"></use-case>
+		<description>Lista os lançamentos de rateio para efetivação no CCO</description>
+		<command>
+			<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.ejb.dto.LancamentoIntegracaoDto(
+							rateioDDALanc.dataMovimentoLoteLancamentoCCO, eventoTarif.numLoteLancamentoCCO, eventoTarif.tipoEventoTarifavel.descTipoEventoTarifavel, rateioDDALanc.numContaLancamentoCCO,
+				         	rateioDDALanc.valorTotalRateio, eventoTarif.idTipoHistoricoLancamentoCCO, rateio.idUsuarioAprovacao, rateioDDALanc.id)
+				        FROM RateioDDALancamento rateioDDALanc
+				        JOIN rateioDDALanc.rateioDDA rateio
+				        JOIN rateioDDALanc.eventoTarifavelDDA eventoTarif
+				        	WHERE 1=1
+				        	<j:if test="${idRateioDDALancamento == null}">
+								AND rateioDDALanc.situacaoRateioLancamento = 1				        	
+						        AND rateio.situacaoRateio = 3
+				        	</j:if>
+						        AND rateio.id = <bancoob:valorOql valor="${idRateioDDA}"/>
+						        AND rateioDDALanc.idInstituicao = <bancoob:valorOql valor="${idInstituicao}"/>
+					        <j:if test="${idRateioDDALancamento != null}">
+					        	AND rateioDDALanc.id  = <bancoob:valorOql valor="${idRateioDDALancamento}"/>
+					        	AND rateioDDALanc.situacaoRateioLancamento.id = 3
+					        	AND rateio.situacaoRateio = 5
+					        </j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="ATUALIZAR_LANCAMENTOS_RATEIO_CCO">
+		<use-case name="ATUALIZAR_LANCAMENTOS_RATEIO_CCO"></use-case>
+		<description>Atualiza os lançamentos de Rateio com o retorno do CCO</description>
+		<command>
+			<![CDATA[
+					UPDATE DDA.RATEIODDALANCAMENTO 
+						SET DATAMOVIMENTOLOTELANCAMENTOCCO = ?, DATAHORALANCAMENTOCCO = ?, NUMSEQLANCAMENTOCCO = ?, CODERROLANCAMENTOCCO = ?, 
+							DESCERROLANCAMENTOCCO = ?, CODRETORNOLANCAMENTOCCO = ?, DESCCAMPOERROLANCAMENTOCCO = ?, CODSITUACAORATEIOLANCAMENTO = ?,
+							NUMCONTALANCAMENTOCCO = ?, IDINSTITUICAOTRANSFERENCIADEBITO = ?
+						WHERE IDRATEIODDA = ? AND IDINSTITUICAO = ? AND CODSITUACAORATEIOLANCAMENTO = ? AND IDRATEIODDALANCAMENTO = ?
+			]]>
+		</command>
+	</query>
+	
+	<query name="TOTAL_EVENTOS_RATEIO">
+		<use-case name="TOTAL_EVENTOS_RATEIO"></use-case>
+		<description>Total de eventos do rateio informado</description>
+		<command>
+			<![CDATA[
+				SELECT count(eventoConsolidado)
+				FROM EventoConsolidadoDDA eventoConsolidado
+				JOIN eventoConsolidado.rateioDDA rateio
+				WHERE rateio.id = <bancoob:valorOql valor="${idRateio}" />
+			]]>
+		</command>
+	</query>
+		
+	<query name="EXISTE_RATEIO_PROCESSAMENTO">
+		<use-case name="EXISTE_RATEIO_PROCESSAMENTO"></use-case>
+		<description>Verifica se existe rateio processando</description>
+		<command>
+			<![CDATA[
+				SELECT count(rateio)
+				FROM RateioDDA rateio
+				JOIN rateio.situacaoRateio situacao
+				WHERE situacao.codSituacaoRateio = <bancoob:valorOql valor="${codSituacaoRateio}" />
+			]]>
+		</command>
+	</query>
+	
+	<query name="ATUALIZAR_SITUACAO_RATEIO_CCO">
+		<use-case name="ATUALIZAR_SITUACAO_RATEIO_CCO"></use-case>
+		<description>Atualizar a situação do rateio de credito</description>
+		<command>
+			<![CDATA[
+					UPDATE DDA.RATEIODDA
+					SET CODSITUACAORATEIO = <bancoob:valor valor="${codSituacaoRateio}"/>
+					WHERE IDRATEIODDA = <bancoob:valor valor="${idRateioDDA}"/>
+			]]>
+		</command>
+	</query>
+
+
+	<query name="CRIAR_TABELA_TEMPORARIA_CONSOLIDACAO">
+		<use-case name="CRIAR_TABELA_TEMPORARIA_CONSOLIDACAO"></use-case>
+		<description>Cria a tabela temporária para uso na consolidação</description>
+		<command>
+			<![CDATA[
+					DECLARE GLOBAL TEMPORARY TABLE SESSION.TEMP_SEL_EVENTOCONSOLIDADO( CODEVENTOTARIFAVEL INTEGER,
+					                                                                   DATAMOVIMENTO DATE,
+					                                                                   QTDAPURADOSICOOB INTEGER,
+					                                                                   IDINSTITUICAOSOLICITANTE INTEGER,
+					                                                                   DATAREFERENCIACONSOLIDACAO DATE,
+					                                                                   DATAHORACONSOLIDACAO TIMESTAMP )
+					                                                                   NOT LOGGED ON ROLLBACK DELETE ROWS
+					                                                                   WITH REPLACE
+			]]>
+		</command>
+	</query>
+
+	<query name="CONFIGURAR_TABELA_TEMPORARIA_CONSOLIDACAO">
+		<use-case name="CONFIGURAR_TABELA_TEMPORARIA_CONSOLIDACAO"></use-case>
+		<description>Cria a tabela temporária para uso na consolidação</description>
+		<command>
+			<![CDATA[
+					CALL ADMIN_CMD ('RUNSTATS ON TABLE SESSION.TEMP_SEL_EVENTOCONSOLIDADO WITH DISTRIBUTION AND DETAILED INDEXES ALL')
+			]]>
+		</command>
+	</query>
+	
+	<query name="GRAVAR_TABELA_TEMPORARIA_CONSOLIDACAO">
+		<use-case name="GRAVAR_TABELA_TEMPORARIA_CONSOLIDACAO"></use-case>
+		<description>Gravar tabela temporária consolidacao</description>
+		<command>
+			<![CDATA[
+					INSERT INTO SESSION.TEMP_SEL_EVENTOCONSOLIDADO
+					WITH
+					SEL_ROLLOUT AS ( SELECT TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,1,10),'DD-MM-YYYY') DATA_INICIAL,
+					                        TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,12,10),'DD-MM-YYYY') DATA_FINAL,
+					                        SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) + 1,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) - 1 ) VALOR_INICIAL,
+					                        SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) + 1,LENGTH(PAR.VALORBASEPARAMETRO) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) ) VALOR_FINAL
+					                 FROM DDA.PARAMETRO PAR
+					                 WHERE PAR.NOMEPARAMETRO LIKE 'Faixa de Rollout - %'
+					                 AND PAR.IDPARAMETRO IN ( 85, 86, 87, 88, 89, 90, 91, 92, 99, 101, 102 )
+					               ),
+					SEL_MAX_EVENTOS AS ( SELECT
+					                     VARCHAR_FORMAT(COALESCE(DATA_MAX_REF_CONSOLIDACAO, (SELECT TIMESTAMP_FORMAT(PAR.VALORBASEPARAMETRO,'DD-MM-YYYY') FROM DDA.PARAMETRO PAR WHERE PAR.IDPARAMETRO = 95)),'YYYY-MM-DD') AS DATA_VERIFICACAO
+					                     FROM ( SELECT MAX(CONS.DATAREFERENCIACONSOLIDACAO) DATA_MAX_REF_CONSOLIDACAO
+					                            FROM DDA.EVENTOCONSOLIDADODDA CONS ) ),
+					SEL_HIST   AS ( SELECT MSG.IDMENSAGEMDDA, MSG.CODTIPOMENSAGEMDDA, MSG.DATAMOVIMENTO, MSG.IDINSTITUICAOSOLICITANTE, MSG.CODSITUACAOMENSAGEMDDA, MSG.DATAPARTICAO
+					                FROM DDA.HISTMENSAGEMDDA MSG
+					                CROSS JOIN SEL_MAX_EVENTOS MAXEVEN
+					                WHERE MSG.DATAPARTICAO || '' &gt; MAXEVEN.DATA_VERIFICACAO
+					                FETCH FIRST 99999999 ROWS ONLY),
+					SEL_HISTBOL AS ( SELECT BOL.IDMENSAGEMDDA, BOL.VALORBOLETO, BOL.BOLDDA
+					                 FROM DDA.HISTMENSAGEMDDABOLETO BOL
+					                 CROSS JOIN SEL_MAX_EVENTOS MAXEVEN
+					                 WHERE BOL.DATAPARTICAO || '' &gt; MAXEVEN.DATA_VERIFICACAO
+					                 FETCH FIRST 99999999 ROWS ONLY),
+					SEL_EVENTO AS ( SELECT EVEN.CODEVENTOTARIFAVEL,
+					                       MSG.DATAMOVIMENTO,
+					                       COUNT(*) AS QTDAPURADOSICOOB,
+					                       MSG.IDINSTITUICAOSOLICITANTE,
+					                       MAX(MSG.DATAPARTICAO) AS DATAREFERENCIACONSOLIDACAO,
+					                       CURRENT TIMESTAMP AS DATAHORACONSOLIDACAO
+					                FROM SEL_HIST MSG
+					                LEFT OUTER JOIN SEL_HISTBOL BOL ON BOL.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+					                JOIN DDA.MENSAGEMTARIFAVELDDA MTA ON MTA.CODTIPOMENSAGEMDDA = MSG.CODTIPOMENSAGEMDDA
+					                JOIN DDA.EVENTOTARIFAVELDDA EVEN ON EVEN.CODEVENTOTARIFAVEL = MTA.CODEVENTOTARIFAVEL AND
+					                                                    EVEN.CODTIPOEVENTOTARIFAVEL = ( CASE
+					                                                                                      WHEN BOL.BOLDDA IS NULL AND EVEN.CODTIPOEVENTOTARIFAVEL IN (1,2) THEN 1
+					                                                                                      WHEN BOL.BOLDDA IS NULL THEN EVEN.CODTIPOEVENTOTARIFAVEL
+					                                                                                      WHEN BOL.BOLDDA = 1 THEN 1
+					                                                                                      ELSE 2
+					                                                                                    END )
+					                WHERE MSG.CODSITUACAOMENSAGEMDDA = 8
+					                AND ( BOL.BOLDDA IS NULL OR 
+					                      BOL.BOLDDA = 1 OR ( BOL.BOLDDA = 0 AND 
+					                                          NOT EXISTS ( SELECT NULL
+					                                                       FROM SEL_ROLLOUT PAR
+					                                                       WHERE MSG.DATAMOVIMENTO BETWEEN PAR.DATA_INICIAL AND PAR.DATA_FINAL
+					                                                       AND BOL.VALORBOLETO BETWEEN CASE
+					                                                                                     WHEN PAR.VALOR_INICIAL = '*' THEN BOL.VALORBOLETO
+					                                                                                     ELSE CAST(PAR.VALOR_INICIAL AS DECIMAL(18,2))
+					                                                                                   END
+					                                                                                     AND
+					                                                                                   CASE
+					                                                                                     WHEN PAR.VALOR_FINAL = '*' THEN BOL.VALORBOLETO
+					                                                                                     ELSE CAST(PAR.VALOR_FINAL AS DECIMAL(18,2))
+					                                                                                   END
+					                                                     )
+					                                        )
+					                    )
+					                GROUP BY EVEN.CODEVENTOTARIFAVEL, 
+					                         MSG.DATAMOVIMENTO, 
+					                         MSG.IDINSTITUICAOSOLICITANTE
+					              )
+					SELECT * FROM SEL_EVENTO
+			]]>
+		</command>
+	</query>
+	
+	<query name="GRAVAR_CONSOLIDACAO">
+		<use-case name="GRAVAR_CONSOLIDACAO"></use-case>
+		<description>Grava tabela de consolidação</description>
+		<command>
+			<![CDATA[
+					MERGE INTO DDA.EVENTOCONSOLIDADODDA EV
+					USING ( SELECT EVEN.CODEVENTOTARIFAVEL,
+					               EVEN.DATAMOVIMENTO,
+					               SUM(EVEN.QTDAPURADOSICOOB) AS QTDAPURADOSICOOB,
+					               MAX(EVEN.DATAREFERENCIACONSOLIDACAO) AS DATAREFERENCIACONSOLIDACAO,
+					               EVEN.DATAHORACONSOLIDACAO
+					        FROM SESSION.TEMP_SEL_EVENTOCONSOLIDADO EVEN
+					        GROUP BY EVEN.CODEVENTOTARIFAVEL, EVEN.DATAMOVIMENTO, EVEN.DATAHORACONSOLIDACAO ) AS TMP
+					ON ( EV.CODEVENTOTARIFAVEL = TMP.CODEVENTOTARIFAVEL AND EV.DATAMOVIMENTO = TMP.DATAMOVIMENTO AND EV.IDRATEIODDA IS NULL )
+					WHEN MATCHED THEN
+					   UPDATE
+					   SET EV.QTDAPURADOSICOOB = EV.QTDAPURADOSICOOB + TMP.QTDAPURADOSICOOB,
+					       EV.DATAREFERENCIACONSOLIDACAO = TMP.DATAREFERENCIACONSOLIDACAO,
+					       EV.DATAHORACONSOLIDACAO = TMP.DATAHORACONSOLIDACAO
+					WHEN NOT MATCHED THEN
+					   INSERT (CODEVENTOTARIFAVEL,
+					           DATAMOVIMENTO,
+					           QTDAPURADOSICOOB,
+					           DATAHORACONSOLIDACAO,
+					           DATAREFERENCIACONSOLIDACAO)
+					   VALUES (TMP.CODEVENTOTARIFAVEL, TMP.DATAMOVIMENTO, TMP.QTDAPURADOSICOOB, TMP.DATAHORACONSOLIDACAO, TMP.DATAREFERENCIACONSOLIDACAO)
+			]]>
+		</command>
+	</query>
+
+	<query name="GRAVAR_CONSOLIDACAO_DETALHE">
+		<use-case name="GRAVAR_CONSOLIDACAO_DETALHE"></use-case>
+		<description>Grava tabela de consolidação Detalhe</description>
+		<command>
+			<![CDATA[
+					MERGE INTO DDA.EVENTOCONSOLIDADODDADETALHE EDET
+					USING ( SELECT CON.IDEVENTOCONSOLIDADODDA,
+					               EVEN.IDINSTITUICAOSOLICITANTE,
+					               EVEN.QTDAPURADOSICOOB
+					        FROM SESSION.TEMP_SEL_EVENTOCONSOLIDADO EVEN
+					        JOIN DDA.EVENTOCONSOLIDADODDA CON ON CON.CODEVENTOTARIFAVEL = EVEN.CODEVENTOTARIFAVEL AND
+					                                             CON.DATAMOVIMENTO = EVEN.DATAMOVIMENTO AND
+					                                             CON.DATAHORACONSOLIDACAO = EVEN.DATAHORACONSOLIDACAO ) AS TMP
+					ON ( EDET.IDEVENTOCONSOLIDADODDA = TMP.IDEVENTOCONSOLIDADODDA AND EDET.IDINSTITUICAO = TMP.IDINSTITUICAOSOLICITANTE )
+					WHEN MATCHED THEN
+					   UPDATE
+					   SET EDET.QTDMENSAGEMAPURADO = EDET.QTDMENSAGEMAPURADO + TMP.QTDAPURADOSICOOB
+					WHEN NOT MATCHED THEN
+					   INSERT (IDEVENTOCONSOLIDADODDA,
+					           IDINSTITUICAO,
+					           QTDMENSAGEMAPURADO)
+					   VALUES (TMP.IDEVENTOCONSOLIDADODDA, TMP.IDINSTITUICAOSOLICITANTE, TMP.QTDAPURADOSICOOB)
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_RATEIOS_CREDITO_ATUALIZACAO_CCO">
+		<use-case name="LISTAR_RATEIOS_CREDITO_ATUALIZACAO_CCO"></use-case>
+	    <description>Obtém os rateios de crédito em processamento para atualização no CCO</description>
+	    <command>
+			<![CDATA[
+					SELECT RATEIO.IDRATEIODDA, 
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 1 THEN 1 ELSE 0 END) AS AGUARDANDOEFETIVACAO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 2 THEN 1 ELSE 0 END) AS EFETIVADO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 3 THEN 1 ELSE 0 END) AS ERROEFETIVACAO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 4 THEN 1 ELSE 0 END) AS EFETIVADOMANUALMENTE,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 5 THEN 1 ELSE 0 END) AS EFETIVADOCOMAJUSTE
+					FROM DDA.RATEIODDALANCAMENTO AS RATEIODDALANC
+					JOIN DDA.RATEIODDA AS RATEIO ON RATEIO.IDRATEIODDA = RATEIODDALANC.IDRATEIODDA
+					WHERE RATEIO.CODSITUACAORATEIO = 5
+					AND RATEIO.IDRATEIODDA = <bancoob:valor valor="${idRateio}"/>
+					GROUP BY RATEIO.IDRATEIODDA
+			]]>
+	    </command>
+	</query>
+</queries>

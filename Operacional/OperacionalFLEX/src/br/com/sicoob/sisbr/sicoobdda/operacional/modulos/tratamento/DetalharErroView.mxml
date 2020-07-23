@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" 
+			 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			 xmlns="br.com.bancoob.componentes.*"
+			 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+			 xmlns:input="br.com.bancoob.componentes.input.*" 
+			 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*" 
+			 width="950" height="600" >
+	
+	
+	
+	<containers:VBoxBancoob width="100%" height="100%">
+		<titulo:SubtituloView texto="Detalhes da Mensagem" width="100%" />
+		<containers:HBoxBancoob width="100%" height="30">
+			<mx:Canvas width="100%">
+				<Rotulo text="Data do Movimento:" width="100" textAlign="right" />
+				<Rotulo id="rotDataMovimento" x="110" width="100" textAlign="left"/>
+				<Rotulo text="Cod Tipo Mensagem:" x="300" width="110" textAlign="right"/>
+				<Rotulo id="rotCodTipoMensagem" x="420" width="100" textAlign="left"/>
+			</mx:Canvas>
+		</containers:HBoxBancoob>
+		<titulo:SubtituloView texto="Detalhamento do Erro" width="100%" />
+		<containers:HBoxBancoob width="100%" height="98%">
+			<containers:VBoxBancoob width="100%" height="100%">
+				<Rotulo text="XML" fontWeight="bold" fontSize="12" />
+				<mx:Canvas width="100%" height="100%" cornerRadius="10" borderStyle="solid" backgroundColor="#D5E6D2" backgroundAlpha=".7" borderThickness="1">
+					<mx:TextArea x="19" y="15" width="90%" height="95%" backgroundAlpha="0" borderStyle="none" id="txtXmlMensagem" editable="false" selectable="true" verticalScrollBarStyleName="fseVerticalScrollBar"/>	
+				</mx:Canvas>
+			</containers:VBoxBancoob>
+			<containers:VBoxBancoob width="100%" height="100%">
+				<Rotulo text="Descrição do Erro Protocolo" fontWeight="bold" fontSize="12" />
+				<mx:Canvas width="100%" height="100%" cornerRadius="10" borderStyle="solid" backgroundColor="#D5E6D2" backgroundAlpha=".7" borderThickness="1">
+					<mx:TextArea x="19" y="15" width="90%" height="95%" backgroundAlpha="0" borderThickness="0" id="txtDescErroProtocolo" editable="false" selectable="false" verticalScrollBarStyleName="fseVerticalScrollBar"/>	
+				</mx:Canvas>
+			</containers:VBoxBancoob>
+		</containers:HBoxBancoob>	
+		<containers:HBoxBancoob width="100%" horizontalAlign="right">
+			<Botao id="btnExcluir" label="Excluir" />
+			<Botao id="btnFechar" label="Fechar" />
+		</containers:HBoxBancoob>	
+	</containers:VBoxBancoob>
+	
+</BaseModulo>

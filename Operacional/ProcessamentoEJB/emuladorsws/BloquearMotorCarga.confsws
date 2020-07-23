@@ -1,0 +1,1 @@
+{"host":"localhost","porta":"1099","servidor":"JBOSS","jndi":"sicoobdda_processamento/BloquearMotorCargaJobServicoRemote","bolSequencial":false,"paramDinamico":["numCooperativa","3256","INTEIRO"],"valoresParamFluxo":[],"valoresParamJob":[]}

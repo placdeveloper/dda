@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:canvas="br.com.sicoob.sisbr.sicoobdda.comumflex.canvas.*"
+		   xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		   xmlns:indicador="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.arquivos.remessa.indicadores.*">
+	
+	<mx:Canvas id="cvTitulo" width="100%" top="0" left="5" height="19"/>
+	
+	<mx:HBox width="100%" height="100%" top="20" horizontalGap="2">
+		<indicador:IndicadorArquivoRemessa id="indicadores" width="100%" height="100%"/>			
+		<mx:Canvas height="100%">
+			<bancoob:Botao id="btnDetalhar" toolTip="Detalhar" styleName="botaoCrudProcurarPeq" bottom="0" right="0" enabled="false"/>
+		</mx:Canvas>
+	</mx:HBox>
+</mx:Canvas>

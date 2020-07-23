@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="CONTAR_QTD_REGISTROS_FILA_ENVIO_CIP_SQL">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+		<description>Conta a qtd de mensagens na fila de envio da CIP.</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(M.IDMENSAGEMDDA)
+				FROM DDA.MENSAGEMDDA M
+				JOIN DDA.TIPOMENSAGEMDDA T ON M.CODTIPOMENSAGEMDDA = T.CODTIPOMENSAGEMDDA
+				WHERE T.CODCATEGORIAMENSAGEMDDA = 'E'
+				AND M.CODSITUACAOMENSAGEMDDA = 2
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_NUM_AGRUPAMENTO_ENVIO_MSG">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Listar o numPrioridade das Msgs de envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT DISTINCT A.NUMAGRUPAMENTOSTEP
+					FROM DDA.TMPENVIOMENSAGEMDDAAPOIO A
+					WHERE A.BOLMENSAGEMPRIORITARIA = <bancoob:valor valor="${msgPrioritaria}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="EXISTE_ARQUIVO_PARA_PROCESSAMENTO">
+		<use-case name="se existe algum arquivo para processamento"></use-case>
+	    <description>"retorn um registro para indicar se existe algum para processamento</description>
+	    <command>
+			<![CDATA[
+				SELECT LE.IDLOGRECEBIMENTOOARQUIVODDA 
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA AS LE 
+				WHERE 	LE.CODTIPOARQUIVO IN (<bancoob:valor valor="${listaTipoArquivo}"/>) AND 
+						LE.CODSITUACAOPROCESSAMENTOARQUIVO = <bancoob:valor valor="${codSituacaoProcessamentoArquivo}"/> AND 
+						LE.CODTIPOMENSAGEM IN (<bancoob:valor valor="${listaTipoMensagem}"/>)
+				FETCH FIRST 1 ROWS ONLY
+			]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_ARQUIVOS_CIP_PARA_PROCESSAMENTO">
+		<use-case name="Motor de processamento de arquivos recebidos"></use-case>
+	    <description>"retorna os arquivos recebidos da cip correspondente a um determinado status para processamento</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					LE.IDLOGRECEBIMENTOOARQUIVODDA, 
+					LE.CODTIPOARQUIVO,
+					LE.DESCNOMEARQUIVORECEBIDO, 
+					LE.IDLOGENVIOARQUIVODDA,
+					LE.CODTIPOMENSAGEM, 
+					LE.CODSITUACAOPROCESSAMENTOARQUIVO 
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA AS LE 
+				WHERE 	LE.CODTIPOARQUIVO IN (<bancoob:valor valor="${lstTpArqs}"/>) AND 
+						LE.CODSITUACAOPROCESSAMENTOARQUIVO = <bancoob:valor valor="${sitProcArq}"/> AND 
+						LE.CODTIPOMENSAGEM IN (<bancoob:valor valor="${lstTpMsgs}"/>)
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ARQUIVO_SEQUENCIA_PARA_PROCESSAMENTO">
+		<use-case name="LISTAR_ARQUIVO_SEQUENCIA_PARA_PROCESSAMENTO"></use-case>
+	    <description>"LISTAR_ARQUIVO_SEQUENCIA_PARA_PROCESSAMENTO</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					LE.IDLOGRECEBIMENTOOARQUIVODDA, 
+					LE.CODTIPOARQUIVO,
+					LE.DESCNOMEARQUIVORECEBIDO, 
+					LE.IDLOGENVIOARQUIVODDA,
+					LE.CODTIPOMENSAGEM, 
+					LE.CODSITUACAOPROCESSAMENTOARQUIVO,
+					 CAST (SUBSTRING(LE.DESCNOMEARQUIVORECEBIDO, 27,5,CODEUNITS16) as INT) AS SEQUENCIA 
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA AS LE 
+				WHERE 	LE.CODTIPOARQUIVO IN (<bancoob:valor valor="${listaTipoArquivo}"/>) AND 
+						LE.CODSITUACAOPROCESSAMENTOARQUIVO = <bancoob:valor valor="${codSituacaoProcessamentoArquivo}"/> AND 
+						LE.CODTIPOMENSAGEM IN (<bancoob:valor valor="${listaTipoMensagem}"/>)
+				ORDER BY LE.DATAMOVIMENTO, SEQUENCIA
+				FETCH FIRST ${qtdMaximaRegistros} ROWS ONLY
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ID_LOG_ENVIO_ARQUIVO_GERAR_ARQUIVO">
+		<use-case name="Listar log envio ArquivoDDA"></use-case>
+	    <description>"Listar log envio ArquivoDDA</description>
+	    <command>
+			<![CDATA[
+		         	SELECT 
+		         		LOG.IDLOGENVIOARQUIVODDA
+					FROM DDA.LOGENVIOARQUIVODDA LOG
+					WHERE LOG.DATAHORAARQUIVO IS NULL
+						AND LOG.DATAHORAENVIO IS NULL
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ID_LOG_ENVIO_ARQUIVO_POSTAR_ARQUIVO">
+		<use-case name="Listar log envio ArquivoDDA"></use-case>
+	    <description>"Listar log envio ArquivoDDA</description>
+	    <command>
+			<![CDATA[
+					SELECT 
+		         		LOG.IDLOGENVIOARQUIVODDA
+					FROM DDA.LOGENVIOARQUIVODDA LOG
+					WHERE LOG.DATAHORAARQUIVO IS NOT NULL
+						AND LOG.DATAHORAENVIO IS NULL
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ID_LOG_ENVIO_ARQUIVO_TRATAMENTO">
+		<use-case name="Listar envio do arquivo"></use-case>
+	    <description>"Listar envio do arquivo para o tratamento</description>
+	    <command>
+			<![CDATA[
+	         	SELECT 
+	         		LOG.IDLOGENVIOARQUIVODDA
+				FROM DDA.LOGENVIOARQUIVODDA LOG
+				WHERE LOG.DATAHORAARQUIVO IS NULL
+					OR LOG.DATAHORAENVIO IS NULL
+			]]>
+	    </command>
+	</query>  
+	
+	<query name="OBTER_ARQUIVOS_CIP_PARA_CONCILIACAO_TOTAL_REGISTROS">
+		<use-case name="Motor de processamento de arquivos recebidos"></use-case>
+	    <description>"retorna os arquivos recebidos da cip correspondente a um determinado status para processamento</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					LE.IDLOGRECEBIMENTOOARQUIVODDA, 
+					LE.CODTIPOARQUIVO,
+					LE.DESCNOMEARQUIVORECEBIDO, 
+					LE.IDLOGENVIOARQUIVODDA,
+					LE.CODTIPOMENSAGEM, 
+					LE.CODSITUACAOPROCESSAMENTOARQUIVO 
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA AS LE 
+				WHERE	LE.CODSITUACAOPROCESSAMENTOARQUIVO = 2 AND 
+				 	    LE.CODTIPOARQUIVO IN (<bancoob:valor valor="${lstTpArqs}"/>) AND 
+						LE.CODTIPOMENSAGEM IN (<bancoob:valor valor="${lstTpMsgs}"/>) AND 
+						LE.QTDREGISTROARQUIVO = ( SELECT COUNT(*) 
+	                       	                          FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA as LD 
+	                       	                          WHERE LD.IDLOGRECEBIMENTOOARQUIVODDA = LE.IDLOGRECEBIMENTOOARQUIVODDA )
+			]]>
+	    </command>
+	</query>
+	
+	<query name="MONTA_STEPS_PARA_PROCESSAMENTO_ARQUIVOS_DIS">
+		<use-case name="MONTA OS PARÂMETROS PARA OS STEPS DE PROCESSAMENTO DOS ARQUIVOS TIPO DIS"></use-case>
+	    <description>"RETORNA OS PARÂMETROS PARA PROCESSAMENTO DOS STEPS PARA OS ARQUIVO DE DISTRIBUIÇÃO</description>
+	    <command>
+				<![CDATA[
+					SELECT VIW.IDLOGRECEBIMENTOOARQUIVODDA,
+					       INT((VIW.NUMLINHA -1) / P.VALORBASEPARAMETRO) NUMPAGINA,
+					       MIN(VIW.#TAG#) #TAG#_INI,
+					       MAX(VIW.#TAG#) #TAG#_FIM,
+					       COUNT(VIW.#TAG#) QTD
+					FROM (SELECT L.IDLOGRECEBIMENTOOARQUIVODDA,
+					             X.#TAG#,
+					             ROWNUMBER() OVER(PARTITION BY L.IDLOGRECEBIMENTOOARQUIVODDA ORDER BY X.#TAG#) AS NUMLINHA
+					      FROM dda.LOGDETRECEBIMENTOOARQUIVODDA L,  
+					           XMLTABLE ('#GRUPO#' passing DESCXMLMENSAGEMRECEBIDA as "d" 
+					                     COLUMNS  
+					                        #TAG#    varchar(20)    PATH '#TAG#') AS "X"
+					      WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/> AND L.BOLPROCESSADO = 0
+					      GROUP BY L.IDLOGRECEBIMENTOOARQUIVODDA,
+					               X.#TAG#
+					      ORDER BY X.#TAG#) VIW,
+					      DDA.PARAMETRO P
+					WHERE P.IDPARAMETRO = 38
+					GROUP BY VIW.IDLOGRECEBIMENTOOARQUIVODDA,
+					         INT((VIW.NUMLINHA -1) / P.VALORBASEPARAMETRO)
+				]]>
+	    </command>
+	</query>
+	
+	<query name="MONTA_STEPS_PARA_PROCESSAMENTO_ARQUIVOS_RET">
+		<use-case name="MONTA OS PARÂMETROS PARA OS STEPS DE PROCESSAMENTO DOS ARQUIVOS TIPO RET"></use-case>
+	    <description>"RETORNA OS PARÂMETROS PARA PROCESSAMENTO DOS STEPS PARA OS ARQUIVO DE RETORNO</description>
+	    <command>
+				<![CDATA[
+					SELECT DET.IDLOGRECEBIMENTOOARQUIVODDA,
+						INT((DET.NUMLINHA - 1) / P.VALORBASEPARAMETRO ) NUMPAGINA,
+						MIN(DET.IDLOGDETRECEBIMENTOOARQUIVODDA) IDLOGDETRECEBIMENTOOARQUIVODDA_INI,
+						MAX(DET.IDLOGDETRECEBIMENTOOARQUIVODDA) IDLOGDETRECEBIMENTOOARQUIVODDA_FIM,
+						COUNT(DET.IDLOGDETRECEBIMENTOOARQUIVODDA) QTD
+					FROM( 
+        				SELECT  L.IDLOGRECEBIMENTOOARQUIVODDA, 
+                			L.IDLOGDETRECEBIMENTOOARQUIVODDA ,
+                			ROWNUMBER() OVER(PARTITION BY L.IDLOGRECEBIMENTOOARQUIVODDA ORDER BY L.IDLOGDETRECEBIMENTOOARQUIVODDA) AS NUMLINHA
+        				FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA  L
+        				WHERE   L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/> AND 
+                				L.BOLPROCESSADO = 0
+        				ORDER BY L.IDLOGDETRECEBIMENTOOARQUIVODDA)  DET,
+                 		DDA.PARAMETRO P
+        			WHERE P.IDPARAMETRO = 38 
+        			GROUP BY DET.IDLOGRECEBIMENTOOARQUIVODDA, INT((DET.NUMLINHA - 1) / P.VALORBASEPARAMETRO )
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_PARAMETROS_STEPS_PROCESSAMENTO_ARQ">
+		<use-case name="Motor de Recebimento de Arquivos"></use-case>
+	    <description>"Listar os parametros para os steps de arquivos de inventários."</description>
+	    <command>
+				<![CDATA[
+                   SELECT IDLOGRECEBIMENTOOARQUIVODDA,
+					       CODTIPOMENSAGEM,
+					       MIN(IDLOGDETRECEBIMENTOOARQUIVODDA) IDLOGDETRECEBIMENTOOARQUIVODDA_INI,
+					       MAX(IDLOGDETRECEBIMENTOOARQUIVODDA) IDLOGDETRECEBIMENTOOARQUIVODDA_FIM
+					FROM (SELECT A.CODTIPOMENSAGEM,
+					               B.IDLOGRECEBIMENTOOARQUIVODDA,
+					               B.IDLOGDETRECEBIMENTOOARQUIVODDA,
+					               ROWNUMBER() OVER(PARTITION BY B.IDLOGRECEBIMENTOOARQUIVODDA ORDER BY B.IDLOGRECEBIMENTOOARQUIVODDA, B.IDLOGDETRECEBIMENTOOARQUIVODDA)-1 NUMLINHA
+					        FROM DDA.LOGRECEBIMENTOOARQUIVODDA A INNER JOIN DDA.LOGDETRECEBIMENTOOARQUIVODDA B
+					                                                 ON B.IDLOGRECEBIMENTOOARQUIVODDA = A.IDLOGRECEBIMENTOOARQUIVODDA
+					        WHERE B.IDLOGRECEBIMENTOOARQUIVODDA IN (<bancoob:valor valor="${listaIdLogArquivo}"/>)
+					                AND B.BOLPROCESSADO = 0)
+					GROUP BY CODTIPOMENSAGEM,
+					         IDLOGRECEBIMENTOOARQUIVODDA,
+					         (NUMLINHA / <bancoob:valor valor="${qtdRegistrosStep}"/>)
+					ORDER BY 1,2,3
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_ID_ARQUIVO_PROCESSAMENTO">
+		<use-case name="LISTAR_ID_ARQUIVO_PROCESSAMENTO"></use-case>
+	    <description>"LISTAR_ID_ARQUIVO_PROCESSAMENTO</description>
+	    <command>
+			<![CDATA[
+				SELECT  
+					LG.IDLOGRECEBIMENTOOARQUIVODDA, 
+					CAST (SUBSTRING(LG.DESCNOMEARQUIVORECEBIDO, 27,5,CODEUNITS16) as INT) AS SEQUENCIA
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA LG
+				WHERE LG.CODTIPOARQUIVO IN (<bancoob:valor valor="${listaTipoArquivo}"/>) 
+					AND	LG.CODTIPOMENSAGEM IN (<bancoob:valor valor="${listaTipoMensagem}"/>) 
+				<j:if test="${codSituacaoProcessamentoArquivo == 3}">
+					AND	LG.CODSITUACAOPROCESSAMENTOARQUIVO = 3
+				</j:if>
+				<j:if test="${codSituacaoProcessamentoArquivo == 4}">
+					AND	LG.CODSITUACAOPROCESSAMENTOARQUIVO = 4
+					AND NOT EXISTS ( SELECT 1
+					                 FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA LD
+					                 WHERE LD.IDLOGRECEBIMENTOOARQUIVODDA = LG.IDLOGRECEBIMENTOOARQUIVODDA
+					                 AND LD.BOLPROCESSADO = 0 )
+				</j:if>
+				ORDER BY LG.DATAMOVIMENTO,SEQUENCIA
+				FETCH FIRST ${qtdMaximaRegistros} ROWS ONLY
+			]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_TOTAL_DE_REGISTROS_DO_ARQUIVO_RECEBIDO">
+		<use-case name="Atualiza a quantidade total de registro extraído do arquivo"></use-case>
+		<description>Atualiza a quantidade total de registro extraído do arquivo.</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.LOGRECEBIMENTOOARQUIVODDA AS LR
+				   SET LR.QTDREGISTROARQUIVO = <bancoob:valor valor="${qtdTotalRegistro}"/>
+				 WHERE LR.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idArquivo}"/>
+			]]>
+		</command>
+	</query>
+	
+	<query name="COUNT_STEPS_ATUALIZAR_SIT_BOLETO">
+		<use-case name="COUNT_STEPS_ATUALIZAR_SIT_BOLETO"></use-case>
+		<description>COUNT_STEPS_ATUALIZAR_SIT_BOLETO</description>
+		<command>
+			<![CDATA[
+				SELECT (COUNT(1)/1000) + 1 qtd
+					FROM DDA.VIW_BOLETODDASITUACAO VB INNER JOIN DDA.BOLETODDA B
+					                                     ON B.IDBOLETODDA = VB.IDBOLETODDA
+					WHERE COALESCE(B.CODSITUACAOBOLETO,-1) != VB.CODSITUACAOBOLETO
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_PARAMETROS_STEP_CONTINGENCIA_MSG">
+		<use-case name="LISTAR_PARAMETROS_STEP_CONTINGENCIA_MSG"></use-case>
+	    <description>LISTAR_PARAMETROS_STEP_CONTINGENCIA_MSG</description>
+	    <command>
+			<![CDATA[
+				SELECT DATAMOVIMENTO,
+				       CODTIPOMENSAGEMDDA,
+				       MIN(IDMENSAGEMDDA) IDMENSAGEMDDA_INI,
+				       MAX(IDMENSAGEMDDA) IDMENSAGEMDDA_FIM,
+				       COUNT(1) QTD 
+				FROM
+				(SELECT C.CODTIPOMENSAGEMDDA,
+				        C.DATAMOVIMENTO,
+				        C.IDMENSAGEMDDA,
+				        ROWNUMBER() OVER (PARTITION BY C.CODTIPOMENSAGEMDDA, C.DATAMOVIMENTO ORDER BY C.CODTIPOMENSAGEMDDA, C.IDMENSAGEMDDA) -1 AS LINHA
+				 FROM DDA.VIW_CONTINGENCIA C)
+				GROUP BY DATAMOVIMENTO,
+				         CODTIPOMENSAGEMDDA
+				ORDER BY 1,2,3
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_COOPERATIVAS_LANCAMENTO_RATEIO_CCO">
+		<use-case name="LISTAR_COOPERATIVAS_LANCAMENTO_RATEIO_CCO"></use-case>
+	    <description>Obtém as cooperativas que contêm lançamentos de rateio a serem efetivados no CCO</description>
+	    <command>
+			<![CDATA[
+				SELECT DISTINCT 
+						RATEIO.IDRATEIODDA, 
+						RATEIODDALANC.IDINSTITUICAO, 
+						CASE 
+							WHEN VIW_INST.IDINSTITUICAO IN (1, 2) THEN 1
+							ELSE VIW_INST.NUMCOOPERATIVA
+						END AS NUMCOOPERATIVA
+					FROM DDA.RATEIODDALANCAMENTO AS RATEIODDALANC
+				JOIN DDA.RATEIODDA AS RATEIO ON RATEIO.IDRATEIODDA = RATEIODDALANC.IDRATEIODDA
+				JOIN SCI.VIW_INSTITUICAO AS VIW_INST ON VIW_INST.IDINSTITUICAO = RATEIODDALANC.IDINSTITUICAO
+					WHERE VIW_INST.NUMPAC = 0
+						AND VIW_INST.CODTIPOUNIDADE = 1
+						AND RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 1
+						AND RATEIO.CODSITUACAORATEIO = 3
+			]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_RATEIOS_CREDITO_ATUALIZACAO_CCO">
+		<use-case name="LISTAR_RATEIOS_CREDITO_ATUALIZACAO_CCO"></use-case>
+	    <description>Obtém os rateios de crédito em processamento para atualização no CCO</description>
+	    <command>
+			<![CDATA[
+					SELECT RATEIO.IDRATEIODDA, 
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 1 THEN 1 ELSE 0 END) AS AGUARDANDOEFETIVACAO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 2 THEN 1 ELSE 0 END) AS EFETIVADO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 3 THEN 1 ELSE 0 END) AS ERROEFETIVACAO,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 4 THEN 1 ELSE 0 END) AS EFETIVADOMANUALMENTE,
+				        SUM(CASE WHEN RATEIODDALANC.CODSITUACAORATEIOLANCAMENTO = 5 THEN 1 ELSE 0 END) AS EFETIVADOCOMAJUSTE
+					FROM DDA.RATEIODDALANCAMENTO AS RATEIODDALANC
+					JOIN DDA.RATEIODDA AS RATEIO ON RATEIO.IDRATEIODDA = RATEIODDALANC.IDRATEIODDA
+					WHERE RATEIO.CODSITUACAORATEIO = 3
+					GROUP BY RATEIO.IDRATEIODDA
+			]]>
+	    </command>
+	</query>
+</queries>

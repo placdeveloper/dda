@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>br.com.sicoob.sdda</groupId>
+		<artifactId>sdda-integracao</artifactId>
+		<version>2.3.9.4-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sdda-integracao-interna-ejb</artifactId>
+	<name>SDDA - IntegracaoInternaEJB</name>
+	<packaging>ejb</packaging>
+
+	<scm>
+		<connection>scm:svn:http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Integracao/IntegracaoInternaEJB</connection>
+		<developerConnection>scm:svn:http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Integracao/IntegracaoInternaEJB</developerConnection>
+		<url>http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Integracao/IntegracaoInternaEJB</url>
+	</scm>
+
+	<dependencies>
+		<!-- Sicoob DDA -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sdda-entidades</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sdda-comum-ejb</artifactId>
+		</dependency>
+		<!-- Sicoob DDA -->
+
+		<!-- Sicoob APIs -->
+		<dependency>
+			<groupId>br.com.sicoob.sci</groupId>
+			<artifactId>sci-cadastro-instituicao-integracao-ejb</artifactId>
+			<classifier>client</classifier>
+		</dependency>
+		
+		<dependency>
+			<groupId>br.com.sicoob.sspb</groupId>
+			<artifactId>sspb-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>br.com.sicoob.adm</groupId>
+			<artifactId>adm-api-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>br.com.sicoob.cco</groupId>
+			<artifactId>cco-aberturacontacorrente-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.cco</groupId>
+			<artifactId>cco-movimentacao-api</artifactId>
+		</dependency>		
+		<!-- Sicoob APIs -->
+
+		<!-- Sicoob -->
+		<dependency>
+			<groupId>br.com.sicoob.framework</groupId>
+			<artifactId>sicoob-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework</groupId>
+			<artifactId>sicoob-jaas</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework</groupId>
+			<artifactId>sicoob-was9</artifactId>
+		</dependency>
+		<!-- Sicoob -->
+
+		<!-- Externo -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml</groupId>
+			<artifactId>rpc</artifactId>
+		</dependency>
+		<!-- Externo -->
+
+		<!-- Teste Unitário -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-reflect</artifactId>
+		</dependency>
+	</dependencies>
+</project>

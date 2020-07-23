@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas  xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:bancoob="br.com.bancoob.componentes.*"
+			width="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.IToolTip;
+			import mx.events.ToolTipEvent;
+			
+			[Bindable]
+			protected var _titulo:String;
+			
+			[Bindable]
+			protected var _atualizacao:String;
+			
+			[Bindable]
+			protected var _toolTipCustom:IToolTip;
+			
+			protected function createCustomTip(event:ToolTipEvent):void {
+				event.toolTip = _toolTipCustom;
+			}
+		]]>
+	</mx:Script>
+	<mx:HBox left="5" top="2">
+		<bancoob:Rotulo text="{_titulo}" fontSize="12" fontWeight="bold" />
+		<bancoob:Botao id="btnInformacao" toolTipCreate="createCustomTip(event)" toolTip="teste" styleName="botaoCrudInfoPeq" />
+		<mx:Canvas width="100%" height="100%">
+			<bancoob:Rotulo text="{_atualizacao}" id="txtAtualizacao" fontSize="10" verticalCenter="0"/>
+		</mx:Canvas>
+	</mx:HBox>
+</mx:Canvas>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="540" height="250"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  >
+		<mx:Style>
+		.alinhaTexto {
+			textAlign:center;
+		}
+		.tituloGrid{
+			textAlign:left;
+			fontSize: 25;
+			fontWeight:bold;
+		}
+		
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.vo.CategoriaMensagemDDAVO;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoGradeHorariaVO;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoMensagemDDAVO;
+			public static function labelComboTipoGradeHoraria(obj:Object, obj2:Object = null):String{
+					var tipoGradeHoraria:TipoGradeHorariaVO = obj as TipoGradeHorariaVO;
+					if(tipoGradeHoraria!=null){
+						return tipoGradeHoraria.codTipoGradeHoraria + " - " + tipoGradeHoraria.descTipoGradeHoraria ;
+					}else{
+						return "";
+					}
+					
+			}
+			
+			public static function labelComboArquivoCorrespondente(obj:Object, obj2:Object = null):String{
+				var tipoMensagem:TipoMensagemDDAVO = obj as TipoMensagemDDAVO;
+				if(tipoMensagem!=null){
+					return tipoMensagem.codTipoMensagem + " - " + tipoMensagem.descTipoMensagem ;
+				}else{
+					return "";
+				}
+				
+			}
+			
+			public static function labelComboCategoria(obj:Object, obj2:Object = null):String{
+				var categoriaMensagem:CategoriaMensagemDDAVO = obj as CategoriaMensagemDDAVO;
+				if(categoriaMensagem!=null){
+					return categoriaMensagem.codCategoriaMensagemDda + " - " + categoriaMensagem.descCategoriaMensagemDda;
+				}else{
+					return "";
+				}
+			}
+		]]>
+	</mx:Script>
+	<containers:VBoxBancoob width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<titulo:SubtituloView id="tituloTipoMensagem" texto="Informações Tipos de Mensagem" left="0" width="100%" top="0"/>
+			<containers:VBoxBancoob width="100%">
+				<containers:HBoxBancoob width="100%">
+					<Rotulo text="Cód. Mensagem: " width="125" textAlign="right"/>
+					<input:Texto id="codTipoMensagem" width="400" maxChars="10" validarObrigatorio="true" restrict="a-z0-9"/>
+				</containers:HBoxBancoob>
+				
+				<containers:HBoxBancoob width="100%">
+					<Rotulo text="Desc. Tipo Mensagem: " width="125" textAlign="right"/>
+					<input:Texto id="descTipoMensagem" width="400" maxChars="100" validarObrigatorio="true" somenteMaiusculas="false"/>
+				</containers:HBoxBancoob>
+				
+				<containers:HBoxBancoob width="100%" verticalAlign="middle">
+					<Rotulo text="Cód. Tipo Grade:" width="125" textAlign="right" />
+					<input:Combo id="cmbTipoGradeHoraria"  labelFunction="{labelComboTipoGradeHoraria}" dropdownWidth="600" labelField="codTipoGradeHoraria" width="400"  inserirItemOpcional="true"/>
+				</containers:HBoxBancoob>
+				
+				<containers:HBoxBancoob width="100%" verticalAlign="middle">
+					<Rotulo text="Prioridade:" width="125" textAlign="right" />
+					<input:Texto id="numPrioridadeEnvio" width="50" maxChars="3" restrict="0-9"  validarObrigatorio="true"/>
+					
+					<Rotulo text="Categoria:" width="125" textAlign="right" />
+					<input:Combo id="cmbCategoria"  labelField="codCategoriaMensagemDDA"  labelFunction="{labelComboCategoria}" dropdownWidth="175" width="210" inserirItemOpcional="true" validarObrigatorio="true"/>
+				</containers:HBoxBancoob>
+				
+				<containers:HBoxBancoob width="100%" verticalAlign="middle">
+					<Rotulo text="Arquivo Correspondente:" width="125" textAlign="right" />
+					<input:Combo id="cmbArquivoCorrespondente"  labelField="tipoMensagemDto.tipoArquivoCorrespondente.codTipoMensagem"  labelFunction="{labelComboArquivoCorrespondente}" width="400" dropdownWidth="600" inserirItemOpcional="true" />
+				</containers:HBoxBancoob>
+	
+				<containers:HBoxBancoob width="100%" height="5%" verticalScrollPolicy="off" horizontalGap="-1" paddingLeft="30" >
+					<Rotulo text="Exige Retorno:" textAlign="right" x="50"/>
+					
+					<containers:HBoxBancoob width="100%" verticalAlign="middle" horizontalAlign="left" paddingLeft="15">
+						<input:RadioGrupoBancoob id="grpExigeRetorno"  />
+						<input:Radio id="optSim" label="Sim" groupName="grpExigeRetorno" width="50" value="true" />
+						<input:Radio id="optNao" label="Não" groupName="grpExigeRetorno" width="50" value="false"/>
+					</containers:HBoxBancoob>
+				</containers:HBoxBancoob>
+
+				<containers:HBoxBancoob width="100%" paddingLeft="275" paddingTop="15">
+					<bancoob:Botao label="Ok" id="btConfirmar" verticalCenter="0"  />
+					<bancoob:Botao label="Limpar" id="btLimpar" verticalCenter="0"  />
+					<bancoob:Botao label="Fechar" id="btFechar" verticalCenter="0"  />
+				</containers:HBoxBancoob>			
+			</containers:VBoxBancoob>		
+
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView >

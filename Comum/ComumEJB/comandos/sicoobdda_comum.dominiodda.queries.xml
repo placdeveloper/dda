@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+<queries>
+	<query name="LISTAR_AUTORIZACAO_VALOR_DIVERGENTE">
+		<use-case name="LISTAR_AUTORIZACAO_VALOR_DIVERGENTE"></use-case>
+		<description>LISTAR_AUTORIZACAO_VALOR_DIVERGENTE</description>
+		<command>
+			<![CDATA[
+				FROM AutorizacaoValorDivergente
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_SITUACAO_BOLETO_PAGAMENTO">
+		<use-case name="LISTAR_SITUACAO_BOLETO_PAGAMENTO"></use-case>
+		<description>LISTAR_SITUACAO_BOLETO_PAGAMENTO</description>
+		<command>
+			<![CDATA[
+				FROM SituacaoBoletoPagamento
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_GRADE_HORARIA_REFERENCIA">
+		<use-case name="OBTER_GRADE_HORARIA_REFERENCIA"></use-case>
+		<description>OBTER_GRADE_HORARIA_REFERENCIA</description>
+		<command>
+			<![CDATA[
+				SELECT 
+					G.IDGRADEHORARIA, 
+					G.CODTIPOGRADEHORARIA,
+					G.DATAREFERENCIA,
+					G.DATAHORAABERTURA,
+					G.DATAHORAFECHAMENTO
+				FROM DDA.TIPOMENSAGEMDDA T, DDA.GRADEHORARIA G
+				WHERE T.CODTIPOGRADEHORARIA = G.CODTIPOGRADEHORARIA 
+				  AND T.CODTIPOMENSAGEMDDA =  <bancoob:valor valor="${codTipoMensagem}"/>
+				  AND CURRENT_TIMESTAMP BETWEEN G.DATAHORAABERTURA AND G.DATAHORAFECHAMENTO
+				ORDER BY G.DATAREFERENCIA DESC
+				FETCH FIRST 1 ROW ONLY
+			]]>
+		</command>
+	</query>
+</queries>

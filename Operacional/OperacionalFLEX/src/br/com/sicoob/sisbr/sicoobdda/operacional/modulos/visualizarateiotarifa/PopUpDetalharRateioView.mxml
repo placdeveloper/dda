@@ -1,0 +1,27 @@
+<bancoob:Modulo  xmlns:mx="http://www.adobe.com/2006/mxml" width="1000" height="465" 
+				 xmlns="br.com.bancoob.componentes.*"
+				 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+				 xmlns:bancoob="br.com.bancoob.componentes.*"
+				 xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+				 xmlns:abaDadosRateio="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.visualizarateiotarifa.abas.rateio.*"
+				 xmlns:abaLancamento="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.visualizarateiotarifa.abas.lancamento.*"
+				 xmlns:containers="br.com.bancoob.componentes.containers.*">
+	
+		<mx:Style>
+		.alerta{
+			backgroundColor: #F00;
+		}
+		
+	</mx:Style>
+	<containers:VBoxBancoob width="100%" height="100%">	
+		<titulo:SubtituloView texto="Detalhe de Rateio" width="100%" />
+		<navegacao:Tab id="tabDetalharRateio" x="0" backgroundAlpha="0" borderThickness="2" styleName="fonteVerticalTab"  paddingTop="0" width="100%" height="100%" focusEnabled="false">
+			<abaDadosRateio:AbaDadosRateio id="abaRateio" label="Dados Rateio" focusEnabled="false" width="100%" height="100%"/>
+			<abaLancamento:AbaLancamento id="abaLancamento" label="Lançamentos" focusEnabled="false" width="100%" height="100%"/>
+		</navegacao:Tab>
+		<containers:HBoxBancoob width="100%" horizontalAlign="right">
+			<Botao id="btnImprimirAba" toolTip="Imprimir" enabled="false" label="Imprimir"/>
+			<Botao label="Fechar" id="btnFechar" />
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>	
+</bancoob:Modulo>

@@ -1,0 +1,1 @@
+{"host":"localhost","porta":"1099","servidor":"JBOSS","jndi":"sicoobdda_processamento/AtualizarArquivosProcessadosCIPJobServicoRemote","bolSequencial":false,"paramDinamico":["","","TEXTO"],"valoresParamFluxo":[],"valoresParamJob":[]}

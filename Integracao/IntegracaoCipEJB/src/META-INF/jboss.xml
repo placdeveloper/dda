@@ -1,0 +1,378 @@
+<?xml version="1.0"?>
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>MensagemAlterarCadastroBeneficiarioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarCadastroBeneficiarioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarCadastroBeneficiarioServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemAlterarSituacaoBeneficiarioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarSituacaoBeneficiarioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarSituacaoBeneficiarioServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemCadastrarBeneficiarioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemCadastrarBeneficiarioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemCadastrarBeneficiarioServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemConsultaBeneficiarioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaBeneficiarioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaBeneficiarioServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemExcluirRelacionamentoBeneficiarioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemExcluirRelacionamentoBeneficiarioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemExcluirRelacionamentoBeneficiarioServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ProcessarRetornoDDAServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarRetornoDDAServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarRetornoDDAServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemGEN0014ServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemGEN0014Servico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemGEN0014ServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ArquivoTestaConectividadeArquivosServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoTestaConectividadeArquivosServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoTestaConectividadeArquivosServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ReplicarBeneficiarioLegadoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ReplicarBeneficiarioLegadoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ReplicarBeneficiarioLegadoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ProcessarEnvioMensagensServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarEnvioMensagensServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarEnvioMensagensServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ProcessarEnvioMensagensDetalheServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarEnvioMensagensDetalheServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarEnvioMensagensDetalheServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ProcessarCargaMensagensServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarCargaMensagensServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarCargaMensagensServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemInclusaoPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemInclusaoPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemInclusaoPagadorServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemConsultaPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaPagadorServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemAlterarPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarPagadorServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemExcluirPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemExcluirPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemExcluirPagadorServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemInclusaoBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemInclusaoBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemInclusaoBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemAlterarBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemAlterarAceiteBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarAceiteBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarAceiteBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemConsultaBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemBaixaOperacionalBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemBaixaOperacionalBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemBaixaOperacionalBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemConsultarPagamentoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultarPagamentoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultarPagamentoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemCancelamentoBaixaOperacionalServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemCancelamentoBaixaOperacionalServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemCancelamentoBaixaOperacionalServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemBaixaEfetivaBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemBaixaEfetivaBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemBaixaEfetivaBoletoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemInclusaoTerceiroAutorizadoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemInclusaoTerceiroAutorizadoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemInclusaoTerceiroAutorizadoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemExcluirTerceiroAutorizadoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemExcluirTerceiroAutorizadoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemExcluirTerceiroAutorizadoServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>MensagemConsultarHorariosDDAServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultarHorariosDDAServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultarHorariosDDAServicoRemote</jndi-name>
+    	</session>
+
+    	<session>
+			<ejb-name>MensagemAlterarHorariosDDAServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAlterarHorariosDDAServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAlterarHorariosDDAServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ProcessarEnvioArquivoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarEnvioArquivoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarEnvioArquivoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemCadastrarReenvioServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemCadastrarReenvioServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemCadastrarReenvioServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoInclusaoPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoInclusaoPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoInclusaoPagadorServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoAlteracaoPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoAlteracaoPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoAlteracaoPagadorServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoExclusaoPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoExclusaoPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoExclusaoPagadorServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoInclusaoBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoInclusaoBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoInclusaoBoletoServicoRemote</jndi-name>
+    	</session>
+    	
+    	
+    <!-- Serviços envolvidos no processo de recepção e processamento de arquivos da CIP  -->    	
+    	
+    	<session>    
+			<ejb-name>ArquivoRecebidoCIPProcessadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoRecebidoCIPProcessadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoRecebidoCIPProcessadorServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoRecebidoCIPEfetivaOperacaoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracao/ArquivoRecebidoCIPEfetivaOperacaoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracao/ArquivoRecebidoCIPEfetivaOperacaoServicoRemote</jndi-name>
+    	</session>
+    	
+    <!-- Fim  -->	
+    	
+    	
+    	
+    	
+    	<session>
+			<ejb-name>ArquivoAlteracaoBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoAlteracaoBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoAlteracaoBoletoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoBaixaOperacionalContingenciaServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoBaixaOperacionalContingenciaServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoBaixaOperacionalContingenciaServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoDecursoPrazoBaixaOperacionalServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoDecursoPrazoBaixaOperacionalServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoDecursoPrazoBaixaOperacionalServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoBaixaEfetivaBoletoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoBaixaEfetivaBoletoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoBaixaEfetivaBoletoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoBaixaEfetivaDecursoPrazoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoBaixaEfetivaDecursoPrazoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoBaixaEfetivaDecursoPrazoServicoRemote</jndi-name>
+    	</session>
+
+    	<session>
+			<ejb-name>MensagemDDAInclusaoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemDDAInclusaoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemDDAInclusaoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemConsultaBoletoPagamentoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaBoletoPagamentoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaBoletoPagamentoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemAvisaArquivoDisponivelServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAvisaArquivoDisponivelServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAvisaArquivoDisponivelServicoRemote</jndi-name>
+    	</session>
+    	
+    	
+    	
+    	<session>
+			<ejb-name>MensagemAberturaGradeHorariaServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemAberturaGradeHorariaServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemAberturaGradeHorariaServicoRemote</jndi-name>
+    	</session>
+
+    	<session>
+			<ejb-name>MensagemFechamentoGradeHorariaServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemFechamentoGradeHorariaServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemFechamentoGradeHorariaServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoManutencaoPagadorServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoManutencaoPagadorServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoManutencaoPagadorServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemConsultaEventoTarifavelServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaEventoTarifavelServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaEventoTarifavelServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemRequisicaoArquivoMensagemServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemRequisicaoArquivoMensagemServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemRequisicaoArquivoMensagemServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemConsultaExtratoProcessamentoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemConsultaExtratoProcessamentoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemConsultaExtratoProcessamentoServicoRemote</jndi-name>
+    	</session>
+
+    	<session>
+			<ejb-name>MensagemBoletoPagamentoAbertoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemBoletoPagamentoAbertoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemBoletoPagamentoAbertoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemDecursoBaixaOperacionalServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemDecursoBaixaOperacionalServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemDecursoBaixaOperacionalServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ReplicarPagadorEletronicoLegadoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ReplicarPagadorEletronicoLegadoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ReplicarPagadorEletronicoLegadoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemDDAServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemDDAServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemDDAServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemSerie0200ServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemSerie0200Servico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemSerie0200ServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemDDA0401ServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemDDA0401Servico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemDDA0401ServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoConsultaBoletoPagamentoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoConsultaBoletoPagamentoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoConsultaBoletoPagamentoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ProcessarContingenciaMensagemServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ProcessarContingenciaMensagemServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ProcessarContingenciaMensagemServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemParticipanteRequisitaArquivoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemParticipanteRequisitaArquivoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemParticipanteRequisitaArquivoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoExclusaoTerceiroAutorizadoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoExclusaoTerceiroAutorizadoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoExclusaoTerceiroAutorizadoServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>MensagemDDAAGEN001ServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/MensagemDDAAGEN001Servico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/MensagemDDAAGEN001ServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoTestaConectividadeServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoTestaConectividadeServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoTestaConectividadeServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ArquivoBaixaOperacionalServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoBaixaOperacionalServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoBaixaOperacionalServicoRemote</jndi-name>
+    	</session>
+    	
+    	<session>
+			<ejb-name>ConsultaBoletoPagamentoCIPServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ConsultaBoletoPagamentoCIPServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ConsultaBoletoPagamentoCIPServicoRemote</jndi-name>
+		</session>
+    	
+    	<session>
+			<ejb-name>ArquivoBoletoPagamentoAbertoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaocip/ArquivoBoletoPagamentoAbertoServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaocip/ArquivoBoletoPagamentoAbertoServicoRemote</jndi-name>
+		</session>
+	</enterprise-beans>
+</jboss>

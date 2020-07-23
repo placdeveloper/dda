@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" horizontalGap="2"
+		 xmlns:canvas="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.canvas.*">
+	
+	<canvas:CanvasIndicador id="cvArqDisponiveis" labelRotulo="DISPONÍVEIS" width="100%" height="100%"/>
+	<canvas:CanvasIndicador id="cvGEN0015SemArq" labelRotulo="GEN0015 SEM ARQUIVO" width="100%" height="100%"/>
+	<canvas:CanvasIndicador id="cvArqSemGEN0015" labelRotulo="ARQUIVOS SEM GEN0015" width="100%" height="100%"/>
+	<canvas:CanvasIndicador id="cvArqEmProcessamento" labelRotulo="ARQUIVOS EM PROCESSAMENTO" width="100%" height="100%"/>
+	
+</mx:HBox>

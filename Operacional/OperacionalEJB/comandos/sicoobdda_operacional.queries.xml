@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="OBTER_SITUCAO_BENEFICIARIO_DDA">
+		<use-case name="Cadatrar Cedente"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numCpfCnpj.</description>
+		<command>
+				<![CDATA[
+					SELECT b.situacaoBeneficiarioDDA
+					FROM 
+						BeneficiarioDDA b
+					WHERE 
+						b.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="BENEFICIARIO_ESTA_NA_CIP">
+		<use-case name="BENEFICIARIO DDA"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numCpfCnpj.</description>
+		<command>
+				<![CDATA[
+					SELECT COUNT(*)
+					FROM 
+						BeneficiarioDDA b
+					WHERE 
+						b.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+						AND b.situacaoBeneficiarioDDA.codSituacaoBeneficiario != 'S'
+						
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_MENSAGEM_DDA_ENVIO_PENDENTE">
+		<use-case
+			name="Obtem a quantindade de Mensagens utilizado na viw de envio de pendencia "></use-case>
+		<description>Obtem a quantindade de Mensagens utilizado na viw de
+			envio de pendencia
+		</description>
+		<command>
+				<![CDATA[
+					SELECT MSG.IDMENSAGEMDDA, 
+				           MSG.CODTIPOMENSAGEMDDA, 
+				           MBEN.NUMCPFCNPJBENEFICIARIO,
+				           TEC.CODTIPOERROCIP,
+				           COALESCE(TEC.DESCTIPOERROCIP, MSG.DESCERROPROTOCOLO) AS DESCTIPOERROCIP
+				    FROM DDA.MENSAGEMDDABENEFICIARIO MBEN
+				    JOIN DDA.MENSAGEMDDA MSG                   ON MSG.IDMENSAGEMDDA = MBEN.IDMENSAGEMDDA AND
+				                                                  MSG.BOLMENSAGEMPENDENTE = 1
+				    LEFT JOIN DDA.MENSAGEMDDA MRET             ON MRET.IDMENSAGEMDDAORIGEM = MSG.IDMENSAGEMDDA
+				    LEFT JOIN DDA.ERROMENSAGEMRETORNOCIP MERC  ON MERC.IDMENSAGEMDDA       = MRET.IDMENSAGEMDDA
+				    LEFT JOIN DDA.TIPOERROCIP TEC              ON TEC.CODTIPOERROCIP       = MERC.CODTIPOERROCIP
+				    WHERE MBEN.NUMCPFCNPJBENEFICIARIO =  <bancoob:valor valor="${numCpfCnpjBeneficiario}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_TIPO_MENSAGENS_DDA">
+		<use-case name="Listar Tipo Mensagens DDA"></use-case>
+		<description>Listar Tipo Mensagens DDA</description>
+		<command>
+				<![CDATA[
+					FROM
+					    TipoMensagemDDA tm
+					    <j:if test="${origem == 0}">
+					    	where tm.categoriaMensagemDDA = 'E'
+					    </j:if>
+					    <j:if test="${origem == 1}">
+					    	where tm.categoriaMensagemDDA in ('X', 'R', 'G')
+					    </j:if>
+					    ORDER BY 1 
+				]]>
+		</command>
+	</query>
+
+	<query name="OBTER_ERRO_MENSAGEM_RETORNO_CIP">
+		<use-case name="Obtem o erro da mensagem retorno cip"></use-case>
+		<description>Obtem o erro da mensagem retorno cip</description>
+		<command>
+				<![CDATA[
+					FROM 
+						ErroMensagemRetornoCip erro
+					WHERE erro.mensagemDDA.id = <bancoob:valorOql valor="${idMensagemDDA}"/>
+					<j:if test="${codtipoErro != null}">
+					  AND erro.tipoErroCip.codTipoErro = <bancoob:valorOql valor="${codtipoErro}"/>
+				  	</j:if>
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_TIPO_ERRO_CIP">
+		<use-case name="Listar tipos de erro da CIP"></use-case>
+		<description>Listar tipos de erro da CIP.</description>
+		<command>
+				<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.TipoErroCipDto (
+						tec.codTipoErro,
+						tec.descTipoErro
+						)
+					FROM 
+						TipoErroCip tec
+					WHERE tec.codTipoErro like 'EDDA%'
+				]]>
+		</command>
+	</query>
+
+	<query name="OBTER_TIPO_ERRO_LOG_BENEFICIARIO_INSTITUICAO">
+		<use-case name="Carga de Beneficiários"></use-case>
+		<description>Recupera o LogArquivoCarga pelo nome do arquivo enviado.
+		</description>
+		<command>
+				<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.LogErroCargaDto (
+						tipoErro.codTipoErro,
+						tipoErro.descTipoErro,
+						log.idInstituicao
+						)
+					FROM 
+						LogErroBeneficiarioInstituicao log
+						LEFT JOIN log.tipoErroCip tipoErro
+					WHERE 
+						log.logErroArquivoCarga.id = <bancoob:valorOql valor="${idLogErro}"/>
+				]]>
+		</command>
+	</query>
+
+
+	<query name="LISTAR_MENSAGENS_DDA">
+		<use-case name="Listar Arquivos Processados DDA"></use-case>
+		<description>Listar Mensagens Beneficiarios CIP DDA</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.MensagemDDADto(
+					msn.id,
+					msn.tipoMensagemDDA.codTipoMensagem,
+					msn.numOperacao,
+					msn.bolOrigemSicoob,
+					msn.dataHoraMensagem,
+					msn.dataHoraProtocolo,
+					msn.descErroProtocolo,
+						(SELECT COUNT(*) FROM
+						ErroMensagemRetornoCip erro
+						WHERE erro.mensagemDDA.id = msn.id
+						) as qtdErroBeneficiarioRetornoCip
+					)
+					FROM 
+						MensagemDDA as msn	
+					WHERE 
+						msn.bolOrigemSicoob = <bancoob:valorOql valor="${criterios.filtro.bolOrigemSicoob}"/>
+						<j:if test="${criterios.filtro.bolOrigemSicoob == true}">
+							AND DATE(msn.dataHoraProtocolo) IS NOT NULL 					
+						</j:if>
+						<j:if test="${criterios.filtro.dataHoraCadastroInicial != null}">
+							AND DATE(msn.dataHoraCadastro) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataHoraCadastroInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataHoraCadastroFinal}" tipo="Date" />
+						</j:if>
+
+						<j:if test="${criterios.filtro.dataHoraMensagemInicial != null}">
+							AND DATE(msn.dataHoraMensagem) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataHoraMensagemInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataHoraMensagemFinal}" tipo="Date" /> 
+						</j:if>
+						
+						<j:if test="${criterios.filtro.movimentoDataInicial != null}">
+							AND DATE(msn.dataMovimento) BETWEEN <bancoob:valorOql valor="${criterios.filtro.movimentoDataInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.movimentoDataFinal}" tipo="Date" />
+						</j:if>
+						<j:if test="${criterios.filtro.codTipoMensagem != null}"> 
+							AND msn.tipoMensagemDDA.codTipoMensagem = <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}"/> 
+						</j:if>
+						<j:if test="${criterios.filtro.statusEnvio == 0}">
+							AND (EXISTS (FROM ErroMensagemRetornoCip erro 
+									WHERE erro.mensagemDDA.id = msn.id)
+								 OR msn.descErroProtocolo IS NOT NULL)
+						</j:if>
+						<j:if test="${criterios.filtro.statusEnvio == 1}">
+							AND (NOT EXISTS (FROM ErroMensagemRetornoCip erro 
+									WHERE erro.mensagemDDA.id = msn.id)
+								 AND msn.descErroProtocolo IS NULL)	
+						</j:if>	 
+						ORDER BY msn.id, msn.dataMovimento ASC						 
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_COUNT_MENSAGENSDDA">
+		<use-case name="Obter Count MensagensDDA"></use-case>
+		<description>Listar Mensagens Beneficiarios CIP DDA</description>
+		<command>
+				<![CDATA[
+					SELECT 
+						COUNT(msn.id)
+					FROM 
+						MensagemDDA msn	
+					WHERE msn.bolOrigemSicoob = <bancoob:valorOql valor="${criterios.filtro.bolOrigemSicoob}"/>
+						<j:if test="${criterios.filtro.bolOrigemSicoob == true}">
+							AND DATE(msn.dataHoraProtocolo) IS NOT NULL 					
+						</j:if>
+						<j:if test="${criterios.filtro.dataHoraCadastroInicial != null}">
+							AND DATE(msn.dataHoraCadastro) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataHoraCadastroInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataHoraCadastroFinal}" tipo="Date" />
+						</j:if>
+
+						<j:if test="${criterios.filtro.dataHoraMensagemInicial != null}">
+							AND DATE(msn.dataHoraMensagem) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataHoraMensagemInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataHoraMensagemFinal}" tipo="Date" /> 
+						</j:if>
+						
+						<j:if test="${criterios.filtro.movimentoDataInicial != null}">
+							AND DATE(msn.dataMovimento) BETWEEN <bancoob:valorOql valor="${criterios.filtro.movimentoDataInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.movimentoDataFinal}" tipo="Date" />
+						</j:if>
+						
+						<j:if test="${criterios.filtro.codTipoMensagem != null}"> 
+							AND msn.tipoMensagemDDA.codTipoMensagem = <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}"/> 
+						</j:if>
+						<j:if test="${criterios.filtro.statusEnvio == 0}">
+							AND (EXISTS (FROM ErroMensagemRetornoCip erro 
+									WHERE erro.mensagemDDA.id = msn.id)
+								 OR msn.descErroProtocolo IS NOT NULL)
+						</j:if>
+						<j:if test="${criterios.filtro.statusEnvio == 1}">
+							AND (NOT EXISTS (FROM ErroMensagemRetornoCip erro 
+									WHERE erro.mensagemDDA.id = msn.id)
+								 AND msn.descErroProtocolo IS NULL)	
+						</j:if>	 								
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_DADOS_CADASTRO_BENFICIARIO">
+		<use-case name="Obter dados do Cadastro do Beneficiario"></use-case>
+		<description>Obter dados do Beneficiario Legado para o reenvio da
+			mensagem
+		</description>
+		<command>
+				<![CDATA[
+						SELECT 
+							CASE pessoa.CodPF_PJ
+					        	WHEN 0 THEN 'F'
+					            WHEN 1 THEN 'J'
+					        END tipoPessoa,
+					        pessoa.NumCGC_CPF numeroDocumento,
+					        pessoa.DescNomePessoa nomePessoaRazaoSocial,
+					        pessoa.DescApelidoPessoa nomeFantasia,
+					        CASE clienteMC.CodSituacaoModCedente
+					            WHEN 0 THEN 'I'
+					            WHEN 1 THEN 'A'
+					            WHEN 2 THEN 'E'
+					        END AS situacaoRelacionamento,
+					        cliente.DataCadastramentoCliente AS dataInicioRelacionamento, 
+					        clienteMC.CodSituacaoModCedente AS situacaoConvenio,
+					        clienteMC.DataConvenio dataInclusaoConvenio, 
+					        clienteMC.DataCancelamento dataFimConvenio, 
+					        CASE 
+					            WHEN (clienteMC.DataConvenio &lt; '2015-06-01') THEN '3'
+					            WHEN (clienteMC.DataConvenio &gt;= '2015-06-01') THEN '1'
+					        END AS tipoCarteira, 
+					        RIGHT('0000' + CAST(clienteMC.NumCooperativa AS VARCHAR(4)), 4) agencia
+						FROM 
+							dbo.ClienteModuloCedente AS clienteMC (Nolock),
+							dbo.Cliente AS cliente (Nolock),
+							dbo.Pessoa AS pessoa (Nolock)
+						WHERE clienteMC.NumCliente = cliente.NumCliente
+							AND clienteMC.NumCliente = pessoa.NumPessoa
+							AND clienteMC.IDProduto = 9
+							<j:if test="${numCPFCNPJ != null}">	
+								AND pessoa.NumCGC_CPF = <bancoob:valor valor="${numCPFCNPJ}"/>
+							</j:if>
+							<j:if test="${numCliente != null}">	
+								AND clienteMC.NumCliente = <bancoob:valor valor="${numCliente}"/>
+							</j:if>
+				]]>
+		</command>
+	</query>
+
+	<query name="OBTER_DADOS_CONVENIO_BENFICIARIO">
+		<use-case name="Obter dados do Convênio do Beneficiario Legado"></use-case>
+		<description>Obter dados do Convênio Beneficiario Legado para o
+			reenvio da mensagem
+		</description>
+		<command>
+				<![CDATA[
+						SELECT 
+							clienteMC.CodSituacaoModCedente AS situacaoConvenio,
+							clienteMC.DataConvenio dataInclusaoConvenio, 
+							CASE 
+								WHEN (clienteMC.DataConvenio &lt; '2015-06-01') THEN '3' 
+								WHEN (clienteMC.DataConvenio &gt;= '2015-06-01') THEN '1'
+							END AS tipoCarteira,
+							RIGHT('0000' + CAST(clienteMC.NumCooperativa AS VARCHAR(4)), 4) agencia,
+							clienteMC.DataCancelamento dataFimConvenio
+						FROM 
+							dbo.ClienteModuloCedente AS clienteMC (Nolock),
+							dbo.Pessoa AS pessoa (Nolock)
+						WHERE clienteMC.NumCliente = pessoa.NumPessoa
+							AND clienteMC.IDProduto = 9
+							AND pessoa.NumCGC_CPF = <bancoob:valor valor="${numCPFCNPJ}"/>
+				]]>
+		</command>
+	</query>
+
+
+	<query name="ATUALIZAR_TIPO_TRATAMENTO_MENSAGEM_RETORNO_CIP">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+		<description>Obter a mensagen do beneficiario para envio.
+		</description>
+		<command>
+				<![CDATA[
+					UPDATE DDA.ERROMENSAGEMRETORNOCIP
+					   SET CODTIPOTRATAMENTOERROCIP = <bancoob:valor valor="${codTipoTratamentoErroCip}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagemDDA}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="BOLETO_ESTA_NA_CIP">
+		<use-case name="Emissao 2 Via"></use-case>
+		<description>Verifica se boleto está na CIP</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(boletoDDA.id)
+				FROM BoletoDDA boletoDDA
+				WHERE boletoDDA.numCodigoBarra like <bancoob:valorOql valor="${numCodigoBarra}"/>
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_BOLETO_DDA_CODIGO_BARRAS">
+		<use-case name="Obter Boleto DDA Codigo Barras"></use-case>
+		<description>Obter Boleto DDA Codigo Barras</description>
+		<command>
+				<![CDATA[
+					FROM BoletoDDA b
+					WHERE 1 = 1
+					<j:if test="${numCodBarrasCampoLivre != null}">
+						AND b.numCodBarrasCampoLivre = <bancoob:valorOql valor="${numCodBarrasCampoLivre}"/>
+					</j:if>
+					<j:if test="${numCodigoBarra != null}">
+						AND b.numCodigoBarra = <bancoob:valorOql valor="${numCodigoBarra}"/>
+					</j:if>
+					<j:if test="${numIdentificadorBoletoCIP != null}">
+						AND b.numIdentificadorBoletoCip = <bancoob:valorOql valor="${numIdentificadorBoletoCIP}"/>
+					</j:if>
+					<j:if test="${situacaoBoleto != null}">
+						AND b.codSituacaoBoleto = <bancoob:valorOql valor="${situacaoBoleto}"/>
+					</j:if>
+					ORDER BY dataHoraUltimaAtualizacao DESC
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_VIEW_BOLETO_DDA_SITUACAO_ID">
+		<use-case name="Obter Boleto DDA Codigo Barras"></use-case>
+		<description>Obter Boleto DDA Codigo Barras</description>
+		<command>
+				<![CDATA[
+					SELECT (v.qtdPagamentoParcial - v.qtdPagamentoRegistrado), (v.valorBaixaOper + v.valorBaixaEfet), v.codSituacaoBoletoPagamento, v.codSituacaoBoleto
+					FROM ViewBoletoDDASituacao v
+					WHERE v.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_BOLETO_DDA_GRUPO_CALCULO_VALIDO">
+		<use-case name="LISTAR_BOLETO_DDA_GRUPO_CALCULO_VALIDO"></use-case>
+		<description>Lista os cálculos vigentes</description>
+		<command>
+				<![CDATA[
+					SELECT calculo
+					FROM BoletoDDAGrupoCalculo calculo
+					JOIN calculo.boletoDDA b
+					WHERE b.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+					ORDER BY calculo.dataValidadeCalculo ASC
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_BOLETO_DDA_TERCEIROAUT">
+		<use-case name="LISTAR_BOLETO_DDA_TERCEIROAUT"></use-case>
+		<description>Lista os Terceiro Autorizado</description>
+		<command>
+				<![CDATA[
+					SELECT terceiroAut
+					FROM BoletoDDATerceiroAut terceiroAut
+					WHERE terceiroAut.boletoDDA.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_BOLETO_DDA_TEXTOINFO">
+		<use-case name="LISTAR_BOLETO_DDA_TEXTOINFO"></use-case>
+		<description>Lista os TextoInfo</description>
+		<command>
+				<![CDATA[
+					SELECT textoInfo
+					FROM BoletoDDATextoInfo textoInfo
+					WHERE textoInfo.boletoDDA.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_BOLETO_DDA_BAIXAOPER">
+		<use-case name="LISTAR_BOLETO_DDA_BAIXAOPER"></use-case>
+		<description>Lista os BaixaOper</description>
+		<command>
+				<![CDATA[
+					SELECT baixaOper
+					FROM BoletoDDABaixaOper baixaOper
+					WHERE baixaOper.boletoDDA.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+					order by baixaOper.dataHoraProcessamentoBaixaOper asc
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_BOLETO_DDA_BAIXAEFET">
+		<use-case name="LISTAR_BOLETO_DDA_BAIXAEFET"></use-case>
+		<description>Lista os Baixa Efet</description>
+		<command>
+				<![CDATA[
+					SELECT baixaEfet
+					FROM BoletoDDABaixaEfet baixaEfet
+					WHERE baixaEfet.boletoDDA.id = <bancoob:valorOql valor="${idBoletoDDA}"/>
+					order by baixaEfet.dataHoraProcessamentoBaixaEfet asc
+				]]>
+		</command>
+	</query>
+
+	<query name="OBTER_SITUACAO_BOLETO_PAGAMENTO">
+		<use-case name="OBTER_SITUACAO_BOLETO_PAGAMENTO"></use-case>
+		<description>Obtém a situação conforme o cod informado</description>
+		<command>
+				<![CDATA[
+					FROM SituacaoBoletoPagamento s
+					WHERE s.codSituacaoBoletoPagamento = <bancoob:valorOql valor="${codSituacaoBoletoPagamento}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="VERIFICAR_PERMITE_ALTERAR_VALOR">
+		<use-case name="VERIFICAR_PERMITE_ALTERAR_VALOR"></use-case>
+		<description>Verifica se permite alterar o valor</description>
+		<command>
+				<![CDATA[
+					SELECT bolPermiteAlterarValor
+					FROM AutorizacaoValorDivergente
+					WHERE codAutorizacaoValorDivergente = <bancoob:valorOql valor="${codAutorizacaoValorDivergente}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="OBTER_QTD_GRADE_HORARIA">
+		<use-case name="OBTER_QTD_GRADE_HORARIA"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+					FROM GradeHoraria g 
+					WHERE 1=1
+					<j:if test="${criterios.filtro.dataReferencia != null}"> 
+						AND DATE(g.dataReferencia) = <bancoob:valorOql valor="${criterios.filtro.dataReferencia}" tipo="date"/>
+					</j:if>
+			    	<j:if test="${criterios.filtro.codTipoGradeHoraria != null}">
+			    		AND g.tipoGradeHoraria.codTipoGradeHoraria =  <bancoob:valorOql valor="${criterios.filtro.codTipoGradeHoraria}" />
+			    	</j:if>
+					<j:if test="${criterios.filtro.gradesEmUso == true}">
+						AND EXISTS (
+							FROM TipoMensagemDDA tm 
+                    		WHERE tm.tipoGradeHoraria.codTipoGradeHoraria = g.tipoGradeHoraria.codTipoGradeHoraria 
+                    		)
+					</j:if>
+					
+			]]>
+		</command>
+	</query>
+
+	<query name="PERMITE_ALTERAR_VALOR">
+		<use-case name="PERMITE_ALTERAR_VALOR"></use-case>
+		<description>Verifica se permite a alteração dos valores</description>
+		<command>
+			<![CDATA[
+				SELECT autorizacao.bolPermiteAlterarValor
+				FROM AutorizacaoValorDivergente autorizacao
+				WHERE autorizacao.codAutorizacaoValorDivergente = <bancoob:valorOql valor="${codAutorizacaoValorDivergente}"/>
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_MENSAGEM_ORIGEM_DDA">
+		<use-case name="REUPERAR MENSAGEM"></use-case>
+		<description>Recupera mensagemOrigem</description>
+		<command>
+				<![CDATA[			
+					SELECT msg.mensagemOrigem
+					FROM MensagemDDA msg
+					WHERE msg.id = <bancoob:valorOql valor="${idMensagem}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_SITUACAO_BOLETO_CANAIS">
+		<use-case name="Listar Situacao do Boleto"></use-case>
+		<description>Lista a situações dos boletos</description>
+		<command>
+				<![CDATA[			
+					SELECT TS.IDTIPOSITUACAOBOLETO, TS.DESCTIPOSITUACAOBOLETO
+					FROM COB.TIPOSITUACAOBOLETO TS
+					JOIN DDA.PARAMETRO PAR ON PAR.IDPARAMETRO = 60
+					WHERE EXISTS ( SELECT NULL FROM DDA.SITUACAOBOLETO S WHERE S.IDTIPOSITUACAOBOLETO = TS.IDTIPOSITUACAOBOLETO )
+					ORDER BY CASE
+            			WHEN LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,LPAD(TS.IDTIPOSITUACAOBOLETO,2,'0') || '=') = 0 THEN 9999
+            			ELSE INTEGER(SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,LPAD(TS.IDTIPOSITUACAOBOLETO,2,'0') || '=') + 3,2))
+         			END, TS.IDTIPOSITUACAOBOLETO
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_SITUACAO_BOLETO">
+		<use-case name="Listar Situacao do Boleto"></use-case>
+		<description>Lista a situações dos boletos</description>
+		<command>
+				<![CDATA[			
+					FROM SituacaoBoleto
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_BOLETO_TERCEIRO_AUTORIZADO_DDA_TRANSACAO_CANAIS">
+		<use-case name="Listar Boleto Terceiro Autorizado "></use-case>
+		<description>Listar Boleto Terceiro Autorizado </description>
+		<command>
+				<![CDATA[			
+					SELECT *
+					FROM DDA.VIW_BOLETOTERCEIROAUTORIZADO
+					where numidentificadorBoletocip = <bancoob:valor valor="${numIdentificadorBoletoCIP}"/>
+				]]>
+		</command>
+	</query>
+
+	<query name="LISTA_HISTORICO_CONTINGENCIAS">
+		<use-case name="Manter Contingência"></use-case>
+		<description>Retorna uma grade com as Contingências</description>
+		<command>
+			<![CDATA[
+				SELECT 
+		               T.DESCTIPOCONTIGENCIA AS DESC_TIPO_CONTINGENCIA,
+		               	CASE 
+                       		WHEN D.BOLCONTINGENCIAHABILITADA IS NULL THEN 'Habilitada'
+                       		WHEN D.BOLCONTINGENCIAHABILITADA = 0 THEN 'Desabilitada'
+                       	END AS SIT_CONTINGENCIA,
+		               H.DATAHORASITUACAO AS DATA_HORA_SITUACAO_INICIO,
+		               H.IDUSUARIO AS ID_USUARIO_HABILITACAO,
+		               D.DATAHORASITUACAO AS DATA_HORA_SITUACAO_FIM,
+		               D.IDUSUARIO AS ID_USUARIO_DESABILITACAO 
+	        				FROM DDA.HISTORICOCONTINGENCIA H INNER JOIN DDA.TIPOCONTINGENCIA T
+	                                 ON T.CODTIPOCONTINGENCIA = H.CODTIPOCONTINGENCIA
+	                                 LEFT JOIN DDA.HISTORICOCONTINGENCIA D
+	                                 ON D.IDHISTORICOCONTINGENCIAHABILITACAO = H.IDHISTORICOCONTINGENCIA
+						WHERE H.IDHISTORICOCONTINGENCIAHABILITACAO IS NULL
+						ORDER BY H.DATAHORASITUACAO DESC
+			]]>
+		</command>
+	</query>
+
+
+	<query name="LISTA_ID_HABILITACAO_CONTINGENCIA">
+		<use-case name="Manter Contingência"></use-case>
+		<description>Lista o ID da habilitação da Contingência</description>
+		<command>
+			<![CDATA[
+				SELECT max(id) FROM HistoricoContingencia hc
+					WHERE hc.contingenciaHabilitada = 1
+			]]>
+		</command>
+	</query>
+
+	<query name="LISTA_BOLETOS_PAGAMENTO_CONTINGENCIA">
+		<use-case name="Manter Contingência"></use-case>
+		<description>Consulta para pagamento dos pagamentos em Contingência</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.BoletoPagamentoContingenciaDto 
+					(
+						m.dataMovimento,
+						mbo.numCodigoBarra
+					)
+					 	FROM MensagemDDABaixaOperacional mbo 
+					 	JOIN mbo.mensagemDDA AS m
+						WHERE m.tipoMensagemDDA IN (<bancoob:valor valor="${listaMensagensDDA}"/>)
+									AND mbo.numRefAtualCadBoleto IS NULL
+									AND SUBSTRING(mbo.numCodigoBarra, 1, 3) NOT IN (<bancoob:valor valor="${listaNumCodPortador}"/>)
+			]]>
+		</command>
+	</query>
+
+	<query name="ATUALIZAR_MENSAGENS_BAIXA_OPERACIONAL">
+		<use-case name="Manter Contingência"></use-case>
+		<description>Atualiza as Mensagens em Baixa Operacional em Contingência</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M 
+					SET M.CODTIPOMENSAGEMDDA = 'ADDA114'
+						WHERE M.IDMENSAGEMDDA IN (	SELECT M.IDMENSAGEMDDA
+													FROM DDA.MENSAGEMDDA M
+													INNER JOIN DDA.MENSAGEMDDABAIXAOPERACIONAL MBO ON MBO.IDMENSAGEMDDA = M.IDMENSAGEMDDA
+										  			WHERE M.CODSITUACAOMENSAGEMDDA = 1
+										  				  AND MBO.BOLOPERACAOCONTINGENCIA = 1
+										  				  AND M.CODTIPOMENSAGEMDDA IN ('ADDA108', 'DDA0108')
+										  			FETCH FIRST 20000 ROWS ONLY)
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_MENSAGEMDDA_BAIXA_OPERACIONAL_CONTINGENCIA">
+		<use-case name="Listar MensagemDDA Baixa Operacional em Contingência"></use-case>
+		<description>Listar MensagemDDA Baixa Operacional em Contingência</description>
+		<command>
+			<![CDATA[
+						SELECT COUNT(*) AS QTD
+						FROM DDA.MENSAGEMDDA M
+						INNER JOIN DDA.MENSAGEMDDABAIXAOPERACIONAL MBO ON MBO.IDMENSAGEMDDA = M.IDMENSAGEMDDA
+			  			WHERE M.CODSITUACAOMENSAGEMDDA = 1
+			  				  AND MBO.BOLOPERACAOCONTINGENCIA = 1
+			  				  AND M.CODTIPOMENSAGEMDDA IN ('ADDA108', 'DDA0108')
+			]]>
+		</command>
+	</query>
+		
+	<query name="POSSUI_BOLETO_DDA">
+		<use-case name="Obter Boleto DDA"></use-case>
+		<description>Obter Boleto DDA Codigo Barras</description>
+		<command>
+				<![CDATA[
+					SELECT count(b)
+					FROM BoletoDDA b
+					WHERE b.numCodBarrasCampoLivre = <bancoob:valorOql valor="${numCodBarrasCampoLivre}"/>
+				]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_BENEFICIARIOS_ALERTA">
+		<use-case name="Lista de Beneficiários em Alerta"></use-case>
+		<description>Lista de Beneficiários em Alerta</description>
+		<command>
+			<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.BeneficiarioAlertaDto (
+					    benDDA.id, 
+						benDDA.codTipoPessoa,
+						benDDA.numCpfCnpj,
+						benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario,
+						iFBenef.codIspbDestinatarioOriginalAlerta,
+						benDDA.dataHoraUltimaAtualizacao,
+						benDDA.bolOrigemSicoob,
+						benef.idInstituicao)
+					FROM BeneficiarioDDA benDDA
+					    LEFT JOIN benDDA.listaBeneficiarioInstituicao benef	
+						JOIN benDDA.listaIFBeneficiarioAlerta iFBenef
+					WHERE benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario IN ('I', 'E')
+						<j:if test="${criterios.filtro.bancoCaf.numCodISPB != null}">
+          					AND iFBenef.codIspbDestinatarioOriginalAlerta = <bancoob:valorOql valor="${criterios.filtro.bancoCaf.numCodISPB}"/>
+             			</j:if>
+             			<j:if test="${criterios.filtro.codTipoPessoa != null}">
+          					AND  benDDA.codTipoPessoa = <bancoob:valorOql valor="${criterios.filtro.codTipoPessoa}"/>
+             			</j:if>
+             			<j:if test="${criterios.filtro.codStatusAlerta != null}">
+          					AND benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario  = <bancoob:valorOql valor="${criterios.filtro.codStatusAlerta}"/>
+          				</j:if>
+             			<j:if test="${criterios.filtro.cPF_CNPJ != null}">
+          					AND benDDA.numCpfCnpj  = <bancoob:valorOql valor="${criterios.filtro.cPF_CNPJ}" />
+          				</j:if>
+          				<j:if test="${criterios.filtro.isBeneficiariosSicoob}">
+          					AND benDDA.bolOrigemSicoob  = <bancoob:valorOql valor="${criterios.filtro.isBeneficiariosSicoob}" />
+          				</j:if>
+					ORDER BY benDDA.numCpfCnpj
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_BENEFICIARIOS_ALERTA">
+		<use-case name="Quantidade de Beneficiários em Alerta"></use-case>
+		<description>Quantidade de Beneficiários em Alerta</description>
+		<command>
+			<![CDATA[
+					SELECT COUNT(*)
+					FROM BeneficiarioDDA benDDA
+					    LEFT JOIN benDDA.listaBeneficiarioInstituicao benef	
+						JOIN benDDA.listaIFBeneficiarioAlerta iFBenef
+					WHERE benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario IN ('I', 'E')
+							<j:if test="${criterios.filtro.bancoCaf.numCodISPB != null}">
+	          					AND iFBenef.codIspbDestinatarioOriginalAlerta = <bancoob:valorOql valor="${criterios.filtro.bancoCaf.numCodISPB}"/>
+	             			</j:if>
+	             			<j:if test="${criterios.filtro.codTipoPessoa != null}">
+	          					AND  benDDA.codTipoPessoa = <bancoob:valorOql valor="${criterios.filtro.codTipoPessoa}"/>
+	             			</j:if>
+	             			<j:if test="${criterios.filtro.codStatusAlerta != null}">
+	          					AND benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario  = <bancoob:valorOql valor="${criterios.filtro.codStatusAlerta}"/>
+	          				</j:if>
+	             			<j:if test="${criterios.filtro.cPF_CNPJ != null}">
+	          					AND benDDA.numCpfCnpj  = <bancoob:valorOql valor="${criterios.filtro.cPF_CNPJ}" />
+	          				</j:if>
+	          				<j:if test="${criterios.filtro.isBeneficiariosSicoob}">
+          						AND benDDA.bolOrigemSicoob  = <bancoob:valorOql valor="${criterios.filtro.isBeneficiariosSicoob}" />
+          					</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_INSTITUICAO_BENEFICIARIOS_ALERTA">
+		<use-case name="Obter a Instituição dos Beneficiários em Alerta"></use-case>
+		<description>Obter a Instituição dos Beneficiários em Alerta</description>
+		<command>
+			<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.BeneficiarioAlertaDto (
+						benInst.beneficiarioDDA.id,
+						benInst.idInstituicao,
+						viewInst.descSiglaCoop,
+						viewInst.numCooperativa,
+						viewInst.descNomeCoop)
+					FROM BeneficiarioInstituicao benInst, ViewInstituicao viewInst
+						WHERE viewInst.id = benInst.idInstituicao
+						AND viewInst.codTipoUnidade = 1
+						AND benInst.beneficiarioDDA.id IN (<bancoob:valorOql valor="${idsBeneficiariosDDA}"/>)
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_BENEFICIARIOS_ALERTA">
+		<use-case name="Lista de Beneficiários em Alerta"></use-case>
+		<description>Lista de Beneficiários em Alerta</description>
+		<command>
+			<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.BeneficiarioAlertaDto (
+					    benDDA.id, 
+						benDDA.codTipoPessoa,
+						benDDA.numCpfCnpj,
+						benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario,
+						iFBenef.codIspbDestinatarioOriginalAlerta,
+						benDDA.dataHoraUltimaAtualizacao,
+						benDDA.bolOrigemSicoob,
+						benef.idInstituicao)
+					FROM BeneficiarioDDA benDDA
+						JOIN benDDA.listaBeneficiarioInstituicao benef	
+						JOIN benDDA.listaIFBeneficiarioAlerta iFBenef
+					WHERE benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario IN ('I', 'E')
+						<j:if test="${numCodISPB != null}">
+          					AND iFBenef.codIspbDestinatarioOriginalAlerta = <bancoob:valorOql valor="${numCodISPB}"/>
+             			</j:if>
+             			<j:if test="${codTipoPessoa != null}">
+          					AND  benDDA.codTipoPessoa = <bancoob:valorOql valor="${codTipoPessoa}"/>
+             			</j:if>
+             			<j:if test="${codStatusAlerta != null}">
+          					AND benDDA.situacaoBeneficiarioDDA.codSituacaoBeneficiario  = <bancoob:valorOql valor="${codStatusAlerta}"/>
+          				</j:if>
+             			<j:if test="${cPF_CNPJ != null}">
+          					AND benDDA.numCpfCnpj  = <bancoob:valorOql valor="${cPF_CNPJ}" />
+          				</j:if>
+					ORDER BY benDDA.numCpfCnpj
+			]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_BOLETO_PAGINADO">
+		<use-case name="Pesquisa Paginada do cadastro do Boleto"></use-case>
+		<description>Pesquisa Paginada do cadastro do Boleto
+		</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.PesquisaBoletoDDADto(
+       				boleto.codPartDestinatario, boleto.dataHoraUltimaAtualizacao, situacaoBoleto.idTipoSituacaoBoleto, boleto.numCodigoBarra, boleto.dataHoraInclusao, boleto.dataVencimento, boleto.valorBoleto)
+				FROM BoletoDDA boleto, SituacaoBoleto situacaoBoleto
+				WHERE 1=1
+				AND boleto.codSituacaoBoleto = situacaoBoleto.codSituacaoBoleto
+				<j:if test="${criterios.filtro.numCodigoBarraCampoLivre != null}">
+					AND boleto.numCodBarrasCampoLivre = <bancoob:valorOql valor="${criterios.filtro.numCodigoBarraCampoLivre}"/>
+				</j:if>
+				<j:if test="${criterios.filtro.numCpfCnpjBeneficiario != null}">
+					AND boleto.numCpfCnpjBeneficiario = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpjBeneficiario}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numCpfCnpjPagador != null}">
+					AND boleto.numCpfCnpjPagador  = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpjPagador}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numBanco != null}">
+					AND boleto.codPartDestinatario = <bancoob:valorOql valor="${criterios.filtro.numBanco}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numSeuNumero != null}">
+					AND boleto.numDocumento = <bancoob:valorOql valor="${criterios.filtro.numSeuNumero}" />
+				</j:if>
+				<j:if test="${criterios.filtro.codSituacaoBoleto != null}">
+					AND situacaoBoleto.idTipoSituacaoBoleto = <bancoob:valorOql valor="${criterios.filtro.codSituacaoBoleto}" />
+				</j:if>
+				<j:if test="${criterios.filtro.dataVencimentoInicial != null and criterios.filtro.dataVencimentoFinal != null}">
+					AND DATE(boleto.dataVencimento) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataVencimentoInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataVencimentoFinal}" tipo="Date" />
+				</j:if>
+				<j:if test="${criterios.filtro.dataRegistroDDAInicial != null and criterios.filtro.dataRegistroDDAFinal != null}">
+					AND DATE(boleto.dataHoraInclusao) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataRegistroDDAInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataRegistroDDAFinal}" tipo="Date" />
+				</j:if>
+				ORDER BY boleto.dataHoraUltimaAtualizacao desc
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_NUMERO_REGISTROS_PESQUISAR_BOLETO_PAGINADO">
+		<use-case name="Numero de Registro da pesquisa paginada"></use-case>
+		<description>Numero de Registro da pesquisa paginada
+		</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM BoletoDDA boleto, SituacaoBoleto situacaoBoleto
+				WHERE 1=1
+				AND boleto.codSituacaoBoleto = situacaoBoleto.codSituacaoBoleto
+				<j:if test="${criterios.filtro.numCodigoBarraCampoLivre != null}">
+					AND boleto.numCodBarrasCampoLivre = <bancoob:valorOql valor="${criterios.filtro.numCodigoBarraCampoLivre}"/>
+				</j:if>
+				<j:if test="${criterios.filtro.numCpfCnpjBeneficiario != null}">
+					AND boleto.numCpfCnpjBeneficiario = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpjBeneficiario}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numCpfCnpjPagador != null}">
+					AND boleto.numCpfCnpjPagador  = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpjPagador}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numBanco != null}">
+					AND boleto.codPartDestinatario = <bancoob:valorOql valor="${criterios.filtro.numBanco}" />
+				</j:if>
+				<j:if test="${criterios.filtro.numSeuNumero != null}">
+					AND boleto.numDocumento = <bancoob:valorOql valor="${criterios.filtro.numSeuNumero}" />
+				</j:if>
+				<j:if test="${criterios.filtro.codSituacaoBoleto != null}">
+					AND situacaoBoleto.idTipoSituacaoBoleto = <bancoob:valorOql valor="${criterios.filtro.codSituacaoBoleto}" />
+				</j:if>
+				<j:if test="${criterios.filtro.dataVencimentoInicial != null and criterios.filtro.dataVencimentoFinal != null}">
+					AND DATE(boleto.dataVencimento) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataVencimentoInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataVencimentoFinal}" tipo="Date" />
+				</j:if>
+				<j:if test="${criterios.filtro.dataRegistroDDAInicial != null and criterios.filtro.dataRegistroDDAFinal != null}">
+					AND DATE(boleto.dataHoraInclusao) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataRegistroDDAInicial}" tipo="Date"/> AND <bancoob:valorOql valor="${criterios.filtro.dataRegistroDDAFinal}" tipo="Date" />
+				</j:if>
+			]]>
+		</command>
+	</query>
+	
+	
+	<query name="OBTER_106_ENCAMINHADA_CIP">
+		<use-case name="Listar Boleto Terceiro Autorizado "></use-case>
+		<description>Listar Boleto Terceiro Autorizado </description>
+		<command>
+				<![CDATA[			
+						SELECT m.idMensagemdda
+						FROM dda.MENSAGEMDDA M
+						INNER JOIN dda.MENSAGEMDDACONSULTABOLETO MCB on MCB.idmensagemdda = m.idmensagemdda
+						WHERE M.codtipomensagemdda = 'DDA0106'
+							  AND MCB.numCodBarrasCampoLivre = <bancoob:valor valor="${numCodigoBarraCampoLivre}"/>
+							  <j:if test="${listaSituacaoBoleto != null}">
+							   	AND MCB.CODSITUACAOBOLETO in (<bancoob:valor valor="${listaSituacaoBoleto}"/>)
+							  </j:if>
+							  AND M.DATAHORAMENSAGEM IS NULL
+						      AND M.NUMOPERACAO IS NULL
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_106_ENCAMINHADA_CIP_APOS_MINUTOS_PARAMETRIZADO">
+		<use-case name="Listar Boleto Terceiro Autorizado "></use-case>
+		<description>Listar Boleto Terceiro Autorizado </description>
+		<command>
+				<![CDATA[			
+						SELECT M.DATAHORAMENSAGEM + INT(P.VALORBASEPARAMETRO) MINUTES
+						FROM dda.MENSAGEMDDA M
+						INNER JOIN dda.MENSAGEMDDACONSULTABOLETO MCB on MCB.idmensagemdda = m.idmensagemdda
+						INNER JOIN DDA.PARAMETRO P ON P.IDPARAMETRO = ${idParametro}
+						WHERE M.codtipomensagemdda = 'DDA0106'
+							  AND MCB.NUMCODIGOBARRA =  <bancoob:valor valor="${numCodigoBarra}"/>
+							   <j:if test="${listaSituacaoBoleto != null}">
+							  	AND MCB.CODSITUACAOBOLETO in (<bancoob:valor valor="${listaSituacaoBoleto}"/>)
+							  </j:if>
+							  AND   M.DATAHORAMENSAGEM + INT(P.VALORBASEPARAMETRO) MINUTES &gt; CURRENT TIMESTAMP 
+				]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_HISTORICO_MENSAGEM_106_PAGINADO">
+		<use-case name="Pesquisa historico mensagem 106"></use-case>
+		<description>Pesquisa Paginada do historico mensagem 106
+		</description>
+		<command>
+			<![CDATA[
+		 SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.HistoricoMensagem106Dto(msgDA.dataHoraMensagem, msgDAOrigem.dataHoraMensagem, msgConsulta.numCodigoBarra,
+			 msgDAOrigem.tipoMensagemDDA.codTipoMensagem, stb.descSituacaoBoleto, msgDAOrigem.xmlMensagem) 
+			FROM 
+	                MensagemDDAConsultaBoleto as msgConsulta
+	                JOIN msgConsulta.mensagemDDA as msgDA
+	                LEFT JOIN msgDA.listaMensagemDDA as msgDAOrigem,
+	                SituacaoBoleto as stb
+            WHERE 
+            	msgConsulta.numCodigoBarra is not null
+				AND msgConsulta.numCodBarrasCampoLivre = <bancoob:valorOql valor="${criterios.filtro}"/>
+	            AND msgConsulta.codSituacaoBoleto is not null
+	            AND msgDA.tipoMensagemDDA.codTipoMensagem = 'DDA0106'
+	            AND stb.codSituacaoBoleto = msgConsulta.codSituacaoBoleto
+	            AND (msgDA.dataHoraMensagem &gt;= CURRENT_DATE OR msgDAOrigem.id IS NULL)
+	            Order by msgDA.dataHoraMensagem
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_NUMERO_REGISTROS_PESQUISAR_HISTORICO_MENSAGEM_106_PAGINADO">
+		<use-case name="Numero de Registro da pesquisa paginada"></use-case>
+		<description>Numero de Registro da pesquisa paginada
+		</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM 
+	                MensagemDDAConsultaBoleto as msgConsulta
+	                JOIN msgConsulta.mensagemDDA as msgDA
+	                 LEFT JOIN msgDA.listaMensagemDDA as msgDAOrigem,
+	                SituacaoBoleto as stb
+            WHERE 
+	            msgConsulta.numCodigoBarra is not null
+				AND msgConsulta.numCodBarrasCampoLivre = <bancoob:valorOql valor="${criterios.filtro}"/>
+	            AND msgConsulta.codSituacaoBoleto is not null
+	            AND msgDA.tipoMensagemDDA.codTipoMensagem = 'DDA0106'
+	            AND stb.codSituacaoBoleto = msgConsulta.codSituacaoBoleto
+	            AND (msgDA.dataHoraMensagem &gt;= CURRENT_DATE OR msgDAOrigem.id IS NULL)
+			]]>
+		</command>
+	</query>
+
+</queries>

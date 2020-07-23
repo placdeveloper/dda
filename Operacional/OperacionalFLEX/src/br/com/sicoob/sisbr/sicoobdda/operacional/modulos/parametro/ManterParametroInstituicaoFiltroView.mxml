@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:containers="br.com.bancoob.componentes.containers.*"
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+	xmlns:input="br.com.bancoob.componentes.input.*"
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:componentes="br.com.bancoob.componentes.*"
+	width="640" height="122">
+	
+	<titulo:SubtituloView texto="FILTROS" />
+	
+	<comum:CentraisSingulares id="cvInstituicao" x="0" y="30" width="450" height="100" visible="true" mostrarUnidade="false"/> 
+	
+	<componentes:Rotulo x="0" y="94" text="Parâmetro:" textAlign="right" width="70" />
+	<input:Combo id="cmbParametro" labelField="descricaoIdNome" x="78" y="92" width="372" editable="false" somenteMaiusculas="false" inserirItemOpcional="true" />
+	
+	<painellista:BotaoProcurarView id="btnProcurar" x="460" y="93" acionarComEnter="true" />
+	
+</containers:CanvasBancoob>

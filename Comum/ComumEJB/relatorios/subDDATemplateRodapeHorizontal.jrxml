@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRodapeHorizontal" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="077249ef-0cc8-4850-a674-53dd10d56d43">
+	<style name="texto" vTextAlign="Middle" vImageAlign="Middle" markup="none" fontName="Arial" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="textoCentralizado" style="texto" hTextAlign="Center" hImageAlign="Center" markup="none" pattern=""/>
+	<style name="textoNegrito" style="texto" isBold="true" isItalic="false"/>
+	<style name="textoNegritoCentralizado" style="textoNegrito" hTextAlign="Center" hImageAlign="Center"/>
+	<style name="borda" fill="Solid">
+		<pen lineWidth="0.75"/>
+	</style>
+	<style name="linha" style="borda" radius="0" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codigoRelatorio" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="loginUsuario" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numeroDaPagina" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageFooter>
+		<band height="13">
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="50" y="0" width="1" height="13" uuid="cb9ee8e9-4593-43f4-b5a9-a8d8819d9d63"/>
+			</line>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="628" y="0" width="1" height="13" uuid="586fbb9a-3b21-4265-9a71-ba77c88e6c0d"/>
+			</line>
+			<textField>
+				<reportElement style="texto" x="632" y="0" width="80" height="13" uuid="82b4abbb-b5ea-4758-87b9-23d28e33791d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{loginUsuario}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="113" y="0" width="1" height="13" uuid="d5cf3a1f-9899-424b-8c39-41b4cd31fba0"/>
+			</line>
+			<line>
+				<reportElement key="linha" style="linha" x="0" y="7" width="50" height="1" uuid="0d0a0fb3-0722-483b-96f0-3e245b978695"/>
+			</line>
+			<line>
+				<reportElement key="linhaMaior" style="linha" x="114" y="7" width="514" height="1" uuid="2d2fe964-4dd1-4cb2-ac95-61edd2c3b6c5"/>
+			</line>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="751" y="0" width="1" height="13" uuid="68313b1a-8d7a-489d-932c-a20cdc3dc59d"/>
+			</line>
+			<textField>
+				<reportElement style="textoCentralizado" x="52" y="0" width="59" height="13" uuid="eb61d751-8600-438f-b3d0-51ac798e4ce0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{codigoRelatorio}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="linha" style="linha" x="752" y="7" width="50" height="1" uuid="253d0505-67d7-4aaa-bbf2-493b8d23002f"/>
+			</line>
+			<textField>
+				<reportElement style="texto" x="712" y="0" width="36" height="13" uuid="44e6ffbb-2296-417a-8cbb-8a8629e27304"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numeroDaPagina}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

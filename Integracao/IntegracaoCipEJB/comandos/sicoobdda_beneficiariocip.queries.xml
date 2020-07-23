@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="OBTER_BENEFICIARIODDA_POR_CPF_CNPJ_DIFERENTE_DE_S">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numCpfCnpj.</description>
+		<command>
+			<![CDATA[
+				FROM 
+					BeneficiarioDDA b
+				WHERE 
+					b.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+					AND b.situacaoBeneficiarioDDA.codSituacaoBeneficiario != 'S'
+			]]>
+		</command>
+	</query>
+	
+		<query name="OBTER_BENEFICIARIODDA_POR_CPF_CNPJ">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numCpfCnpj.</description>
+		<command>
+			<![CDATA[
+				FROM 
+					BeneficiarioDDA b
+				WHERE 
+					b.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+			]]>
+		</command>
+	</query>
+
+
+	<query name="OBTER_BENEFICIARIODDA_POR_CPF_CNPJ_LOCK">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numCpfCnpj.</description>
+		<command>
+			<![CDATA[
+				   select 
+		                b.idBeneficiarioDDA,
+		                b.numIdentificaBeneficiario,
+		                b.numCtrlDDA,
+		                b.BolOrigemSicoob,
+		                b.numCpfCnpj,
+		                b.CodTipoPessoa,
+		                b.codSituacaoBeneficiario,
+		                b.idProduto,
+		                b.dataHoraUltimaAtualizacao,
+		                b.dataInicioRelacionamento,
+		                b.numRefAtualCadBeneficiario,
+		                b.numSeqAtualCadBeneficiario
+                 FROM dda.BENEFICIARIODDA as b
+                 WHERE b.numCpfCnpj = <bancoob:valor valor="${numCpfCnpj}"/>
+					
+				<j:if test="${isLocarTabela}">
+						 FOR UPDATE WITH RS
+				 </j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_BENEFICIARIO_INSTITUICAO">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioInsituicao pelo idBeneficiarioDDA.</description>
+		<command>
+			<![CDATA[
+			        SELECT 
+                              b.idBeneficiarioInstituicao,
+                              b.idBeneficiarioDDA,
+                              b.idInstituicao,
+                              b.dataInicioRelacionamento
+                       FROM dda.BENEFICIARIOINSTITUICAO as b
+                       WHERE
+                           b.idBeneficiarioDDA =  <bancoob:valor valor="${idBeneficiarioDDA}"/>
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_HISTORICO_STATUS_BENEFICIARIO">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioInsituicao pelo idBeneficiarioDDA.</description>
+		<command>
+			<![CDATA[
+			       SELECT hsb.idHistoricoStatusBeneficiario,
+					      hsb.idBeneficiarioDDA,
+					      hsb.codSituacaoBeneficiario,
+					      hsb.dataHoraCadastro 
+					FROM dda.HISTORICOSTATUSBENEFICIARIO hsb
+					WHERE hsb.idBeneficiarioDDA =  <bancoob:valor valor="${idBeneficiarioDDA}"/>
+			]]>
+		</command>
+	</query>
+	
+		<query name="LISTAR_IF_BENEFICIARIO_ALERTA">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioInsituicao pelo idBeneficiarioDDA.</description>
+		<command>
+			<![CDATA[
+			       SELECT ib.idIfBeneficiarioAlerta,
+					        ib.idbeneficiarioDDA,
+					        ib.codIspbPartDestinatarioOrigDRAlert,
+					        ib.dataHoraAtualizacao
+					
+					FROM dda.IFBENEFICIARIOALERTA ib
+					WHERE ib.idBeneficiarioDDA =  <bancoob:valor valor="${idBeneficiarioDDA}"/>
+			]]>
+		</command>
+	</query>
+	
+	
+		<query name="OBTER_BENEFICIARIODDA_POR_NUM_IDENT">
+		<use-case name="Carga de Beneficiarios"></use-case>
+		<description>Recupera o BeneficiarioDDa pelo numIdent.</description>
+		<command>
+			<![CDATA[
+				FROM 
+					BeneficiarioDDA b
+				WHERE 
+					b.numIdentBeneficiario = <bancoob:valorOql valor="${numIdentBeneficiario}"/>
+					AND b.situacaoBeneficiarioDDA.codSituacaoBeneficiario != 'S'
+			]]>
+		</command>
+	</query>
+	<query name="REMOVER_VINCULO_BENEFICIARIO_COM_SICOOB">
+		<use-case name="Excluir relacionamento com beneficiario"></use-case>
+		<description>Retira o vinculo do beneficiario com o sicoob.</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.BeneficiarioDDA b
+				SET b.numIdentificaBeneficiario = null,
+				    b.bolOrigemSicoob = 0 
+				WHERE b.idBeneficiarioDDA = <bancoob:valor valor="${idBeneficiarioDDA}"/>
+			]]>
+		</command>
+	</query>
+	<query name="REMOVER_VINCULO_BENEFICIARIO_INSTITUICAO_COM_SICOOB">
+		<use-case name="Excluir relacionamento com beneficiario"></use-case>
+		<description>Retira o vinculo do beneficiario com o sicoob.</description>
+		<command>
+			<![CDATA[
+				DELETE FROM DDA.BeneficiarioInstituicao bi 
+				WHERE bi.idBeneficiarioDDA = <bancoob:valor valor="${idBeneficiarioDDA}"/>
+			]]>
+		</command>
+	</query>
+	<query name="REMOVER_BENEFICIARIO_INSTITUICAO">
+		<use-case name="Deletar Beneficiario DDA Instituicao"></use-case>
+	    <description>Deletar Beneficiario DDA Instituicao pelo IdBeneficiario.</description>
+	    <command>
+				<![CDATA[
+					DELETE FROM DDA.BENEFICIARIOINSTITUICAO B WHERE B.IDBENEFICIARIODDA = <bancoob:valor valor="${idBeneficiarioDDA}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="REMOVER_IF_BENEFICIARIO_ALERTA">
+		<use-case name="Deletar Beneficiario DDA IF Alerta"></use-case>
+	    <description>Deletar Beneficiario DDA IF Alerta pelo IdBeneficiario.</description>
+	    <command>
+				<![CDATA[
+					DELETE FROM DDA.IFBENEFICIARIOALERTA I WHERE I.IDBENEFICIARIODDA = <bancoob:valor valor="${idBeneficiarioDDA}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEMDDA_BENEFICIARIO">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				        mb.IDMENSAGEMDDA,
+				        mb.NUMCPFCNPJBENEFICIARIO,
+				        mb.CODTIPOPESSOABENEFICIARIO,
+				        mb.NOMEBENEFICIARIO,
+				        mb.NOMEFANTASIABENEFICIARIO,
+				        mb.CODSITUACAOBENEFICIARIO,
+				        mb.DATAHORASITUACAO,
+				        mb.CODSITUACAORELACIONAMENTOBENEFICIARIO,
+				        mb.DATAINICIORELACIONAMENTO,
+				        mb.DATAFIMRELACIONAMENTO,
+				        mb.numRefAtualCadBeneficiario,
+				        mb.numSeqAtualCadBeneficiario
+					FROM 
+        				DDA.MENSAGEMDDABENEFICIARIO mb
+					WHERE 
+						mb.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEMDDA_BENEFICIARIO_CONVENIO">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+						mc.IDMENSAGEMDDABENEFICIARIOCONVENIO,
+				        mc.NUMAGENCIA,
+				        mc.NUMCONTA,
+				        mc.NUMCLIENTEOUCONVENIO,
+				        mc.CODTIPOPRODUTODDA,
+				        mc.CODSITUACAOCONVENIODDA,
+				        mc.DATAINICIORELACIONAMENTO,
+				        mc.DATAFIMRELACIONAMENTO,
+				        mc.CODISPBPARTICIPANTEINCORPORADO,
+				        mc.CODTIPOOPERACAO
+				    FROM 
+						DDA.MENSAGEMDDABENEFICIARIOCONVENIO mc
+					WHERE
+  					  	mc.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEMDDA_BENEFICIARIO_REPRESENTANTE">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT
+				        mr.IDMENSAGEMDDABENEFICIARIOREPRESENTANTE,
+				        mr.CODTIPOPESSOAREPRESENTANTE,
+				        mr.NUMCPFCNPJREPRESENTANTE
+					FROM 
+						DDA.MENSAGEMDDABENEFICIARIOREPRESENTANTE mr
+					WHERE 
+						mr.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEM_DDA">
+		<use-case name="Obter Mensagem DDA"></use-case>
+	    <description>Obter a mensagen do DDA.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				        M.IDMENSAGEMDDA, 
+				        M.IDMENSAGEMDDAORIGEM,
+				       	M.CODTIPOMENSAGEMDDA,
+				        M.DATAMOVIMENTO, 
+				        M.DATAHORAMENSAGEM, 
+				        M.QTDTOTREG, 
+				        M.DATAHORAPROTOCOLO,
+				        M.NUMOPERACAO, 
+				        M.DESCERROPROTOCOLO, 
+				        M.XMLMENSAGEM, 
+				        M.BOLORIGEMSICOOB,
+				        M.DATAHORACADASTRO,
+				        M.NUMPRIORIDADEENVIO,
+				        M.NUMCONTROLEDDA,
+				        M.BOLEXCEDEUSLA,
+				        M.IDCANAL,
+				        M.IDINSTITUICAOSOLICITANTE,
+				        M.IDUSUARIOSOLICITANTE
+					FROM 
+        				DDA.MENSAGEMDDA M
+					WHERE 
+						M.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_MENSAGEMDDA_BENEFICIARIO_REFERENCIAS">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do beneficiario para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT 
+				        mb.IDMENSAGEMDDA,
+				        mb.NUMCPFCNPJBENEFICIARIO,
+				        mb.CODTIPOPESSOABENEFICIARIO,
+				        mb.NOMEBENEFICIARIO,
+				        mb.NOMEFANTASIABENEFICIARIO,
+				        mb.CODSITUACAOBENEFICIARIO,
+				        mb.DATAHORASITUACAO,
+				        mb.CODSITUACAORELACIONAMENTOBENEFICIARIO,
+				        mb.DATAINICIORELACIONAMENTO,
+				        mb.DATAFIMRELACIONAMENTO,
+				        b.numRefAtualCadBeneficiario,
+				        b.numSeqAtualCadBeneficiario,
+				        b.numIdentificaBeneficiario
+					FROM 
+        				DDA.MENSAGEMDDABENEFICIARIO mb
+        			LEFT JOIN DDA.BENEFICIARIODDA b on b.NUMCPFCNPJ = mb.NUMCPFCNPJBENEFICIARIO	
+					WHERE 
+						mb.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="ATUALIZAR_MENSAGEMDDA_BENEFICIARIO">
+		<use-case name="Atualizar Mensagem Beneficiario "></use-case>
+	    <description>Atualizar o numero de referencia do beneficiario e o Numero Sequencial de acordo com o idMensagemDDABeneficiario</description>
+	    <command>
+				<![CDATA[
+				UPDATE DDA.MENSAGEMDDABENEFICIARIO
+					   SET numRefAtualCadBeneficiario = <bancoob:valor valor="${numRefAtualCadBeneficiario}"/>,
+					   numSeqAtualCadBeneficiario = <bancoob:valor valor="${numSeqAtualCadBeneficiario}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagemDDABeneficiario}"/>
+				]]>
+	    </command>
+	</query>
+	
+	
+	
+	
+	
+</queries>

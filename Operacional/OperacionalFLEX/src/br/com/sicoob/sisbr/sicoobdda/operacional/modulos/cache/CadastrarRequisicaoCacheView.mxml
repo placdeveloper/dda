@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="350" height="135"
+					xmlns:bancoob="br.com.bancoob.componentes.*"
+					xmlns:input="br.com.bancoob.componentes.input.*"
+					xmlns:componentes="br.com.bancoob.componentes.*"
+					xmlns:titulo="br.com.bancoob.componentes.titulo.*" >
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Dados da Requisição" left="0" right="0" top="0"/>
+	
+	<componentes:Rotulo x="0" y="35" width="90" text="Cache:" textAlign="right" />
+	<input:Combo x="100" y="33" id="cbCache" width="250" labelField="label" inserirItemOpcional="true" dataProvider="{Constantes.CACHE}" editable="false"/>
+	
+	<componentes:Rotulo x="0" y="65" width="90" text="Servidor Destino:" textAlign="right" />
+	<input:Combo x="100" y="63" id="cbServidor" width="250" labelField="codServidorDDA" inserirItemOpcional="true" editable="false"/>
+	
+	<titulo:LinhaView y="95"/>
+	<mx:HBox bottom="5" right="5">
+		<componentes:Botao id="btnInserir" label="OK" />
+		<componentes:Botao id="btnLimpar" label="CANCELAR" />
+		<componentes:Botao id="btnFechar" label="FECHAR" />
+	</mx:HBox>
+</bancoob:BaseModulo>

@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="GRAVAR_BOLETODDA_BAIXA_OPERACIONAL_XML_ADDA108RR2">
+		<use-case name="Motor de Recebimento de Arquivos ADDA108RR2"></use-case>
+	    <description>Gravar BoletoDDABaixaOper do XML ADDA108RR2.</description>
+	    <command>
+			<![CDATA[
+            WITH 
+            LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                  BXOP.NUMIDENTIFICADORBAIXAOPER AS NUM_IDENT_BX_EXISTENTE,
+                                  Y.NUMIDENTIFICADORBAIXAOPER,
+                                  Y.NUMREFATUALBAIXAOPER,
+                                  Y.NUMSEQATUALBAIXAOPER,
+                                  Y.NUMREFATUALCADBOLETO,
+                                  Y.DATAPROCESSAMENTOBAIXAOPER,
+                                  Y.DATAHORAPROCESSAMENTOBAIXAOPER,
+                                  Y.VALORBAIXAOPER,
+                                  Y.NUMCODBARRASBAIXAOPER,
+                                  Y.CODCANALPAGAMENTO,
+                                  Y.CODMEIOPAGAMENTO,
+                                  Y.CODSITUACAOBAIXAOPERACIONAL,
+                                  Y.CODTIPOBAIXAOPERACIONAL,
+                                  Y.CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                  Y.CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                  Y.CODTIPOPESSOAPORTADOR,
+                                  Y.NUMCNPJCPFPORTADOR,
+                                  Y.BOLOPERACAOCONTINGENCIA,
+                                  Y.QTDPAGAMENTOPARCIALREG,
+                                  Y.CODSITUACAOBOLETOPAGAMENTO,
+                                  Y.IDLOGDETRECEBIMENTOOARQUIVODDA,
+								  MAX(Y.NUMSEQATUALBAIXAOPER) OVER (PARTITION BY BOL.IDBOLETODDA) MAX_SEQ,
+                                  /*Somente gravará o XML na tabela de mensagem em caso de erro*/
+                                  CASE WHEN BOL.IDBOLETODDA IS NULL THEN
+                                     XMLSERIALIZE(Y.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                  ELSE
+                                     NULL
+                                  END AS DESCXMLMENSAGEMRECEBIDA
+                           FROM ( SELECT X.NUMIDENTIFICADORBOLETOCIP, 
+                                         X.NUMIDENTIFICADORBAIXAOPER,
+                                         X.NUMREFATUALBAIXAOPER,
+                                         X.NUMSEQATUALBAIXAOPER,
+                                         X.NUMREFATUALCADBOLETO,
+                                         X.DATAPROCESSAMENTOBAIXAOPER,
+                                         X.DATAHORAPROCESSAMENTOBAIXAOPER,
+                                         X.VALORBAIXAOPER,
+                                         X.NUMCODBARRASBAIXAOPER,
+                                         X.CODCANALPAGAMENTO,
+                                         X.CODMEIOPAGAMENTO,
+                                         'A' CODSITUACAOBAIXAOPERACIONAL,
+                                         X.CODTIPOBAIXAOPERACIONAL,
+                                         X.CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                         X.CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                         DECODE(TRIM(X.CODTIPOPESSOAPORTADOR),'',NULL,X.CODTIPOPESSOAPORTADOR) CODTIPOPESSOAPORTADOR,
+                                         CASE
+                                          WHEN X.CODTIPOPESSOAPORTADOR = 'F' THEN
+                                           LPAD(DECODE(TRIM(X.NUMCNPJCPFPORTADOR),'',NULL,X.NUMCNPJCPFPORTADOR), 11, 0)
+                                          ELSE
+                                           LPAD(DECODE(TRIM(X.NUMCNPJCPFPORTADOR),'',NULL,X.NUMCNPJCPFPORTADOR), 14, 0)
+                                         END NUMCNPJCPFPORTADOR,
+                                         CASE
+                                          WHEN X.BOLOPERACAOCONTINGENCIA = 'S' THEN
+                                           1
+                                          ELSE
+                                           0
+                                         END BOLOPERACAOCONTINGENCIA,
+                                         NVL(X.QTDPAGAMENTOPARCIALREG,0) QTDPAGAMENTOPARCIALREG,
+                                         X.CODSITUACAOBOLETOPAGAMENTO,
+                                         L.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                                         L.DESCXMLMENSAGEMRECEBIDA
+                                  FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L,
+                                    XMLTABLE ('$d/ArqRecebimento/Grupo_ADDA108RR2_Tit' passing DESCXMLMENSAGEMRECEBIDA as "d" 
+                                     COLUMNS 
+                                     NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH  'NumIdentcTit',
+                                     NUMIDENTIFICADORBAIXAOPER              BIGINT        PATH  'NumIdentcBaixaOperac',
+                                     NUMREFATUALBAIXAOPER                   BIGINT        PATH  'NumRefAtlBaixaOperac',
+                                     NUMSEQATUALBAIXAOPER                   BIGINT        PATH  'NumSeqAtlzBaixaOperac',
+                                     NUMREFATUALCADBOLETO                   BIGINT        PATH  'NumRefCadTitBaixaOperac',
+                                     DATAPROCESSAMENTOBAIXAOPER             DATE          PATH  'DtProcBaixaOperac',
+                                     DATAHORAPROCESSAMENTOBAIXAOPER         TIMESTAMP     PATH  'DtHrProcBaixaOperac',
+                                     VALORBAIXAOPER                         DECIMAL(18,2) PATH  'VlrBaixaOperacTit',
+                                     NUMCODBARRASBAIXAOPER                  VARCHAR(44)   PATH  'NumCodBarrasBaixaOperac',
+                                     CODCANALPAGAMENTO                      SMALLINT      PATH  'CanPgto',
+                                     CODMEIOPAGAMENTO                       SMALLINT      PATH  'MeioPgto',
+                                     CODTIPOBAIXAOPERACIONAL                SMALLINT      PATH  'TpBaixaOperac',
+                                     CODPARTRECEBEDORBAIXAOPERACIONAL       VARCHAR(3)    PATH  'CodPartRecbdrBaixaOperac',
+                                     CODISPBPARTRECEBEDORBAIXAOPERACIONAL   VARCHAR(8)    PATH  'ISPBPartRecbdrBaixaOperac',
+                                     CODTIPOPESSOAPORTADOR                  CHAR(1)       PATH  'TpPessoaPort',
+                                     NUMCNPJCPFPORTADOR                     VARCHAR(14)   PATH  'CNPJ_CPFPort',
+                                     BOLOPERACAOCONTINGENCIA                CHAR(1)       PATH  'IndrOpContg',
+                                     QTDPAGAMENTOPARCIALREG                 INTEGER       PATH  'QtdPgtoParclRegtd',
+                                     CODSITUACAOBOLETOPAGAMENTO             CHAR(2)       PATH  'SitTitPgto'
+                                    ) AS X
+                                  WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                                  AND L.BOLPROCESSADO = 0
+                                  AND L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                                ) Y
+                           LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP
+                           LEFT OUTER JOIN DDA.BOLETODDABAIXAOPER BXOP ON BXOP.IDBOLETODDA = BOL.IDBOLETODDA AND
+                                                                          BXOP.NUMIDENTIFICADORBAIXAOPER = Y.NUMIDENTIFICADORBAIXAOPER
+                         ),
+            BOLETOBAIXA AS (SELECT COUNT(*) QTD_BOLETOBAIXA
+                            FROM FINAL TABLE ( INSERT 
+                                               INTO DDA.BOLETODDABAIXAOPER(IDBOLETODDA,
+                                                                           NUMIDENTIFICADORBAIXAOPER,
+                                                                           NUMREFATUALBAIXAOPER,
+                                                                           NUMSEQATUALBAIXAOPER,
+                                                                           NUMREFATUALCADBOLETO,
+                                                                           DATAPROCESSAMENTOBAIXAOPER,
+                                                                           DATAHORAPROCESSAMENTOBAIXAOPER,
+                                                                           VALORBAIXAOPER,
+                                                                           NUMCODBARRASBAIXAOPER,
+                                                                           CODCANALPAGAMENTO,
+                                                                           CODMEIOPAGAMENTO,
+                                                                           CODSITUACAOBAIXAOPERACIONAL,
+                                                                           CODTIPOBAIXAOPERACIONAL,
+                                                                           CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                           CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                           CODTIPOPESSOAPORTADOR,
+                                                                           NUMCNPJCPFPORTADOR,
+                                                                           BOLOPERACAOCONTINGENCIA,
+                                                                           NUMCODBARRASCAMPOLIVRE)
+                                  SELECT REC.IDBOLETODDA,
+                                         REC.NUMIDENTIFICADORBAIXAOPER,
+                                         REC.NUMREFATUALBAIXAOPER,
+                                         REC.NUMSEQATUALBAIXAOPER,
+                                         REC.NUMREFATUALCADBOLETO,
+                                         REC.DATAPROCESSAMENTOBAIXAOPER,
+                                         REC.DATAHORAPROCESSAMENTOBAIXAOPER,
+                                         REC.VALORBAIXAOPER,
+                                         REC.NUMCODBARRASBAIXAOPER,
+                                         REC.CODCANALPAGAMENTO,
+                                         REC.CODMEIOPAGAMENTO,
+                                         REC.CODSITUACAOBAIXAOPERACIONAL,
+                                         REC.CODTIPOBAIXAOPERACIONAL,
+                                         REC.CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                         REC.CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                         REC.CODTIPOPESSOAPORTADOR, 
+                                         REC.NUMCNPJCPFPORTADOR,
+                                         REC.BOLOPERACAOCONTINGENCIA,
+                                         SUBSTR(REC.NUMCODBARRASBAIXAOPER,20,25) AS NUMCODBARRASCAMPOLIVRE
+                                  FROM LOGDETREC REC
+                                  WHERE REC.IDBOLETODDA IS NOT NULL
+                                  AND   REC.NUM_IDENT_BX_EXISTENTE IS NULL
+                                )
+                            ),
+            BOLDDA AS ( SELECT COUNT(*) QTD_BOLETODDA
+               FROM FINAL TABLE ( UPDATE DDA.BOLETODDA BUP
+                    SET ( BUP.QTDPAGAMENTOPARCIALREG,
+                          BUP.NUMREFATUALCADBOLETO,
+                          BUP.CODSITUACAOBOLETOPAGAMENTO) = (SELECT COALESCE(REC1.QTDPAGAMENTOPARCIALREG,0) AS QTDPAGAMENTOPARCIALREG,
+                                                                    REC1.NUMREFATUALCADBOLETO               AS NUMREFATUALCADBOLETO,
+                                                                    REC1.CODSITUACAOBOLETOPAGAMENTO         AS CODSITUACAOBOLETOPAGAMENTO
+                                                             FROM LOGDETREC REC1
+                                                             WHERE REC1.IDBOLETODDA = BUP.IDBOLETODDA
+                                                             AND   REC1.IDBOLETODDA IS NOT NULL
+                                                             AND   REC1.NUM_IDENT_BX_EXISTENTE IS NULL
+                                                             AND   REC1.MAX_SEQ = NUMSEQATUALBAIXAOPER),
+                          BUP.DATAHORAULTIMAATUALIZACAO = CURRENT TIMESTAMP
+                    WHERE BUP.IDBOLETODDA IN ( SELECT REC2.IDBOLETODDA
+                                               FROM LOGDETREC REC2
+                                               WHERE REC2.IDBOLETODDA IS NOT NULL
+                                               AND REC2.NUM_IDENT_BX_EXISTENTE IS NULL )
+                   )
+               ),
+            MSGDDA AS ( SELECT COUNT(*) QTD_MSGDDA
+                        FROM FINAL TABLE ( INSERT
+                                           INTO DDA.MENSAGEMDDA ( IDMENSAGEMDDAORIGEM,
+                                                                  CODTIPOMENSAGEMDDA,
+                                                                  DATAMOVIMENTO,
+                                                                  DATAHORAMENSAGEM,
+                                                                  QTDTOTREG,
+                                                                  DATAHORAPROTOCOLO,
+                                                                  NUMOPERACAO,
+                                                                  DESCERROPROTOCOLO,
+                                                                  XMLMENSAGEM,
+                                                                  BOLORIGEMSICOOB,
+                                                                  DATAHORACADASTRO,
+                                                                  NUMPRIORIDADEENVIO,
+                                                                  NUMCONTROLEDDA,
+                                                                  IDUSUARIOSOLICITANTE,
+                                                                  IDINSTITUICAOSOLICITANTE,
+                                                                  IDCANAL )
+                                           SELECT NULL AS IDMENSAGEMDDAORIGEM,
+                                                  'ERRO001' AS CODTIPOMENSAGEMDDA,
+                                                  CURRENT DATE AS DATAMOVIMENTO,
+                                                  NULL AS DATAHORAMENSAGEM,
+                                                  NULL AS QTDTOTREG,
+                                                  NULL AS DATAHORAPROTOCOLO,
+                                                  NULL AS NUMOPERACAO,
+                                                  NULL AS DESCERROPROTOCOLO,
+                                                  REC.DESCXMLMENSAGEMRECEBIDA AS XMLMENSAGEM,
+                                                  1 AS BOLORIGEMSICOOB,
+                                                  CURRENT TIMESTAMP AS DATAHORACADASTRO,
+                                                  1 AS NUMPRIORIDADEENVIO,
+                                                  NULL AS NUMCONTROLEDDA,
+                                                  'DDA-CIP',
+                                                  1,
+                                                  1 AS IDCANAL
+                                           FROM LOGDETREC REC
+                                           WHERE REC.IDBOLETODDA IS NULL) ),
+            LOGDETUPD AS ( SELECT COUNT(*) QTD_LOGDETUPD
+                           FROM FINAL TABLE ( UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+                                              SET LOGU.BOLPROCESSADO = 1,
+                                                  LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+                                              WHERE LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA IN ( SELECT REC2.IDLOGDETRECEBIMENTOOARQUIVODDA
+                                                                                             FROM LOGDETREC REC2 )
+                     )
+             )
+            /*Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            SELECT A1.QTD_BOLETOBAIXA, A2.QTD_BOLETODDA, A3.QTD_MSGDDA, A4.QTD_LOGDETUPD
+            FROM BOLETOBAIXA A1, BOLDDA A2, MSGDDA A3, LOGDETUPD A4
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			]]>
+		</command>
+	</query>
+	<query name="PROCESSAR_INCLUSAO_BAIXAOPERACIONAL_ADDA108RET">
+		<use-case name="Motor de Recebimento de Arquivos ADDA108RET"></use-case>
+	    <description>Processamento da atualização do XML da ADDA108RET.</description>
+	    <command>
+			<![CDATA[
+            WITH
+            /*Cursor WITH que acessa a tabela LOGDETRECEBIMENTOOARQUIVODDA dos registros que serão processados*/
+            SEL_LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                      BXOP.NUMIDENTIFICADORBAIXAOPER AS NUM_IDENT_BX_EXISTENTE,
+                                      Y.CODMSG, 
+                                      Y.NUMCTRLDDAPART,
+                                      Y.NUMCTRLDDA,
+                                      Y.NUMIDENTIFICADORBAIXAOPER,
+                                      Y.NUMREFATUALBAIXAOPER,
+                                      Y.NUMSEQATUALBAIXAOPER,
+                                      Y.NUMREFATUALCADBOLETO,
+                                      Y.DESCNOMEARQUIVORECEBIDO,
+                                      Y.DESCXMLMENSAGEMRECEBIDA,
+                                      Y.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM (
+                               SELECT XML1.CODMSG, 
+                                      XML1.NUMCTRLDDAPART,
+                                      /*Quando o grupo for Recusado o campo abaixo estará nulo e consequentemente não recuperará nenhum boleto*/
+                                      XML1.NUMIDENTIFICADORBOLETOCIP, 
+                                      XML1.NUMCTRLDDA,
+                                      XML1.NUMIDENTIFICADORBAIXAOPER,
+                                      XML1.NUMREFATUALBAIXAOPER,
+                                      XML1.NUMSEQATUALBAIXAOPER,
+                                      XML1.NUMREFATUALCADBOLETO,
+                                      REC.DESCNOMEARQUIVORECEBIDO,
+                                      /*Somente gravará o XML quando retornar erro*/
+                                      CASE WHEN XML1.CODMSG = 'ADDA108ERR' THEN
+                                         XMLSERIALIZE(DET.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                      ELSE
+                                         NULL
+                                      END AS DESCXMLMENSAGEMRECEBIDA,
+                                      DET.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM DDA.LOGRECEBIMENTOOARQUIVODDA REC
+                               JOIN DDA.LOGDETRECEBIMENTOOARQUIVODDA DET ON DET.IDLOGRECEBIMENTOOARQUIVODDA = REC.IDLOGRECEBIMENTOOARQUIVODDA
+                               CROSS JOIN XMLTABLE ('$a/ArqRecebimento/.' passing DET.DESCXMLMENSAGEMRECEBIDA as "a" 
+                                       COLUMNS
+                                          CODMSG                                 VARCHAR(10)   PATH   'CodMsg',
+                                          GRTITULOACEITO                         XML           PATH   'Grupo_ADDA108RET_TitActo',
+                                          GRTITULORECUSADO                       XML           PATH   'Grupo_ADDA108RET_TitRecsd',
+                                          NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH   '*/NumIdentcTit',
+                                          NUMCTRLDDAPART                         VARCHAR(50)   PATH   '*/NumCtrlReqPart', -- Será recuperado o do aceito se for aceito e do recusado se for recusado
+                                          NUMCTRLDDA                             VARCHAR(50)   PATH   'Grupo_ADDA108RET_TitActo/NumCtrlDDA',
+                                          NUMIDENTIFICADORBAIXAOPER              BIGINT        PATH   'Grupo_ADDA108RET_TitActo/NumIdentcBaixaOperac',
+                                          NUMREFATUALBAIXAOPER                   BIGINT        PATH   'Grupo_ADDA108RET_TitActo/NumRefAtlBaixaOperac',
+                                          NUMSEQATUALBAIXAOPER                   BIGINT        PATH   'Grupo_ADDA108RET_TitActo/NumSeqAtlzBaixaOperac',
+                                          NUMREFATUALCADBOLETO                   BIGINT        PATH   'Grupo_ADDA108RET_TitActo/NumRefAtlCadTit'
+                                       ) AS XML1
+                               WHERE REC.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                               AND DET.BOLPROCESSADO = 0
+                               AND DET.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                               ) Y
+                               /*LEFT OUTER JOIN necessário para que todos os registros sejam retornados, viabilizando a gravação da tabela MENSAGEMDDA com ERRO001 caso seja encontrada a tupla na BOLETODDA*/
+                               LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP
+							   LEFT OUTER JOIN DDA.BOLETODDABAIXAOPER BXOP ON BXOP.IDBOLETODDA = BOL.IDBOLETODDA AND
+                                                                              BXOP.NUMIDENTIFICADORBAIXAOPER = Y.NUMIDENTIFICADORBAIXAOPER
+							   
+							   ),
+            /*O INSERT abaixo é responsável pela insersão das mensagens na tabela MENSAGEMDDA. Que será divida em 3 tipos conforme descrito abaixo:
+              ERRO001 - Para os registros que foram encontrados na BOLETODDA
+              ADDA108RET - Para os títulos que estão no grupo de títulos aceitos
+              ADDA108ERR - Para os títulos que estão no grupo de títulos regeitados ou Recusados
+              Nesse comando FROM FINAL TABLE optamos por retornar alguns dados inseridos para que os mesmos possam ser utilizados
+              nos comandos WITH: INSERT_MSG_ERRO e INSERT_BAIXAOPERACIONAL.
+              Foi retornado também um count utilizando partition by default para que o DB2 retorne o numero de linhas total em todas as tuplas retornadas*/
+            INSERT_MSG_DDA AS (SELECT
+                               --COUNT(*) OVER () QTD_MSG_DDA,
+                               IDMENSAGEMDDA, IDMENSAGEMDDAORIGEM, CODTIPOMENSAGEMDDA, XMLMENSAGEM
+                               FROM FINAL TABLE ( INSERT 
+                                                  INTO DDA.MENSAGEMDDA (
+                                                    IDMENSAGEMDDAORIGEM,
+                                                    CODTIPOMENSAGEMDDA,
+                                                    DATAMOVIMENTO,
+                                                    DATAHORAMENSAGEM,
+                                                    QTDTOTREG,
+                                                    DATAHORAPROTOCOLO,
+                                                    NUMOPERACAO,
+                                                    DESCERROPROTOCOLO,
+                                                    XMLMENSAGEM,
+                                                    BOLORIGEMSICOOB,
+                                                    DATAHORACADASTRO,
+                                                    NUMPRIORIDADEENVIO,
+                                                    NUMCONTROLEDDA,
+                                                    IDUSUARIOSOLICITANTE,
+                                                    IDINSTITUICAOSOLICITANTE,
+                                                    IDCANAL )
+                                                  SELECT 
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN REC.NUMCTRLDDAPART ELSE NULL END  AS IDMENSAGEMDDAORIGEM,
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN CODMSG ELSE 'ERRO001' END         AS CODTIPOMENSAGEMDDA,
+                                                         CURRENT DATE                                                                 AS DATAMOVIMENTO,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORAMENSAGEM,
+                                                         1                                                                            AS QTDTOTREG,
+                                                         NULL                                                                         AS DATAHORAPROTOCOLO,
+                                                         REC.DESCNOMEARQUIVORECEBIDO                                                  AS NUMOPERACAO,
+                                                         NULL                                                                         AS DESCERROPROTOCOLO,
+                                                         REC.DESCXMLMENSAGEMRECEBIDA                                                  AS XMLMENSAGEM,
+                                                         0                                                                            AS BOLORIGEMSICOOB,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORACADASTRO,
+                                                         100                                                                          AS NUMPRIORIDADEENVIO,
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN REC.NUMCTRLDDA ELSE NULL END      AS NUMCONTROLEDDA,
+                                                         'DDA-CIP'                                                                    AS IDUSUARIOSOLICITANTE,
+                                                         1                                                                            AS IDINSTITUICAOSOLICITANTE, 
+                                                         1                                                                            AS IDCANAL
+                                                  FROM SEL_LOGDETREC REC ) XX ),
+            /*Abaixo será realizado o insert da tabela ERROMENSAGEMRETORNOCIP que é filha da tabela MENSAGEMDDA e somente é gravada 
+              para os casos de mensagem ADDA108ERR, que ocorre para os títulos Recusados.
+              Então o insert é realizado baseado no retorno do FROM FINAL TABLE realizado no comando WITH INSERT_MSG_DDA para podermos 
+              recuperar o IDMENSAGEMDDA e o XMLMENSAGEM que veio no arquivo e que foi gravado na mensagem*/
+            INSERT_MSG_ERRO AS ( SELECT
+                                 COUNT(*) QTD_MSG_ERRO
+                                 FROM FINAL TABLE ( INSERT INTO DDA.ERROMENSAGEMRETORNOCIP
+                                                     (IDMENSAGEMDDA, 
+                                                      CODTIPOERROCIP, 
+                                                      DATAHORAATUALIZACAO,
+                                                      CODTIPOTRATAMENTOERROCIP)
+                                                     SELECT MS.IDMENSAGEMDDA,
+                                                            CODERRO,
+                                                            CURRENT TIMESTAMP, 
+                                                            NULL
+                                                     FROM INSERT_MSG_DDA MS,
+                                                          XMLTABLE ('$d/ArqRecebimento/Grupo_ADDA108RET_TitRecsd/*/@CodErro' passing XMLPARSE( DOCUMENT MS.XMLMENSAGEM ) as "d" 
+                                                             COLUMNS 
+                                                             CODERRO  VARCHAR(10)   PATH  '.'
+                                                          ) AS X
+                                                     WHERE MS.CODTIPOMENSAGEMDDA = 'ADDA108ERR' ) ),
+            /*O Comando de insert a seguir (INSERT_BAIXAOPERACIONAL)
+              utlizam o recurso FROM FINAL TABLE do DB2 que recupera um cursor das tuplas que foram inseridas na tabela.
+              O insert abaixo retornará somente a quantidade de registros que foram inseridas
+              Esse insert será baseados nas mensagem aceitas (INSERT_MSG_DDA) para recuperar o NUMIDENTIFICADORBOLETOCIP e assim recuperar os boletos para pegar o IDBOLETODDA
+              e assim inserir a tabela DDA.BOLETODDABAIXAOPERACIONAL baseado nos dados da tabela MENSAGEMDDABAIXAOPERACIONAL acessado pelo campo IDMENSAGEMDDAORIGEM retornado nas mensagem aceitas (INSERT_MSG_DDA)*/
+            INSERT_BAIXAOPERACIONAL AS ( SELECT
+                                         COUNT(*) QTD_INS_BAIXA
+                                         FROM FINAL TABLE ( INSERT INTO DDA.BOLETODDABAIXAOPER (IDBOLETODDA,
+                                                                                                NUMIDENTIFICADORBAIXAOPER,
+                                                                                                NUMREFATUALBAIXAOPER,
+                                                                                                NUMSEQATUALBAIXAOPER,
+                                                                                                DATAPROCESSAMENTOBAIXAOPER,
+                                                                                                DATAHORAPROCESSAMENTOBAIXAOPER,
+                                                                                                VALORBAIXAOPER,
+                                                                                                NUMCODBARRASBAIXAOPER,
+                                                                                                CODCANALPAGAMENTO,
+                                                                                                CODMEIOPAGAMENTO,
+                                                                                                BOLOPERACAOCONTINGENCIA,
+                                                                                                CODSITUACAOBAIXAOPERACIONAL,
+                                                                                                CODTIPOBAIXAOPERACIONAL,
+                                                                                                CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                                                CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                                                CODTIPOPESSOAPORTADOR,
+                                                                                                NUMCNPJCPFPORTADOR,
+                                                                                                NUMREFATUALCADBOLETO,
+                                                                                                NUMCODBARRASCAMPOLIVRE)
+                                                            SELECT MSGA.IDBOLETODDA,
+                                                                   MSGA.NUMIDENTIFICADORBAIXAOPER,
+                                                                   MSGA.NUMREFATUALBAIXAOPER,
+                                                                   MSGA.NUMSEQATUALBAIXAOPER,
+                                                                   MS.DATAHORACADASTRO,
+                                                                   MS.DATAHORACADASTRO,
+                                                                   MBX.VALORBAIXA,
+                                                                   MBX.NUMCODIGOBARRA,
+                                                                   MBX.CODCANALPAGAMENTO,
+                                                                   MBX.CODMEIOPAGAMENTO,
+                                                                   0,
+                                                                   'A',
+                                                                   MBX.CODTIPOBAIXAOPERACIONAL,
+                                                                   '756',
+                                                                   '02038232',
+                                                                   MBX.CODTIPOPESSOAPORTADOR,
+                                                                   MBX.NUMCPFCNPJPORTADOR,
+                                                                   MSGA.NUMREFATUALCADBOLETO,
+                                                                   MBX.NUMCODBARRASCAMPOLIVRE
+                                                            FROM SEL_LOGDETREC MSGA
+                                                            JOIN DDA.MENSAGEMDDA MS ON MS.IDMENSAGEMDDA = MSGA.NUMCTRLDDAPART
+                                                            JOIN DDA.MENSAGEMDDABAIXAOPERACIONAL MBX ON MBX.IDMENSAGEMDDA = MS.IDMENSAGEMDDA
+                                                            WHERE MSGA.CODMSG = 'ADDA108RET'
+                                                            AND MSGA.IDBOLETODDA IS NOT NULL
+                                                            AND MSGA.NUM_IDENT_BX_EXISTENTE IS NULL ) ),
+            BOLDDA AS ( SELECT COUNT(*) QTD_BOLETODDA
+                        FROM FINAL TABLE ( UPDATE DDA.BOLETODDA BUP
+                                           SET BUP.NUMREFATUALCADBOLETO = ( SELECT REC1.NUMREFATUALCADBOLETO
+                                                                            FROM SEL_LOGDETREC REC1
+                                                                            WHERE REC1.IDBOLETODDA = BUP.IDBOLETODDA
+                                                                            AND   REC1.IDBOLETODDA IS NOT NULL
+                                                                            AND   REC1.NUM_IDENT_BX_EXISTENTE IS NULL ),
+                                               BUP.DATAHORAULTIMAATUALIZACAO = CURRENT TIMESTAMP
+                                           WHERE BUP.IDBOLETODDA IN ( SELECT REC2.IDBOLETODDA
+                                                                      FROM SEL_LOGDETREC REC2
+                                                                      WHERE REC2.CODMSG = 'ADDA108RET'
+																	  AND REC2.IDBOLETODDA IS NOT NULL
+                                                                      AND   REC2.NUM_IDENT_BX_EXISTENTE IS NULL ) ) ),
+            /*Esse UPDATE realiza alteração de todos os registros lidos para processados (BOLPROCESSADO = 1)*/
+            UPDATE_LOGDET AS (SELECT COUNT(*) QTD_UPD_LOGDET
+                              FROM FINAL TABLE ( UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+                                                 SET LOGU.BOLPROCESSADO = 1,
+                                                     LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+                                                 WHERE LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA IN ( SELECT REC2.IDLOGDETRECEBIMENTOOARQUIVODDA FROM SEL_LOGDETREC REC2 ) ) )
+            /*
+            Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            --SELECT * FROM INSERT_MSG_DDA
+            SELECT A1.QTD_MSG_DDA, A2.QTD_MSG_ERRO, A3.QTD_INS_BAIXA, A31.QTD_BOLETODDA, A4.QTD_UPD_LOGDET
+            FROM 
+            (SELECT COALESCE(AA.QTD_MSG_DDA,0) QTD_MSG_DDA FROM SYSIBM.SYSDUMMY1 LEFT OUTER JOIN INSERT_MSG_DDA AA ON AA.QTD_MSG_DDA IS NOT NULL FETCH FIRST 1 ROW ONLY) A1,
+            INSERT_MSG_ERRO A2, INSERT_BAIXAOPERACIONAL A3, BOLDDA A31, UPDATE_LOGDET A4
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_MENSAGEMDDA_BAIXA_OPERACIONAL_REFERENCIAS">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do Baixa Operacional para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT * FROM (
+					SELECT mbo.idMensagemDDA, mbo.numCodigoBarra, mbo.numRefAtualCadBoleto, mbo.codTipoBaixaOperacional, 
+					       mbo.codTipoPessoaPortador, mbo.numCpfCnpjPortador, mbo.valorBaixa, mbo.codMeioPagamento, 
+					       mbo.codCanalPagamento, mbo.bolOperacaoContingencia, boletoDDABaixaOper.numRefAtualBaixaOper, 
+					       boletoDDABaixaOper.numSeqAtualBaixaOper, boletoDDABaixaOper.numIdentificadorBaixaOper, boletoDDA.numIdentificadorBoletoCip, boletoDDA.DATAHORAULTIMAATUALIZACAO,
+					       MAX(boletoDDA.DATAHORAULTIMAATUALIZACAO) OVER (PARTITION BY boletoDDA.numCodigoBarra) as Data_MAX,
+					       MAX(boletoDDABaixaOper.NUMSEQATUALBAIXAOPER) OVER (PARTITION BY boletoDDABaixaOper.IDBOLETODDA) as NUMSEQ_MAX
+					FROM DDA.MENSAGEMDDABAIXAOPERACIONAL mbo LEFT JOIN DDA.BOLETODDA boletoDDA 
+					                                           ON boletoDDA.numCodigoBarra  = mbo.numCodigoBarra
+					                                          AND boletoDDA.codSituacaoBoleto = 1
+					                                          LEFT JOIN DDA.BOLETODDABAIXAOPER boletoDDABaixaOper 
+					                                          ON boletoDDABaixaOper.idBoletoDDA = boletoDDA.idBoletoDDA
+					                                          AND boletoDDABaixaOper.codSituacaoBaixaOperacional = 'A'
+					WHERE mbo.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+					) X
+					WHERE X.DATAHORAULTIMAATUALIZACAO = X.DATA_MAX
+					and ( x.numSeqAtualBaixaOper IS NULL OR x.numSeqAtualBaixaOper = NUMSEQ_MAX )
+					FETCH FIRST 1 ROWS ONLY	
+				]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_MENSAGEMDDA_BAIXA_OPERACIONAL">
+		<use-case name="Atualizar Mensagem Baixa Operacional "></use-case>
+	    <description>Atualizar o numero de referencia do boleto e o Numero Sequencial de acordo com o idMensagemDDABaixaOperacional</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDABAIXAOPERACIONAL
+					   SET numRefAtualBaixaOper = <bancoob:valor valor="${numRefAtualBaixaOper}"/>,
+					       numSeqAtualBaixaOper = <bancoob:valor valor="${numSeqAtualBaixaOper}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagemDDABaixaOperacional}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGEMDDA_BAIXA_OPERACIONAL">
+		<use-case name="Listar Mensagem DDA "></use-case>
+	    <description>Listar MensagemDDABaixaOperacional com JOIN no LogDetalheEnvioArquivoDDA. Utilizado na Geraçao e Postagem dos Arquivos</description>
+	    <command>
+				<![CDATA[
+					SELECT * FROM (
+						        SELECT mbo.idMensagemDDA, mbo.numCodigoBarra, mbo.numRefAtualCadBoleto, mbo.codTipoBaixaOperacional, 
+								       mbo.codTipoPessoaPortador, mbo.numCpfCnpjPortador, mbo.valorBaixa, mbo.codMeioPagamento, 
+								       mbo.codCanalPagamento, mbo.bolOperacaoContingencia, boletoDDABaixaOper.numRefAtualBaixaOper, 
+								       boletoDDABaixaOper.numSeqAtualBaixaOper, boletoDDABaixaOper.numIdentificadorBaixaOper,
+								       boletoDDA.numIdentificadorBoletoCip, boletoDDA.DATAHORAULTIMAATUALIZACAO,
+							               MAX(boletoDDA.DATAHORAULTIMAATUALIZACAO) OVER (PARTITION BY boletoDDA.numCodigoBarra) as Data_MAX,
+							               MAX(boletoDDABaixaOper.NUMSEQATUALBAIXAOPER) OVER (PARTITION BY boletoDDABaixaOper.IDBOLETODDA) as NUMSEQ_MAX,
+										   boletoDDABaixaOper.IDBOLETODDABAIXAOPER
+						        FROM DDA.MENSAGEMDDABAIXAOPERACIONAL mbo  
+							        INNER JOIN DDA.LOGDETALHEENVIOARQUIVODDA log on log.idmensagemdda = mbo.idmensagemdda 
+							        LEFT JOIN DDA.BOLETODDA boletoDDA 
+							                ON boletoDDA.numCodigoBarra  = mbo.numCodigoBarra
+							                AND boletoDDA.codSituacaoBoleto = 1 
+							        LEFT JOIN DDA.BOLETODDABAIXAOPER boletoDDABaixaOper 
+							                 ON boletoDDABaixaOper.idBoletoDDA = boletoDDA.idBoletoDDA
+							                 AND boletoDDABaixaOper.codSituacaoBaixaOperacional = 'A'
+					  		 WHERE log.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+					  ) X
+					WHERE  X.DATAHORAULTIMAATUALIZACAO = X.DATA_MAX
+					and (x.numSeqAtualBaixaOper IS NULL OR x.numSeqAtualBaixaOper = X.NUMSEQ_MAX)
+					ORDER BY X.IDBOLETODDABAIXAOPER DESC
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGEMDDA_BAIXA_OPERACIONAL_CONTINGENCIA">
+		<use-case name="Listar Mensagem DDA "></use-case>
+	    <description>Listar MensagemDDABaixaOperacional com JOIN no LogDetalheEnvioArquivoDDA. Utilizado na Geraçao e Postagem dos Arquivos</description>
+	    <command>
+				<![CDATA[
+				        SELECT mbo.idMensagemDDA, mbo.numCodigoBarra, mbo.numRefAtualCadBoleto, mbo.codTipoBaixaOperacional, 
+						       mbo.codTipoPessoaPortador, mbo.numCpfCnpjPortador, mbo.valorBaixa, mbo.codMeioPagamento, 
+						       mbo.codCanalPagamento, mbo.bolOperacaoContingencia
+				        FROM DDA.MENSAGEMDDABAIXAOPERACIONAL mbo  
+					        INNER JOIN DDA.LOGDETALHEENVIOARQUIVODDA log on log.idmensagemdda = mbo.idmensagemdda 
+			  		 WHERE log.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	
+	
+	<query name="OBTER_MENSAGEM_DDA">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen DDA</description>
+	    <command>
+				<![CDATA[
+					SELECT m.idmensagemdda, m.idmensagemddaorigem, m.codTipoMensagemdda, m.dataMovimento, m.datahoramensagem, m.qtdtotreg, m.datahoraprotocolo,
+					 m.numoperacao,	m.descerroprotocolo, m.xmlmensagem, m.bolorigemsicoob, m.datahoracadastro, m.numprioridadeenvio,  m.numControleDDA,
+					 m.bolExcedeuSLA, m.idCanal, m.idInstituicaoSolicitante , m.idUsuarioSolicitante
+						FROM DDA.MENSAGEMDDA m
+					WHERE   
+						m.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+		<query name="PROCESSAR_INCLUSAO_BAIXAOPERACIONAL_ADDA114RET">
+		<use-case name="Motor de Recebimento de Arquivos ADDA14RET"></use-case>
+	    <description>Processamento da atualização do XML da ADDA114RET.</description>
+	    <command>
+			<![CDATA[
+            WITH
+            /*Cursor WITH que acessa a tabela LOGDETRECEBIMENTOOARQUIVODDA dos registros que serão processados*/
+            SEL_LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                      BXOP.NUMIDENTIFICADORBAIXAOPER AS NUM_IDENT_BX_EXISTENTE,
+                                      Y.CODMSG, 
+                                      Y.NUMCTRLDDAPART,
+                                      Y.NUMCTRLDDA,
+                                      Y.NUMIDENTIFICADORBAIXAOPER,
+                                      Y.NUMREFATUALBAIXAOPER,
+                                      Y.NUMSEQATUALBAIXAOPER,
+                                      Y.NUMREFATUALCADBOLETO,
+                                      Y.DESCNOMEARQUIVORECEBIDO,
+                                      Y.DESCXMLMENSAGEMRECEBIDA,
+                                      Y.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM (
+                               SELECT XML1.CODMSG, 
+                                      XML1.NUMCTRLDDAPART,
+                                      /*Quando o grupo for Recusado o campo abaixo estará nulo e consequentemente não recuperará nenhum boleto*/
+                                      XML1.NUMIDENTIFICADORBOLETOCIP, 
+                                      XML1.NUMCTRLDDA,
+                                      XML1.NUMIDENTIFICADORBAIXAOPER,
+                                      XML1.NUMREFATUALBAIXAOPER,
+                                      XML1.NUMSEQATUALBAIXAOPER,
+                                      XML1.NUMREFATUALCADBOLETO,
+                                      REC.DESCNOMEARQUIVORECEBIDO,
+                                      /*Somente gravará o XML quando retornar erro*/
+                                      CASE WHEN XML1.CODMSG = 'ADDA114ERR' THEN
+                                         XMLSERIALIZE(DET.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                      ELSE
+                                         NULL
+                                      END AS DESCXMLMENSAGEMRECEBIDA,
+                                      DET.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM DDA.LOGRECEBIMENTOOARQUIVODDA REC
+                               JOIN DDA.LOGDETRECEBIMENTOOARQUIVODDA DET ON DET.IDLOGRECEBIMENTOOARQUIVODDA = REC.IDLOGRECEBIMENTOOARQUIVODDA
+                               CROSS JOIN XMLTABLE ('$a/ArqRecebimento/.' passing DET.DESCXMLMENSAGEMRECEBIDA as "a" 
+                                       COLUMNS
+                                          CODMSG                                 VARCHAR(10)   PATH   'CodMsg',
+                                          GRTITULOACEITO                         XML           PATH   'Grupo_ADDA114RET_TitActo',
+                                          GRTITULORECUSADO                       XML           PATH   'Grupo_ADDA114RET_TitRecsd',
+                                          NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH   '*/NumIdentcTit',
+                                          NUMCTRLDDAPART                         VARCHAR(50)   PATH   '*/NumCtrlReqPart', -- Será recuperado o do aceito se for aceito e do recusado se for recusado
+                                          NUMCTRLDDA                             VARCHAR(50)   PATH   'Grupo_ADDA114RET_TitActo/NumCtrlDDA',
+                                          NUMIDENTIFICADORBAIXAOPER              BIGINT        PATH   'Grupo_ADDA114RET_TitActo/NumIdentcBaixaOperac',
+                                          NUMREFATUALBAIXAOPER                   BIGINT        PATH   'Grupo_ADDA114RET_TitActo/NumRefAtlBaixaOperac',
+                                          NUMSEQATUALBAIXAOPER                   BIGINT        PATH   'Grupo_ADDA114RET_TitActo/NumSeqAtlzBaixaOperac',
+                                          NUMREFATUALCADBOLETO                   BIGINT        PATH   'Grupo_ADDA114RET_TitActo/NumRefAtlCadTit'
+                                       ) AS XML1
+                               WHERE REC.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                               AND DET.BOLPROCESSADO = 0
+                               AND DET.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                               ) Y
+                               /*LEFT OUTER JOIN necessário para que todos os registros sejam retornados, viabilizando a gravação da tabela MENSAGEMDDA com ERRO001 caso seja encontrada a tupla na BOLETODDA*/
+                               LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP
+                               LEFT OUTER JOIN DDA.BOLETODDABAIXAOPER BXOP ON BXOP.IDBOLETODDA = BOL.IDBOLETODDA AND
+                                                                              BXOP.NUMIDENTIFICADORBAIXAOPER = Y.NUMIDENTIFICADORBAIXAOPER
+                               
+                               ),
+            /*O INSERT abaixo é responsável pela insersão das mensagens na tabela MENSAGEMDDA. Que será divida em 3 tipos conforme descrito abaixo:
+              ERRO001 - Para os registros que foram encontrados na BOLETODDA
+              ADDA108RET - Para os títulos que estão no grupo de títulos aceitos
+              ADDA108ERR - Para os títulos que estão no grupo de títulos regeitados ou Recusados
+              Nesse comando FROM FINAL TABLE optamos por retornar alguns dados inseridos para que os mesmos possam ser utilizados
+              nos comandos WITH: INSERT_MSG_ERRO e INSERT_BAIXAOPERACIONAL.
+              Foi retornado também um count utilizando partition by default para que o DB2 retorne o numero de linhas total em todas as tuplas retornadas*/
+            INSERT_MSG_DDA AS (SELECT
+                               --COUNT(*) OVER () QTD_MSG_DDA,
+                               IDMENSAGEMDDA, IDMENSAGEMDDAORIGEM, CODTIPOMENSAGEMDDA, XMLMENSAGEM
+                               FROM FINAL TABLE ( INSERT 
+                                                  INTO DDA.MENSAGEMDDA (
+                                                    IDMENSAGEMDDAORIGEM,
+                                                    CODTIPOMENSAGEMDDA,
+                                                    DATAMOVIMENTO,
+                                                    DATAHORAMENSAGEM,
+                                                    QTDTOTREG,
+                                                    DATAHORAPROTOCOLO,
+                                                    NUMOPERACAO,
+                                                    DESCERROPROTOCOLO,
+                                                    XMLMENSAGEM,
+                                                    BOLORIGEMSICOOB,
+                                                    DATAHORACADASTRO,
+                                                    NUMPRIORIDADEENVIO,
+                                                    NUMCONTROLEDDA,
+                                                    IDUSUARIOSOLICITANTE,
+                                                    IDINSTITUICAOSOLICITANTE,
+                                                    IDCANAL )
+                                                  SELECT 
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN REC.NUMCTRLDDAPART ELSE NULL END  AS IDMENSAGEMDDAORIGEM,
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN CODMSG ELSE 'ERRO001' END         AS CODTIPOMENSAGEMDDA,
+                                                         CURRENT DATE                                                                 AS DATAMOVIMENTO,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORAMENSAGEM,
+                                                         1                                                                            AS QTDTOTREG,
+                                                         NULL                                                                         AS DATAHORAPROTOCOLO,
+                                                         REC.DESCNOMEARQUIVORECEBIDO                                                  AS NUMOPERACAO,
+                                                         NULL                                                                         AS DESCERROPROTOCOLO,
+                                                         REC.DESCXMLMENSAGEMRECEBIDA                                                  AS XMLMENSAGEM,
+                                                         0                                                                            AS BOLORIGEMSICOOB,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORACADASTRO,
+                                                         100                                                                          AS NUMPRIORIDADEENVIO,
+                                                         CASE WHEN REC.IDBOLETODDA IS NOT NULL THEN REC.NUMCTRLDDA ELSE NULL END      AS NUMCONTROLEDDA,
+                                                         'DDA-CIP'                                                                    AS IDUSUARIOSOLICITANTE,
+                                                         1                                                                            AS IDINSTITUICAOSOLICITANTE, 
+                                                         1                                                                            AS IDCANAL
+                                                  FROM SEL_LOGDETREC REC ) XX ),
+            /*Abaixo será realizado o insert da tabela ERROMENSAGEMRETORNOCIP que é filha da tabela MENSAGEMDDA e somente é gravada 
+              para os casos de mensagem ADDA108ERR, que ocorre para os títulos Recusados.
+              Então o insert é realizado baseado no retorno do FROM FINAL TABLE realizado no comando WITH INSERT_MSG_DDA para podermos 
+              recuperar o IDMENSAGEMDDA e o XMLMENSAGEM que veio no arquivo e que foi gravado na mensagem*/
+            INSERT_MSG_ERRO AS ( SELECT
+                                 COUNT(*) QTD_MSG_ERRO
+                                 FROM FINAL TABLE ( INSERT INTO DDA.ERROMENSAGEMRETORNOCIP
+                                                     (IDMENSAGEMDDA, 
+                                                      CODTIPOERROCIP, 
+                                                      DATAHORAATUALIZACAO,
+                                                      CODTIPOTRATAMENTOERROCIP)
+                                                     SELECT MS.IDMENSAGEMDDA,
+                                                            CODERRO,
+                                                            CURRENT TIMESTAMP, 
+                                                            NULL
+                                                     FROM INSERT_MSG_DDA MS,
+                                                          XMLTABLE ('$d/ArqRecebimento/Grupo_ADDA114RET_TitRecsd/*/@CodErro' passing XMLPARSE( DOCUMENT MS.XMLMENSAGEM ) as "d" 
+                                                             COLUMNS 
+                                                             CODERRO  VARCHAR(10)   PATH  '.'
+                                                          ) AS X
+                                                     WHERE MS.CODTIPOMENSAGEMDDA = 'ADDA108ERR' ) ),
+            /*O Comando de insert a seguir (INSERT_BAIXAOPERACIONAL)
+              utlizam o recurso FROM FINAL TABLE do DB2 que recupera um cursor das tuplas que foram inseridas na tabela.
+              O insert abaixo retornará somente a quantidade de registros que foram inseridas
+              Esse insert será baseados nas mensagem aceitas (INSERT_MSG_DDA) para recuperar o NUMIDENTIFICADORBOLETOCIP e assim recuperar os boletos para pegar o IDBOLETODDA
+              e assim inserir a tabela DDA.BOLETODDABAIXAOPERACIONAL baseado nos dados da tabela MENSAGEMDDABAIXAOPERACIONAL acessado pelo campo IDMENSAGEMDDAORIGEM retornado nas mensagem aceitas (INSERT_MSG_DDA)*/
+            INSERT_BAIXAOPERACIONAL AS ( SELECT
+                                         COUNT(*) QTD_INS_BAIXA
+                                         FROM FINAL TABLE ( INSERT INTO DDA.BOLETODDABAIXAOPER (IDBOLETODDA,
+                                                                                                NUMIDENTIFICADORBAIXAOPER,
+                                                                                                NUMREFATUALBAIXAOPER,
+                                                                                                NUMSEQATUALBAIXAOPER,
+                                                                                                DATAPROCESSAMENTOBAIXAOPER,
+                                                                                                DATAHORAPROCESSAMENTOBAIXAOPER,
+                                                                                                VALORBAIXAOPER,
+                                                                                                NUMCODBARRASBAIXAOPER,
+                                                                                                CODCANALPAGAMENTO,
+                                                                                                CODMEIOPAGAMENTO,
+                                                                                                BOLOPERACAOCONTINGENCIA,
+                                                                                                CODSITUACAOBAIXAOPERACIONAL,
+                                                                                                CODTIPOBAIXAOPERACIONAL,
+                                                                                                CODPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                                                CODISPBPARTRECEBEDORBAIXAOPERACIONAL,
+                                                                                                CODTIPOPESSOAPORTADOR,
+                                                                                                NUMCNPJCPFPORTADOR,
+                                                                                                NUMREFATUALCADBOLETO,
+                                                                                                NUMCODBARRASCAMPOLIVRE)
+                                                            SELECT MSGA.IDBOLETODDA,
+                                                                   MSGA.NUMIDENTIFICADORBAIXAOPER,
+                                                                   MSGA.NUMREFATUALBAIXAOPER,
+                                                                   MSGA.NUMSEQATUALBAIXAOPER,
+                                                                   MS.DATAHORACADASTRO,
+                                                                   MS.DATAHORACADASTRO,
+                                                                   MBX.VALORBAIXA,
+                                                                   MBX.NUMCODIGOBARRA,
+                                                                   MBX.CODCANALPAGAMENTO,
+                                                                   MBX.CODMEIOPAGAMENTO,
+                                                                   0,
+                                                                   'A',
+                                                                   MBX.CODTIPOBAIXAOPERACIONAL,
+                                                                   '756',
+                                                                   '02038232',
+                                                                   MBX.CODTIPOPESSOAPORTADOR,
+                                                                   MBX.NUMCPFCNPJPORTADOR,
+                                                                   MSGA.NUMREFATUALCADBOLETO,
+                                                                   MBX.NUMCODBARRASCAMPOLIVRE
+                                                            FROM SEL_LOGDETREC MSGA
+                                                            JOIN DDA.MENSAGEMDDA MS ON MS.IDMENSAGEMDDA = MSGA.NUMCTRLDDAPART
+                                                            JOIN DDA.MENSAGEMDDABAIXAOPERACIONAL MBX ON MBX.IDMENSAGEMDDA = MS.IDMENSAGEMDDA
+                                                            WHERE MSGA.CODMSG = 'ADDA114RET'
+                                                            AND MSGA.IDBOLETODDA IS NOT NULL
+                                                            AND MSGA.NUM_IDENT_BX_EXISTENTE IS NULL ) ),
+            BOLDDA AS ( SELECT COUNT(*) QTD_BOLETODDA
+                        FROM FINAL TABLE ( UPDATE DDA.BOLETODDA BUP
+                                           SET BUP.NUMREFATUALCADBOLETO = ( SELECT REC1.NUMREFATUALCADBOLETO
+                                                                            FROM SEL_LOGDETREC REC1
+                                                                            WHERE REC1.IDBOLETODDA = BUP.IDBOLETODDA
+                                                                            AND   REC1.IDBOLETODDA IS NOT NULL
+                                                                            AND   REC1.NUM_IDENT_BX_EXISTENTE IS NULL ),
+                                               BUP.DATAHORAULTIMAATUALIZACAO = CURRENT TIMESTAMP
+                                           WHERE BUP.IDBOLETODDA IN ( SELECT REC2.IDBOLETODDA
+                                                                      FROM SEL_LOGDETREC REC2
+                                                                      WHERE REC2.CODMSG = 'ADDA114RET'
+                                                                      AND REC2.IDBOLETODDA IS NOT NULL
+                                                                      AND   REC2.NUM_IDENT_BX_EXISTENTE IS NULL ) ) ),
+            /*Esse UPDATE realiza alteração de todos os registros lidos para processados (BOLPROCESSADO = 1)*/
+            UPDATE_LOGDET AS (SELECT COUNT(*) QTD_UPD_LOGDET
+                              FROM FINAL TABLE ( UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+                                                 SET LOGU.BOLPROCESSADO = 1,
+                                                     LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+                                                 WHERE LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA IN ( SELECT REC2.IDLOGDETRECEBIMENTOOARQUIVODDA FROM SEL_LOGDETREC REC2 ) ) )
+            /*
+            Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            --SELECT * FROM INSERT_MSG_DDA
+            SELECT A1.QTD_MSG_DDA, A2.QTD_MSG_ERRO, A3.QTD_INS_BAIXA, A31.QTD_BOLETODDA, A4.QTD_UPD_LOGDET
+            FROM 
+            (SELECT COALESCE(AA.QTD_MSG_DDA,0) QTD_MSG_DDA FROM SYSIBM.SYSDUMMY1 LEFT OUTER JOIN INSERT_MSG_DDA AA ON AA.QTD_MSG_DDA IS NOT NULL FETCH FIRST 1 ROW ONLY) A1,
+            INSERT_MSG_ERRO A2, INSERT_BAIXAOPERACIONAL A3, BOLDDA A31, UPDATE_LOGDET A4
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			]]>
+	    </command>
+	</query>
+	
+	
+	
+</queries>

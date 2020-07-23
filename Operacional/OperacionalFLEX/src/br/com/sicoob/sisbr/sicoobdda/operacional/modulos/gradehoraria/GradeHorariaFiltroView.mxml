@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<cadastro:FormularioCadastroView 
+	xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" autoLayout="true" standAlone="true" 
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	clipContent="false" verticalScrollPolicy="off" paddingLeft="1" paddingRight="1"
+	width="100%" height="30">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TipoGradeHorariaDTO;
+			
+			public static function labelComboTipoGradeHoraria(obj:Object, obj2:Object = null):String{
+				var tipoGradeHoraria:TipoGradeHorariaDTO = obj as TipoGradeHorariaDTO;
+				return tipoGradeHoraria.codTipoGradeHoraria + " - " + tipoGradeHoraria.descTipoGradeHoraria ;
+			}
+		]]>
+	</mx:Script>
+		
+	
+	<containers:VBoxBancoob>
+		<titulo:SubtituloView id="tituloListaFiltro" texto="Filtro" width="100%" />
+		<containers:HBoxBancoob paddingLeft="15" width="100%" verticalScrollPolicy="off" horizontalGap="-1" paddingBottom="5" verticalAlign="middle">
+			<Rotulo text="Cód. Tipo Grade:" width="100" textAlign="right" paddingRight="10"/>
+			<input:Combo id="cmbTipoGradeHoraria" labelField="label" width="500" editable="false" labelFunction="{labelComboTipoGradeHoraria}" dropdownWidth="500" labelItemOpcional=""  inserirItemOpcional="true" />
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" height="5%" verticalScrollPolicy="off" horizontalGap="-1" verticalAlign="middle">
+			<containers:HBoxBancoob width="100%" verticalAlign="middle" paddingLeft="15">
+				<Rotulo text="Data Movimento:" width="100" textAlign="right" />
+				<input:Data id="dataReferencia" width="100" dataDefault="{null}" />
+				<input:Check id="chkGradesEmUso" label="Somente grades em uso" paddingLeft="10"/>
+			</containers:HBoxBancoob>
+
+			<containers:HBoxBancoob paddingLeft="325">
+				<painellista:BotaoProcurarView id="btnProcurar"  acionarComEnter="true" />
+				<componentes:Botao id="btnLimpar" width="70" acionarComEnter="true" label="Limpar" />
+			</containers:HBoxBancoob>
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView> 

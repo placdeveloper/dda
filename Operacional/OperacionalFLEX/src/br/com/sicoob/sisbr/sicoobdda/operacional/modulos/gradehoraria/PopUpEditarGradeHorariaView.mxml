@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="900" height="500"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  >
+		<mx:Style>
+		.alinhaTexto {
+			textAlign:center;
+		}
+		.tituloGrid{
+			borderThickness: 1;
+			borderSides: bottom;
+			borderStyle:solid;
+			textAlign:left;
+			fontSize: 25;
+			fontWeight:bold;
+		}
+		
+		
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TipoGradeHorariaDTO;
+			
+			public static function labelComboTipoGradeHoraria(obj:Object, obj2:Object = null):String{
+				var tipoGradeHoraria:TipoGradeHorariaDTO = obj as TipoGradeHorariaDTO;
+				return tipoGradeHoraria.codTipoGradeHoraria + " - " + tipoGradeHoraria.descTipoGradeHoraria ;
+			}
+			
+		]]>
+	</mx:Script>
+	<containers:VBoxBancoob width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<titulo:SubtituloView id="tituloFiltroAddGradeHoraria" texto="Informações Grade Horária" left="0" width="100%" top="0"/>
+		<containers:VBoxBancoob width="100%">
+			<containers:HBoxBancoob width="100%">
+				<Rotulo text="Cód. Tipo Grade: " width="100" textAlign="right"/>
+				<input:Combo id="cmbTipoGradeHoraria" labelFunction="{labelComboTipoGradeHoraria}" labelField="descTipoGradeHoraria" width="50%" enabled="false" />
+			</containers:HBoxBancoob>
+			
+			<containers:HBoxBancoob width="100%" verticalAlign="middle">
+				<Rotulo text="Data Referência:" width="100" textAlign="right" />
+				<input:Data id="dataReferencia" width="100" validarObrigatorio="true" enabled="false" />
+			</containers:HBoxBancoob>
+		</containers:VBoxBancoob>		
+		<titulo:SubtituloView id="tituloAddGradeHoraria" texto="Horários da Grade Horária" left="0" width="100%" top="0"/>
+
+		<mx:Grid width="100%" >
+			<mx:GridRow textAlign="center"  width="100%" >
+				<mx:GridItem colSpan="2" styleName="tituloGrid" width="395" >
+					<Rotulo text="Data Abertura" fontSize="12"/>
+				</mx:GridItem>
+				
+				<mx:GridItem colSpan="2" styleName="tituloGrid"  width="100%" >
+					<Rotulo text="Data Fechamento" fontSize="12"/>
+				</mx:GridItem>
+			</mx:GridRow>
+		</mx:Grid>
+		
+		<containers:HBoxBancoob width="100%" height="100%">
+			<containers:VBoxBancoob width="100%" height="100%">
+				<grid:Grid id="listaGradeHoraria" width="100%" height="100%" fontWeight="bold" sortableColumns="false" verticalScrollPolicy="auto" editable="false" doubleClickEnabled="false">
+					<grid:columns>
+						<mx:DataGridColumn dataField="dataHoraAberturaTemp" headerText="Data"  textAlign="center" editorDataField="selectedDate" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" />
+						
+						<mx:DataGridColumn dataField="horaAbertura" headerText="HH"  textAlign="center" />
+
+						<mx:DataGridColumn dataField="minutoAbertura" headerText="MM"  textAlign="center" />
+						
+						<mx:DataGridColumn dataField="dataHoraFechamentoTemp" headerText="Data"  textAlign="center" editorDataField="selectedDate" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" />
+						
+						<mx:DataGridColumn dataField="horaFechamento" headerText="HH"  textAlign="center" />
+						
+						<mx:DataGridColumn dataField="minutoFechamento" headerText="MM"  textAlign="center" />
+
+					</grid:columns>
+				</grid:Grid>
+				
+			</containers:VBoxBancoob>
+			
+			<containers:VBoxBancoob y="205" paddingTop="255" >
+				<Botao id="btnIncluir" toolTip="Incluir" styleName="botaoCrudAdicionarPeq"/>
+				<Botao id="btnRemover" toolTip="Remover" styleName="botaoCrudRemoverPeq" />
+			</containers:VBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" paddingLeft="620" paddingTop="15">
+			<bancoob:Botao label="Ok" id="btConfirmar" verticalCenter="0"  />
+			<bancoob:Botao label="Cancelar" id="btCancelar" verticalCenter="0"  />
+			<bancoob:Botao label="Fechar" id="btFechar" verticalCenter="0"  />
+		</containers:HBoxBancoob>			
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView >

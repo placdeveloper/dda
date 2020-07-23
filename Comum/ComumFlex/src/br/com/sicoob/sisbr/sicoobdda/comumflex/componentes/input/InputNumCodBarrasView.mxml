@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   xmlns:input="br.com.bancoob.componentes.input.*"
+		   xmlns:bancoob="br.com.bancoob.componentes.*">
+	<mx:Script>
+		<![CDATA[
+			
+			protected static const TAMANHO_MAXIMO_LINHA_DIGITAVEL:int = 47;
+			protected static const TAMANHO_MAXIMO_CODIGO_BARRAS:int = 44;
+			
+			protected const LABEL_CODIGO_BARRAS:String = "Cód. de Barras:";
+			protected const LABEL_LINHA_DIGITAVEL:String = "Linha Digitável:";
+			
+		]]>
+	</mx:Script>
+
+	
+	<bancoob:Rotulo id="lblRotulo" text="{LABEL_CODIGO_BARRAS}" width="75" textAlign="right" y="2"/>
+	<mx:Image id="imgTip" toolTip="Pressione F12 pra alternar entre o código de barras e linha digitável" x="77" y="2">
+		<mx:source>br/com/bancoob/imagens/icos/information.png</mx:source>
+	</mx:Image>
+	
+	<input:Texto id="txtCodBarras" width="359" maxChars="{TAMANHO_MAXIMO_CODIGO_BARRAS}" restrict="0-9" x="95" />
+		
+	<mx:HBox id="hboxLinhaDigitavel" width="100%" horizontalGap="3" visible="false" x="95">
+		<input:Texto id="txtLinhaDigitavel1" width="84" maxChars="10" agruparDigitos="false" restrict="0-9" />
+		<input:Texto id="txtLinhaDigitavel2" width="90" maxChars="11" agruparDigitos="false" restrict="0-9" />
+		<input:Texto id="txtLinhaDigitavel3" width="90" maxChars="11" agruparDigitos="false" restrict="0-9" />
+		<input:Texto id="txtLinhaDigitavel4" width="20" maxChars="1" agruparDigitos="false" restrict="0-9" />
+		<input:Texto id="txtLinhaDigitavel5" width="110" maxChars="14" agruparDigitos="false" restrict="0-9" />
+	</mx:HBox>
+	
+	
+</mx:Canvas>

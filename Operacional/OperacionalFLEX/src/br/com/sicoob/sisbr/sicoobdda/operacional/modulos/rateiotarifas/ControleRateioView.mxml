@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*"
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+			xmlns:servico="br.com.bancoob.util.servico.*"
+			xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+			xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+			xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+			xmlns:rateiotarifas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.*"
+			width="1070" horizontalScrollPolicy="off" layout="vertical"
+			paddingBottom="0" paddingTop="0" paddingLeft="0" paddingRight="0"
+			verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			private const WIDTH_LABEL_1:int = 90;
+			private const WIDTH_LABEL_2:int = 80;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView width="100%" texto="RATEIO ATUAL"/>
+	
+	<containers:HBoxBancoob width="100%" verticalAlign="middle">
+		<Rotulo text="Identificador:" width="{WIDTH_LABEL_1}" textAlign="right"/>
+		<Rotulo id="lblIdentificador" width="{WIDTH_LABEL_2}" />
+		
+		<Rotulo text="Situação:" width="{WIDTH_LABEL_1}" textAlign="right"/>
+		<Rotulo id="lblSituacao" />
+	</containers:HBoxBancoob>
+	
+	<containers:HBoxBancoob width="100%" verticalAlign="middle">
+		<Rotulo text="Data Inclusão:" width="{WIDTH_LABEL_1}" textAlign="right"/>
+		<Rotulo id="lblDataInclusao" width="{WIDTH_LABEL_2}" />
+		
+		<containers:HBoxBancoob width="100%" verticalAlign="middle" horizontalAlign="right">
+			<Rotulo text="Desvio Padrão" />
+			<comumflex:CampoNumericoDDA id="txtDesvioPadrao" width="50" maxChars="6" casasDecimais="2" permitirValoreNegativos="false" agruparDigitos="false" valorMaximo="100" valorMinimo="0.00" />
+			<Rotulo text="%" />
+			<Botao id="btnAplicarDesvio" label="Aplicar" />
+		</containers:HBoxBancoob>
+	</containers:HBoxBancoob>
+	
+	<navegacao:Tab id="tab" width="100%" height="430">
+		<containers:CanvasBancoob label="Eventos Disponíveis" verticalScrollPolicy="off" horizontalScrollPolicy="off" width="100%">
+			<rateiotarifas:AbaEventosDisponiveis id="abaEventosDisponiveis" />
+		</containers:CanvasBancoob>
+		
+		<containers:CanvasBancoob label="Detalhes do Rateio" verticalScrollPolicy="off" horizontalScrollPolicy="off" width="100%">
+			<rateiotarifas:AbaDetalhesRateio id="abaDetalhesRateio" />
+		</containers:CanvasBancoob>
+	</navegacao:Tab>
+	
+	<containers:HBoxBancoob id="hbBotoes" width="100%" horizontalAlign="right">
+		<Botao id="btnGravar" label="Gravar" />
+		<Botao id="btnFechar" label="Fechar" />
+	</containers:HBoxBancoob>
+
+</BaseModulo>	

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView width="718" height="490"
+							xmlns:mx="http://www.adobe.com/2006/mxml"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:input="br.com.bancoob.componentes.input.*"
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns:bancoob="br.com.bancoob.componentes.*"
+							xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns="br.com.bancoob.componentes.*"
+							deveLimparPesquisa="false" xmlns:parametro="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.parametro.*">
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil;
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="pnlLista" >
+			
+			<painellista:metodoPesquisa>obterDadosParametroInstituicao</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>true</painellista:deveExibirMensagemNenhumRegistro>
+			
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="obterDadosParametroInstituicao">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ManterParametroInstituicaoServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>				
+			</painellista:servicoPesquisa>	
+			
+			<painellista:painelFiltro>	
+				<parametro:ManterParametroInstituicaoFiltroView id="pnlFiltro" width="100%" />
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				
+				<tabelapaginada:TabelaPaginadaBanco id="tblValores" width="97%" titulo="SELECIONAR" height="100%" tamanhoPagina="10" tabIndex="5">
+					<tabelapaginada:MetadadosTabela id="metaDados">
+						<grid:ColunaGrid dataField="idParametro" headerText="Cód" width="15" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid dataField="numeroCooperativa" headerText="Cooperativa" width="32" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid dataField="nomeParametro" headerText="Nome" width="70" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid dataField="valorBaseParametro" headerText="Valor Parametro" width="50" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid labelFunction="{TabelaUtil.defaultIsentoLabelFunction}" dataField="bolAtivo" headerText="Ativo" width="18" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid dataField="tipoParametro.descTipoParametro" headerText="Tipo" width="50" headerWordWrap="true" wordWrap="true" sortable="false"/>
+						<grid:ColunaGrid dataField="descricaoParametro" headerText="Descrição" width="70" headerWordWrap="true" wordWrap="true" sortable="false"/>
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>		
+				
+			</painellista:tabelaPaginada>
+			<containers:VBoxBancoob x="685" y="375">
+				<Botao id="btnAlterar" toolTip="Alterar Parâmetro" styleName="botaoCrudAlterarPeq" tabIndex="6"/>
+			</containers:VBoxBancoob>
+		</painellista:PainelListaBancoView>
+		
+	</cadastro:painelLista>
+	
+	
+</cadastro:ListaCadastroView>

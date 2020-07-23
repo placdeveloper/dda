@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+<queries>
+
+	<query name="OBTER_PARAMETRO_INSTIUICAO_JDBC">
+		<use-case name="Pesquisa o valor do parâmetro"></use-case>
+		<description>Pesquisa o parâmetro</description>
+		<command>
+			<![CDATA[
+				SELECT * FROM DDA.Parametro
+				WHERE idParametro = <bancoob:valor valor="${idParametro}" />
+			]]>
+		</command>
+	</query>
+
+
+	<query name="OBTER_VALOR_PARAMETRO_INSTIUICAO_JDBC">
+		<use-case name="Pesquisa o valor do parâmetro"></use-case>
+		<description>Pesquisa o valor do parâmetro da instituição informada.
+		</description>
+		<command>
+			<![CDATA[
+				SELECT * FROM DDA.ValorParametro
+				WHERE idInstituicao = <bancoob:valor valor="${idInstituicao}" />
+				AND idParametro = <bancoob:valor valor="${idParametro}" />
+			]]>
+		</command>
+	</query>
+
+	<query name="ATUALIZAR_VALOR_PARAMETRO_GLOBAL_JDBC">
+		<use-case name="Manter parâmetro"></use-case>
+		<description>Atualizar valor do parâmetro</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.PARAMETRO P 
+					SET P.VALORBASEPARAMETRO = <bancoob:valor valor="${valorParametro}" />,
+						P.DATAHORAULTIMAATUALIZACAO = CURRENT_TIMESTAMP
+				WHERE P.IDPARAMETRO = <bancoob:valor valor="${idParametro}" />
+			]]>
+		</command>
+	</query>
+
+	<query name="ATUALIZAR_VALOR_PARAMETRO_INSTIUICAO_JDBC">
+		<use-case name="Manter parâmetro"></use-case>
+		<description>Atualizar valor do parâmetro</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.VALORPARAMETRO VP
+					SET VP.VALORPARAMETRO = <bancoob:valor valor="${valorParametro}" />
+						VP.DATAHORAULTIMAATUALIZACAO = CURRENT_TIMESTAMP
+				WHERE VP.IDPARAMETRO = <bancoob:valor valor="${idParametro}" />
+					AND VP.IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+			]]>
+		</command>
+	</query>
+
+	<query name="PESQUISAR_PARAMETRO">
+		<use-case name="PESQUISAR_PARAMETRO"></use-case>
+		<description>PESQUISAR_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT p FROM ParametroDDA p 
+				WHERE 1 = 1
+				<j:if test="${criterios.filtro.nomeParametro != null}">
+					AND nomeParametro = <bancoob:valorOql valor="${criterios.filtro.nomeParametro}" />
+				</j:if>
+				<j:if test="${criterios.filtro.id != null}">
+					AND id = ${criterios.filtro.id}
+				</j:if>
+				ORDER BY p.id
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_PARAMETRO">
+		<use-case name="OBTER_PARAMETRO"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+				FROM ParametroDDA p
+				WHERE 1 = 1
+				<j:if test="${criterios.filtro.nomeParametro != null}">
+					AND nomeParametro = <bancoob:valorOql valor="${criterios.filtro.nomeParametro}" />
+				</j:if>
+				<j:if test="${criterios.filtro.id != null}">
+					AND id = ${criterios.filtro.id}
+				</j:if>
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_VALOR_PARAMETRO_INSTITUICAO">
+		<use-case name="OBTER_VALOR_PARAMETRO_INSTITUICAO"></use-case>
+		<description>OBTER_VALOR_PARAMETRO_INSTITUICAO</description>
+		<command>
+			<![CDATA[
+			
+			SELECT valorParametro 
+				FROM ValorParametroDDA
+					WHERE idInstituicao = <bancoob:valorOql valor="${idInstituicao}" /> 
+						AND parametro.id = <bancoob:valorOql valor="${idParametro}" />
+        		]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_PARAMETRO">
+		<use-case name="Lista as informações do parâmetro"></use-case>
+		<description>Lista as informações do parâmetro</description>
+		<command>
+			<![CDATA[
+				SELECT new ParametroDDA(id, nomeParametro)
+				FROM ParametroDDA p
+				WHERE 1 = 1
+				<j:if test="${somenteVisiveis}">
+					AND bolVisivelFuncionalidadeAlteracao = true
+				</j:if>
+				<j:if test="${somenteNaoGlobal}">
+					AND bolParametroGlobal = false
+				</j:if>
+				ORDER BY p.id
+			]]>
+		</command>
+	</query>
+
+	<query name="PESQUISAR_PARAMETRO_INSTITUICAO">
+		<use-case name="PESQUISAR_PARAMETRO_INSTITUICAO"></use-case>
+		<description>PESQUISAR_PARAMETRO_INSTITUICAO</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.ConsultaParametroDto(p.id,p.nomeParametro,p.descParametro,vp.idInstituicao,p.tipoParametro,p.bolPermiteAlteracaoPeloUsuario,
+					p.bolVisivelFuncionalidadeAlteracao,p.bolAtivo,p.bolParametroGlobal,vp.valorParametro,p.valorParametroTexto,p.dataCriacao,p.dataHoraUltimaAtualizacao,inst.numCooperativa,inst.descSiglaCoop)
+				FROM ValorParametroDDA vp,ViewInstituicao inst
+				LEFT JOIN vp.parametro as p
+				WHERE vp.idInstituicao = inst.id
+				AND inst.idUnidadeInst = 0
+				AND p.bolParametroGlobal = 0
+				<j:if test="${criterios.filtro.somenteVisiveis}">
+					AND p.bolVisivelFuncionalidadeAlteracao = 1
+				</j:if>
+				<j:if test="${criterios.filtro.idParametro != null}">
+					AND vp.parametro.id = <bancoob:valorOql valor="${criterios.filtro.idParametro}" />
+				</j:if>
+				<j:if test="${criterios.filtro.idInstituicao != null}">
+					AND vp.idInstituicao = <bancoob:valorOql valor="${criterios.filtro.idInstituicao}" />
+				</j:if>
+				ORDER BY p.id,vp.idInstituicao
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_PARAMETRO_INSTITUICAO">
+		<use-case name="OBTER_PARAMETRO_INSTITUICAO"></use-case>
+		<description>OBTER_PARAMETRO_INSTITUICAO</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+				FROM ValorParametroDDA vp,ViewInstituicao inst
+				LEFT JOIN vp.parametro as p
+				WHERE vp.idInstituicao = inst.id
+				AND inst.idUnidadeInst = 0
+				AND p.bolParametroGlobal = 0
+				<j:if test="${criterios.filtro.somenteVisiveis}">
+					AND p.bolVisivelFuncionalidadeAlteracao = 1
+				</j:if>
+				<j:if test="${criterios.filtro.idParametro != null}">
+					AND vp.parametro.id = <bancoob:valorOql valor="${criterios.filtro.idParametro}" />
+				</j:if>
+				<j:if test="${criterios.filtro.idInstituicao != null}">
+					AND vp.idInstituicao = <bancoob:valorOql valor="${criterios.filtro.idInstituicao}" />
+				</j:if>
+			]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_TIPO_PARAMETRO">
+		<use-case name="LISTAR_TIPO_PARAMETRO"></use-case>
+		<description>LISTAR_TIPO_PARAMETRO</description>
+		<command>
+			<![CDATA[
+			select tp from TipoParametroDDA tp
+			]]>
+		</command>
+	</query>
+
+
+	<query name="EXCLUIR_VALOR_PARAMETRO_DESNECESSARIO">
+		<use-case name="EXCLUIR_VALOR_PARAMETRO_DESNECESSARIO"></use-case>
+		<description>Exclui os valores parâmetros dos parâmetros que estiverem
+			definidos como global</description>
+		<command>
+			<![CDATA[
+				DELETE FROM DDA.VALORPARAMETRO VP
+				WHERE EXISTS (SELECT NULL FROM DDA.PARAMETRO P WHERE P.IDPARAMETRO = VP.IDPARAMETRO AND P.BOLPARAMETROGLOBAL = 1)
+			]]>
+		</command>
+	</query>
+
+	<query name="ATUALIZAR_VALOR_PARAMETRO_INSTITUICAO">
+		<use-case name="ATUALIZAR_VALOR_PARAMETRO_INSTITUICAO"></use-case>
+		<description>Atualiza a tabela valor parametro com as novas
+			instituições
+		</description>
+		<command>
+			<![CDATA[
+				INSERT INTO DDA.VALORPARAMETRO (IDINSTITUICAO, IDPARAMETRO, DATACRIACAO, VALORPARAMETRO, DATAHORAULTIMAATUALIZACAO, IDUSUARIORESPONSAVEL)
+					SELECT S.IDINSTITUICAO, P.IDPARAMETRO, CURRENT_DATE DATACRIACAO, P.VALORBASEPARAMETRO VALORPARAMETRO, CURRENT_TIMESTAMP DATAHORAULTIMAATUALIZACAO, 
+       					'SICOOB' IDUSUARIORESPONSAVEL
+					FROM DDA.PARAMETRO P, SCI.VIW_INSTITUICAO S
+					WHERE P.BOLPARAMETROGLOBAL = 0
+						AND (S.CODTIPOINSTITUICAO = 3 OR S.IDINSTITUICAO = 1)/* SOMENTE COOPERATIVA E O BANCOOB*/
+						AND S.CODTIPOUNIDADE     = 1 /* MATRIZ */
+						AND NOT EXISTS (SELECT NULL FROM DDA.VALORPARAMETRO VP WHERE VP.IDINSTITUICAO = S.IDINSTITUICAO AND VP.IDPARAMETRO = P.IDPARAMETRO)
+					ORDER BY S.IDINSTITUICAO, P.IDPARAMETRO
+			]]>
+		</command>
+	</query>
+
+	<query name="ATUALIZANDO_LISTA_VALOR_PARAMETRO_INSTITUICAO_JDBC">
+		<use-case name="ATUALIZANDO_LISTA_VALOR_PARAMETRO_INSTITUICAO_JDBC"></use-case>
+		<description>ATUALIZANDO_LISTA_VALOR_PARAMETRO_INSTITUICAO_JDBC
+		</description>
+		<command>
+			<![CDATA[
+			update 
+				dda.valorParametro vp
+        			set 
+        				vp.valorParametro = <bancoob:valor valor="${valorParametro}" />
+        					where 
+        					idParametro = <bancoob:valor valor="${idParametro}" />
+        					
+        						and idInstituicao 
+        							in (${listaInstituicao})
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_VALOR_PARAMETRO_GLOBAL_LOCK_REGISTRO_JDBC">
+		<use-case name="Pesquisa o valor do parâmetro"></use-case>
+		<description>Pesquisa o parâmetro</description>
+		<command>
+			<![CDATA[
+				SELECT 
+					P.VALORBASEPARAMETRO 
+				FROM DDA.Parametro P
+				WHERE P.idParametro = <bancoob:valor valor="${idParametro}" />
+				FOR UPDATE WITH RS
+			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_VALOR_PARAMETRO_INSTITUICAO_LOCK_REGISTRO_JDBC">
+		<use-case name="Pesquisa o valor do parâmetro"></use-case>
+		<description>Pesquisa o parâmetro</description>
+		<command>
+			<![CDATA[
+				SELECT 
+				   	P.VALORPARAMETRO 
+				FROM DDA.VALORPARAMETRO P
+				WHERE P.IDPARAMETRO = <bancoob:valor valor="${idParametro}" />
+				  AND P.IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+				FOR UPDATE WITH RS
+			]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_INSTITUICOES_JDBC">
+		<use-case name="LISTAR_INSTITUICOES_JDBC"></use-case>
+		<description>LISTAR_INSTITUICOES_JDBC</description>
+		<command>
+			<![CDATA[
+				SELECT INST.IDINSTITUICAO, (INST.NUMCOOPERATIVA||' - '|| INST.DESCSIGLACOOP) AS DESCSIGLACOOP
+                FROM DDA.ValorParametro VALORP
+				INNER JOIN SCI.VIW_INSTITUICAO AS INST ON INST.IDINSTITUICAO = VALORP.IDINSTITUICAO                
+       		    WHERE INST.IDINSTITUICAO in (<bancoob:valor valor="${listaSingular}" />)
+					AND INST.NUMCOOPERATIVA IS NOT NULL
+					AND INST.NUMPAC = 0
+					AND CODSITUACAOINST = 1
+					AND CODTIPOGRAUCOOP > 1
+				GROUP BY VALORP.IDINSTITUICAO,INST.NUMCOOPERATIVA,INST.DESCSIGLACOOP, INST.IDINSTITUICAO
+				ORDER BY INST.NUMCOOPERATIVA
+			]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_PARAMETROS_PARA_STEP">
+		<use-case name="recupera parametros"></use-case>
+		<description>Recupera apenas os parâmetros dos ids informados
+		</description>
+		<command>
+			<![CDATA[
+				SELECT * FROM DDA.PARAMETRO WHERE IDPARAMETRO in(<bancoob:valor valor="${idsParametrosNecessarios}" />)
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_PARAMETROS_ATIVOS">
+		<use-case name="recupera parametros"></use-case>
+		<description>Recupera apenas os parâmetros dos ids informados
+		</description>
+		<command>
+			<![CDATA[
+				SELECT 
+					* 
+				FROM DDA.PARAMETRO P 
+				WHERE P.BOLATIVO = 1 AND P.BOLPARAMETROGLOBAL = 1
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_PARAMETROS">
+		<use-case name="LISTAR_PARAMETROS"></use-case>
+		<description>LISTAR_PARAMETROS</description>
+		<command>
+			<![CDATA[
+				SELECT 
+					P.IDPARAMETRO,
+					P.DESCPARAMETRO,
+				   	P.VALORBASEPARAMETRO
+				FROM DDA.PARAMETRO P
+				WHERE P.IDPARAMETRO IN (<bancoob:valor valor="${listaIdParametro}"/>)
+				ORDER BY P.IDPARAMETRO
+			]]>
+		</command>
+	</query>
+</queries>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:VBoxBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*"
+			xmlns:rateiotarifas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.*"
+			width="100%" height="100%"
+			paddingBottom="3" paddingLeft="5" paddingRight="5" paddingTop="7"
+			horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	
+	<rateiotarifas:TabelaEventoRateio id="grid" width="1058" height="358" />
+	
+	<containers:HBoxBancoob width="100%" horizontalAlign="right">
+		<Botao id="btnAprovar" label="Aprovar rateio" enabled="false" />
+	</containers:HBoxBancoob>
+	
+</containers:VBoxBancoob>

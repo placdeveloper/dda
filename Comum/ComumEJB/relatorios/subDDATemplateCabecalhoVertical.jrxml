@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subCabecalhoVertical" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<style name="texto" isDefault="false" vAlign="Middle" markup="none" fontName="Arial" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="textoCentralizado" isDefault="false" style="texto" hAlign="Center" markup="none" pattern=""/>
+	<style name="textoNegrito" isDefault="false" style="texto" isBold="true" isItalic="false"/>
+	<style name="textoNegritoCentralizado" isDefault="false" style="textoNegrito" hAlign="Center"/>
+	<style name="borda" isDefault="false" fill="Solid">
+		<pen lineWidth="1.0"/>
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="bordaCabecalho" isDefault="false" style="borda" hAlign="Left" vAlign="Top" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box bottomPadding="0"/>
+	</style>
+	<style name="titulo" isDefault="false" hAlign="Center" vAlign="Middle" markup="none" fontName="Arial" fontSize="12" isBold="true"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\SisbrIDE-4.5\\workspace\\SicoobDDA\\Comum\\ComumEJB\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numCooperativa" class="java.lang.String"/>
+	<parameter name="nomeRelatorio" class="java.lang.String"/>
+	<parameter name="descFiltroOpcional" class="java.lang.String"/>
+	<parameter name="aplicativoSisBR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Sicoob"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="siglaCooperativa" class="java.lang.String"/>
+	<title>
+		<band height="75" splitType="Stretch">
+			<rectangle>
+				<reportElement key="rectangle" style="bordaCabecalho" mode="Transparent" x="0" y="0" width="555" height="75"/>
+			</rectangle>
+			<textField>
+				<reportElement key="aplicativo" style="titulo" x="125" y="11" width="305" height="14"/>
+				<textElement markup="styled"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{aplicativoSisBR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-2" style="texto" positionType="Float" x="471" y="9" width="80" height="13"/>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Data de Emissão:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="dataEmissao" style="texto" x="471" y="20" width="80" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format(new Date())]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement key="logoSicoob" x="11" y="11" width="104" height="30"/>
+				<imageExpression class="java.lang.String"><![CDATA["logosicoob.jpg"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="false">
+				<reportElement key="cooperativa" style="textoNegritoCentralizado" x="11" y="44" width="104" height="13">
+					<printWhenExpression><![CDATA[new Boolean($P{numCooperativa}.length() > 0)]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{siglaCooperativa} != null && !$P{siglaCooperativa}.equalsIgnoreCase("") ? $P{numCooperativa} + " - " + $P{siglaCooperativa} : "Cooperativa: " + $P{numCooperativa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-2" style="texto" positionType="Float" x="471" y="40" width="80" height="13"/>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Hora de Emissão:]]></text>
+			</staticText>
+			<textField>
+				<reportElement key="horaEmissao" style="texto" x="471" y="51" width="80" height="13"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.SimpleDateFormat("HH:mm:ss").format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="nomeRelatorio" style="titulo" x="125" y="30" width="305" height="14"/>
+				<textElement markup="styled"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{nomeRelatorio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="filtroOpcional" style="titulo" x="125" y="49" width="305" height="14">
+					<printWhenExpression><![CDATA[new Boolean($P{descFiltroOpcional}.length() > 0)]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="styled"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{descFiltroOpcional}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

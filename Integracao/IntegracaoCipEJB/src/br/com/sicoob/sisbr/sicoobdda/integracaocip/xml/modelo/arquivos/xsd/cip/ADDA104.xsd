@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDA104"
+	xmlns="http://www.bcb.gov.br/ARQ/ADDA104.xsd" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" 
+	targetNamespace="http://www.bcb.gov.br/ARQ/ADDA104.xsd" 
+	elementFormDefault="qualified" version="9.1.0">
+
+	<!-- Definição dos Tipos Globais -->
+	<xs:include schemaLocation="ADDATIPOS.xsd"/>
+
+	<!-- Definicao da mensagem -->
+	<xs:element name="ADDADOC" type="ADDADOCComplexType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfEvento>
+					<cat:Evento>ADDA104 – Alteração do aceite do boleto de pagamento.</cat:Evento>
+					<cat:Descricao>Destinado ao Participante Recebedor requisitar alteração do aceite do boleto de pagamento.</cat:Descricao>
+					<cat:Observacao>
+					</cat:Observacao>
+					<cat:Servico>Manutenção Cadastral de Boletos de Pagamento</cat:Servico>
+					<cat:TipoFluxo>Fluxo3</cat:TipoFluxo>
+				</cat:InfEvento>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="ADDADOCComplexType">
+		<xs:sequence>
+			<xs:element name="BCARQ" type="BCARQComplexType"/>
+			<xs:element name="SISARQ" type="SISARQComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definição do SISARQ -->
+	<xs:complexType name="SISARQComplexType">
+		<xs:choice>
+			<xs:element name="ADDA104" type="ADDA104ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>Participante recebedor informa o aceite do título.</cat:Mensagem>
+							<cat:Emissor>Participante Recebedor</cat:Emissor>
+							<cat:Destinatario>DDA</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADDA104RET" type="ADDA104RETComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>DDA retorna a resposta do processamento recebedor informa o aceite do título.</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante Recebedor</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADDA104RR2" type="ADDA104RR2ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>Aviso a Terceiros sobre atualização de aceite do título.</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante Destinatário</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA104ComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA104_Tit" type="Grupo_ADDA104_TitComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA104_TitComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle Requisição Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Recebedor Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Recebedor Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcTit" type="NumIdentcTit_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlActe" type="NumRefCad_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência Atual Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrActe" type="IndrActe_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Indicador Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA104RETComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA104RET_TitActo" type="Grupo_ADDA104RET_TitActoComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Titulo Aceito</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA104RET_TitRecsd" type="Grupo_ADDA104_TitComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Titulo Recusado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA104RET_TitActoComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle Requisição Participante </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Recebedor Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Recebedor Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcTit" type="NumIdentcTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlActe" type="NumRefCad">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência Atual Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzActe" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Sequência Atualização Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA104RR2ComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA104RR2_Tit" type="Grupo_ADDA104RR2_TitComplexType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Título</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA104RR2_TitComplexType">
+		<xs:sequence>
+			<xs:element name="ISPBPartPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcTit" type="NumIdentcTit">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação Titulo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlActe" type="NumRefCad" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência Atual Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzActe" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Sequência Atualização Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrActe" type="IndrActe">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Indicador Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitActe" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Situação Aceite</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

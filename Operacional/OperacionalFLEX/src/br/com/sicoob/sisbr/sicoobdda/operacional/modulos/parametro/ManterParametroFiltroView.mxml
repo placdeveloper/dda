@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:containers="br.com.bancoob.componentes.containers.*"
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+	xmlns:input="br.com.bancoob.componentes.input.*"
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+	xmlns:componentes="br.com.bancoob.componentes.*"
+	width="640" height="65">
+	
+	<titulo:SubtituloView texto="Filtros" />
+	
+	<componentes:Rotulo x="0" y="33" text="Parâmetro:" textAlign="right" width="70" />
+	<input:ComboBoxFiltro id="cmbParametro" x="81" y="31" width="495" labelField="descricaoIdNome" prompt=" Selecione " somenteMaiusculas="false" />
+	<painellista:BotaoProcurarView id="btnProcurar" x="590" y="31" acionarComEnter="true" />
+	
+</containers:CanvasBancoob>

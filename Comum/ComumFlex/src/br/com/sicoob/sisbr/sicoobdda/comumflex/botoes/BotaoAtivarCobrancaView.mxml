@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Botao toolTip="Ativar" styleName="botaoAtivar" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="br.com.bancoob.componentes.*">
+
+	  <mx:Style source="br/com/sicoob/sisbr/sicoobdda/comumflex/css/style.css"/>
+		  
+</Botao>

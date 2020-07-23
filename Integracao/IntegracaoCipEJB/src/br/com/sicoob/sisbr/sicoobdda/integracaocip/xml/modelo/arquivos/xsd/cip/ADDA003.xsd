@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDA003"
+	xmlns="http://www.bcb.gov.br/ARQ/ADDA003.xsd" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" 
+	targetNamespace="http://www.bcb.gov.br/ARQ/ADDA003.xsd" 
+	elementFormDefault="qualified" version="9.1.0">
+
+	<!-- Definição dos Tipos Globais -->
+	<xs:include schemaLocation="ADDATIPOS.xsd"/>
+
+	<!-- Definicao da mensagem -->
+	<xs:element name="ADDADOC" type="ADDADOCComplexType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfEvento>
+					<cat:Evento>ADDA003 - Manutenção de cliente pagador eletrônico no DDA</cat:Evento>
+					<cat:Descricao>Destinado ao DDA informar para os Participantes, de forma reduzida, as inclusões, alterações, e exclusões, na base de cliente pagador eletrônico do DDA realizadas no dia.</cat:Descricao>
+					<cat:Observacao>
+					</cat:Observacao>
+					<cat:Servico>Manutenção Cadastral de Clientes Pagadores Eletrônicos</cat:Servico>
+					<cat:TipoFluxo>Fluxo1</cat:TipoFluxo>
+				</cat:InfEvento>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="ADDADOCComplexType">
+		<xs:sequence>
+			<xs:element name="BCARQ" type="BCARQComplexType"/>
+			<xs:element name="SISARQ" type="SISARQComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definicao do SISMSG da mensagem -->
+	<xs:complexType name="SISARQComplexType">
+		<xs:choice>
+			<xs:element name="ADDA003" type="ADDA003ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>DDA informa manutenção de pagador no DDA</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+ 
+	<xs:complexType name="ADDA003ComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA003_PagdrDDA" type="Grupo_ADDA003_PagdrDDAComplexType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Pagador DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA003_PagdrDDAComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrManutPagdr" type="IndrIEA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Indicador Manutenção Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaPagdr" type="TpPessoa">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Pessoa Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFPagdr" type="CNPJ_CPF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>CNPJ ou CPF Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QtdAdesCliPagdrDDA" type="Qtd">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Quantidade Adesão Cliente Pagador DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitAdesCliPagdrDDA" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Situação Adesão Cliente Pagador DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

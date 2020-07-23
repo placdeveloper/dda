@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:VBoxBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns:containers="br.com.bancoob.componentes.containers.*"
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+			xmlns="br.com.bancoob.componentes.*"
+			paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"
+			width="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.EventoRateioDTO;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil;
+			import br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.TabelaEventoRateio;
+			
+			[Bindable]
+			public var selecionarTodos:Boolean = false;
+			
+			private function labelValor(obj:Object, col:DataGridColumn):String {
+				if (obj && obj is EventoRateioDTO) {
+					var valor:Number = EventoRateioDTO(obj).valorCIP;
+					
+					if (!isNaN(valor) && valor > 0) {
+						return TabelaPaginadaUtils.defaultValorRealLabelFunction(obj, col);
+					}
+				}
+				
+				return "-";
+			}
+		]]>
+	</mx:Script>
+	
+	<grid:Grid id="grid" width="100%" height="100%" sortableColumns="false" verticalScrollPolicy="on" resizableColumns="false" editable="true" draggableColumns="false" variableRowHeight="true">
+		<grid:columns>
+			<mx:DataGridColumn id="col1" width="22" headerText="" dataField="selecionado" textAlign="center" editable="true" rendererIsEditor="true" editorDataField="selected">
+				<mx:headerRenderer>
+					<mx:Component>
+						<mx:Canvas>
+							<mx:Script>
+								<![CDATA[
+									import br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.TabelaEventoRateio;
+								]]>
+							</mx:Script>
+							<mx:CheckBox x="3" id="headerCheckbox" click="{(outerDocument as TabelaEventoRateio).tratarSelecionarTodos();}"
+										 selected="{parentDocument.selecionarTodos}" creationComplete="{(outerDocument as TabelaEventoRateio).definirHeaderCheckBox(headerCheckbox);}" />
+						</mx:Canvas>
+					</mx:Component>
+				</mx:headerRenderer>
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:CheckBox click="{(outerDocument as TabelaEventoRateio).tratarSelecionar(data, !data.selecionado);}" selectedField="selecionado" />
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:DataGridColumn>
+			<grid:ColunaGrid id="col2" dataField="dataEvento" headerText="Dt. Evento" width="65" textAlign="center" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col3" dataField="descEventoTarifavel" headerText="Evento Tarifável" width="112" textAlign="center" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col4" dataField="valorUnitarioCIP" headerText="Valor Unitário Tarifa CIP" textAlign="center" width="80" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col5" dataField="qtdApuradaSicoob" headerText="Qtd. Apurada Sicoob" textAlign="center" width="80" wordWrap="true" headerWordWrap="true" editable="false" labelFunction="{TabelaUtil.defaultValorLabelFunction}" />
+			<grid:ColunaGrid id="col6" dataField="valorApuradoSicoob" headerText="Valor Apurado Sicoob" textAlign="center" width="100" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" wordWrap="true" headerWordWrap="true" editable="false" />
+			<mx:DataGridColumn id="col7" dataField="qtdCIP" editorUsesEnterKey="true" headerWordWrap="true" wordWrap="true" headerText="Qtd. CIP" textAlign="center" width="80" editable="true" labelFunction="{TabelaUtil.defaultValorLabelFunction}">
+				<mx:itemEditor>
+					<mx:Component>
+						<comumflex:TextoCobranca tabEnabled="true" restrict="0-9" maxChars="9" casasDecimais="0" />
+					</mx:Component>
+				</mx:itemEditor>
+			</mx:DataGridColumn>
+			<grid:ColunaGrid id="col8" dataField="valorCIP" headerText="Valor CIP" textAlign="center" width="100" labelFunction="{labelValor}" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col9" dataField="difQtdValor" itemRenderer="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.RotuloDiferenca" textAlign="center" width="120" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col10" dataField="desvioQtdValorMaior" itemRenderer="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.RotuloDentroDesvio" textAlign="center" width="120" wordWrap="true" headerWordWrap="true" editable="false" />
+			<grid:ColunaGrid id="col11" dataField="desvioQtdValorMenor" itemRenderer="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.RotuloDentroDesvio" textAlign="center" width="120" wordWrap="true" headerWordWrap="true" editable="false" />
+		</grid:columns>
+	</grid:Grid>
+	
+	<containers:HBoxBancoob verticalAlign="middle" horizontalGap="0">
+		<Rotulo id="lblTotal" width="{col1.width + col2.width + col3.width + col4.width}" text="TOTAIS" fontWeight="bold" />
+		<Rotulo id="lblQtdTotalSicoob" width="{col5.width}" fontWeight="bold" textAlign="center" />
+		<Rotulo id="lblValorTotalSicoob" width="{col6.width}" fontWeight="bold" textAlign="center" />
+		<Rotulo id="lblQtdTotalCIP" width="{col7.width}" fontWeight="bold" textAlign="center" />
+		<Rotulo id="lblValorTotalCIP" width="{col8.width}" fontWeight="bold" textAlign="center" />
+		<Rotulo width="{col9.width}" id="lblDifQtdValor" fontWeight="bold" textAlign="center" />
+	</containers:HBoxBancoob>
+	
+	<titulo:LinhaView width="100%" height="10" />
+	
+	<containers:HBoxBancoob id="hbBotoes" width="100%" horizontalAlign="right">
+		<Botao id="btnIncluirRateio" label="Incluir no rateio" enabled="false" />
+		<Botao id="btnRemoverRateio" label="Remover do rateio" enabled="false" />
+		<Botao id="btnImprimir" label="Imprimir" enabled="false" />
+	</containers:HBoxBancoob>
+
+</containers:VBoxBancoob>

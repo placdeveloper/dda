@@ -1,0 +1,45 @@
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="java.util.Map.Entry"%>
+<%@page import="java.util.Properties"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+
+	<H3>Versão do aplicativo</H3>
+	<jsp:include page="verificacao.html"/>
+	
+	<h3>Java</h3>
+	<%
+	out.print("JAVA_HOME=");
+	out.println(System.getProperties().get("java.home"));
+	out.print("<br/>");
+	out.print("JAVA_VERSION=");
+	out.println(System.getProperties().get("java.version"));
+	out.print("<br/>");
+	out.print("JAVA_VENDOR=");
+	out.println(System.getProperties().get("java.vendor"));
+	out.flush();
+	%>
+	
+	<h3>Servlet Granite</h3>
+	<a href="graniteamf/amf" target="_blank">Testar servlet granite</a>
+	
+	<h3>System Properties</h3>
+	<%
+	Properties properties = System.getProperties();
+	for(Entry<Object, Object> propertie : properties.entrySet()) {
+		out.print(propertie.getKey());
+		out.print("=");
+		out.println(propertie.getValue());
+		out.print("<br/>");
+	}
+	out.flush();
+	%>
+	
+</body>
+</html>

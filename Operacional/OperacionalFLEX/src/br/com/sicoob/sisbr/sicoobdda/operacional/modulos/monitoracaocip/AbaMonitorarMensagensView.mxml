@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" 
+							width="1100" height="565" 
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+							deveLimparPesquisa="false"
+							xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MensagemDDADTO;
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+			
+			public static function bolStatusEnvioLabel(objeto:Object, objeto2:Object = null):String{
+				var msg:MensagemDDADTO = objeto as MensagemDDADTO;
+				if(msg.statusEnvio == 1){
+					return Constantes.SUCESSO_ENVIO;
+				}else if(msg.statusEnvio == 2){
+					return msg.descTipoTratamentoErroCip;
+				}else{
+					return Constantes.ERRO_ENVIO;
+				}
+			}
+			
+			public static function bolOrigem(objeto:Object, objeto2:Object = null):String{
+				var msg:MensagemDDADTO = objeto as MensagemDDADTO;
+				return retornaLabel(msg.bolOrigemSicoob);
+			}
+			
+			public static function bolOrigemPai(objeto:Object, objeto2:Object = null):String{
+				var msg:MensagemDDADTO = objeto as MensagemDDADTO;
+				return retornaLabel(!msg.bolOrigemSicoob);
+			}
+			
+			private static function retornaLabel(bolOrigem:Boolean):String {
+				if(bolOrigem){
+					return Constantes.ORIGEM_SICOOB;
+				}else{
+					return Constantes.ORIGEM_CIP;
+				}
+			}
+		]]>
+	</mx:Script>
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaPainel">
+			<painellista:metodoPesquisa>pesquisaPainelMensagensPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+			
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="pesquisaPainelMensagensPaginado">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.MonitoramentoMensagensDDAServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>
+			</painellista:servicoPesquisa>
+			
+			<painellista:painelFiltro>
+				<monitoracaocip:MonitorarMensagensFiltroView id="painelFiltro" width="100%" height="100%"/>
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				<tabelapaginada:TabelaPaginadaBanco id="listaMensagens" width="97%" titulo="Lista de mensagens" height="100%" tamanhoPagina="15" doubleClickEnabled="false">
+					<tabelapaginada:MetadadosTabela id="metadados">
+						<grid:ColunaGrid dataField="idMensagem" headerText="ID Msg" width="35" wordWrap="false"  sortable="false" editable="false"/>
+						<grid:ColunaGrid dataField="codTipoMensagem" headerText="Mensagem" width="50" wordWrap="false" sortable="false" editable="false"/>
+						<grid:ColunaGrid dataField="numOperacao" headerText="Número Operação" width="120" wordWrap="false" sortable="false" editable="false"/>
+						<grid:ColunaGrid dataField="bolOrigemSicoob" labelFunction="{bolOrigemPai}" width="50" headerText="Destino" wordWrap="false" sortable="false" editable="false"/>
+						<grid:ColunaGrid dataField="dataHoraMensagem" headerText="Data Hora Mensagem" width="85" editable="false" wordWrap="false" sortable="false" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" />
+						<grid:ColunaGrid dataField="dataHoraProtocolo" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" editable="false" width="85" headerText="Data Hora Protocolo" wordWrap="false" sortable="false" id="dtHrProtocolo"/>
+						<grid:ColunaGrid dataField="statusEnvio" labelFunction="{bolStatusEnvioLabel}" editable="false" width="55" headerText="Status" wordWrap="false" sortable="false" />
+						<grid:ColunaGrid dataField="descTipoTratamentoErroCip"  editable="false" width="200" headerText="Erro Protocolo" wordWrap="false" sortable="false" id="descErro"/>
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>
+			</painellista:tabelaPaginada>
+			
+			<containers:VBoxBancoob x="1000" y="435">
+				<Botao id="btnDetalharMensagem" toolTip="Detalhar Mensagem" styleName="botaoCrudProcurarPeq" />
+			</containers:VBoxBancoob>
+			
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

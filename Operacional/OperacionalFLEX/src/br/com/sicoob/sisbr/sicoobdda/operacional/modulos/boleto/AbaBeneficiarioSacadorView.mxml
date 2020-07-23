@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="550" height="520" layout="absolute"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:campos="br.com.bancoob.componentes.campos.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+								 xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								 xmlns:consultaBoleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.boleto.*" 
+								 verticalScrollPolicy="off" paddingLeft="1" paddingRight="1">
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			protected var _allLabelWidth:Number = 110;
+			
+			[Bindable]
+			protected var _allTitleWidth:Number = 700;
+			
+			[Bindable]
+			protected var _yInit:Number = 10;
+			
+			[Bindable]
+			protected var _ySpace:Number = 38;
+			
+			[Bindable]
+			protected var _ySpaceTitle:Number = 35;
+			
+			[Bindable]
+			protected var _xTitle:Number = 4;
+			
+			[Bindable]
+			protected var _xLeftLabel:Number = 26;
+			
+			[Bindable]
+			protected var _xLeftField:Number = 139;
+			
+			[Bindable]
+			protected var _xCenterField:Number = 370;
+			
+			[Bindable]
+			protected var _xCenterLabel:Number = 310;
+			
+			[Bindable]
+			protected var _xRightField:Number = 560;
+			
+			[Bindable]
+			protected var _xRightLabel:Number = 530;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Dados do Beneficiário" x="{_xTitle}" y="0" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesDadosBeneficiario" width="100%" x="0" y="10">
+		<Rotulo text="Tipo Pessoa:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtTpPessoaBeneficiario" x="{_xLeftField}" y="{_yInit}" selectable="true"/>
+		
+		<Rotulo text="CPF/CNPJ:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtCnpfCnpjBeneficiario" x="{_xCenterField}" y="{_yInit}" selectable="true"/>
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Nome / Razão Social:" x="{_xLeftLabel}" y="{txtCnpfCnpjBeneficiario.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="txtNomeBeneficiario" x="{_xLeftField}" y="{txtCnpfCnpjBeneficiario.y + _ySpace}" selectable="true"/>
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Nome Fantasia:" x="{_xLeftLabel}" y="{txtNomeBeneficiario.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtNomeFantasiaBeneficiario" x="{_xLeftField}" y="{txtNomeBeneficiario.y + _ySpace}" selectable="true"/>
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Logradouro:" x="{_xLeftLabel}" y="{txtNomeFantasiaBeneficiario.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtLogradouroBeneficiario" x="{_xLeftField}" y="{txtNomeFantasiaBeneficiario.y + _ySpace}" />
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Cidade:" x="{_xLeftLabel}" y="{txtLogradouroBeneficiario.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtCidadeBeneficiario" x="{_xLeftField}" y="{txtLogradouroBeneficiario.y + _ySpace}" />
+		
+		<Rotulo text="UF:" x="{_xCenterLabel}" y="{txtLogradouroBeneficiario.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtUfBeneficiario" x="{_xCenterField}" y="{txtLogradouroBeneficiario.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="CEP:" x="{_xRightLabel}" y="{txtLogradouroBeneficiario.y + _ySpace}" fontWeight="bold"/>
+		<Rotulo id="txtCepBeneficiario" x="{_xRightField}" y="{txtLogradouroBeneficiario.y + _ySpace}" selectable="true"/>
+		
+		
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Dados do Pagador" x="{_xTitle}" y="208" width="{_allTitleWidth}"/> <!-- 215-->
+	<containers:CanvasBancoob id="cvInformacoesDadosPagador" width="100%" x="0" y="230">
+		<Rotulo text="Tipo Pessoa:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtTpPessoaPagador" x="{_xLeftField}" y="{_yInit}" selectable="true"/>
+		
+		<Rotulo text="CPF/CNPJ:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtCnpfCnpjPagador" x="{_xCenterField}" y="{_yInit}" selectable="true"/>
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Nome / Razão Social:" x="{_xLeftLabel}" y="{txtCnpfCnpjPagador.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="txtNomePagador" x="{_xLeftField}" y="{txtCnpfCnpjPagador.y + _ySpace}" selectable="true"/>
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Nome Fantasia:" x="{_xLeftLabel}" y="{txtNomePagador.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtNomeFantasiaPagador" x="{_xLeftField}" y="{txtNomePagador.y + _ySpace}" />
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Logradouro:" x="{_xLeftLabel}" y="{txtNomeFantasiaPagador.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtLogradouroPagador" x="{_xLeftField}" y="{txtNomeFantasiaPagador.y + _ySpace}" />
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Cidade:" x="{_xLeftLabel}" y="{txtLogradouroPagador.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtCidadePagador" x="{_xLeftField}" y="{txtLogradouroPagador.y + _ySpace}" />
+		
+		<Rotulo text="UF:" x="{_xCenterLabel}" y="{txtLogradouroPagador.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtUfPagador" x="{_xCenterField}" y="{txtLogradouroPagador.y + _ySpace}" selectable="true"/>
+		
+		<Rotulo text="CEP:" x="{_xRightLabel}" y="{txtLogradouroPagador.y + _ySpace}" width="70" fontWeight="bold"/>
+		<Rotulo id="txtCepPagador" x="{_xRightField}" y="{txtLogradouroPagador.y + _ySpace}" selectable="true"/>
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Dados do Sacador Avalista" x="{_xTitle}" y="429" width="{_allTitleWidth}" /> <!-- 435 -->
+	<containers:CanvasBancoob id="cvInformacoesDadosSacador" width="100%" x="0" y="450">
+		<Rotulo text="Tipo Pessoa:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtTpPessoaSacador"  x="{_xLeftField}" y="{_yInit}" />
+		
+		<Rotulo text="CPF/CNPJ:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="txtCnpfCnpjSacador" x="{_xCenterField}" y="{_yInit}" selectable="true" />
+		
+		<!-- ##################################################################-->
+		
+		<Rotulo text="Nome / Razão Social:" x="{_xLeftLabel}" y="{txtCnpfCnpjSacador.y + _ySpace}" width="135" fontWeight="bold"/>
+		<Rotulo id="txtNomeSacador" x="{_xLeftField}" y="{txtCnpfCnpjSacador.y + _ySpace}" selectable="true"/>
+		
+	</containers:CanvasBancoob>
+	
+	
+</cadastro:FormularioCadastroView>

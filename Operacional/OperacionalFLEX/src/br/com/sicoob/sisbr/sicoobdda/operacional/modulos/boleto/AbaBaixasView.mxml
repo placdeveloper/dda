@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="550" height="520" layout="absolute"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:campos="br.com.bancoob.componentes.campos.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+								 xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								 xmlns:consultaBoleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.boleto.*" 
+								 verticalScrollPolicy="off" paddingLeft="1" paddingRight="1">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			
+			[Bindable]
+			protected var _allTitleWidth:Number = 700;
+			
+			[Bindable]
+			protected var _xTitle:Number = 4;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Baixa Operacional" x="{_xTitle}" y="0" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesBaixaOperacional" width="100%" x="3" y="30">
+		<grid:Grid id="gridBaixaOperacional" width="700" height="240" variableRowHeight="true" sortableColumns="false" x="17">
+			<grid:columns>
+				<grid:ColunaGrid  dataField="descricaoBanco" width="160" headerText="Banco Recebedor"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="dataHoraProcessamentoBaixaOper" width="115" headerText="Data Hora Processamento" editable="false" headerWordWrap="true" wordWrap="true" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" />
+				<grid:ColunaGrid  dataField="descTpBaixaOperacional" width="120" headerText="Tipo da Baixa"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="descCanalPagamento" width="120" headerText="Canal Pagamento" editable="false" headerWordWrap="true" wordWrap="true"  />
+				<grid:ColunaGrid  dataField="descMeioPagamento" width="120" headerText="Meio Pagamento"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="valorBaixaOper" width="125" headerText="Valor Baixa Operacional" editable="false" headerWordWrap="true" wordWrap="true"  labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+				<grid:ColunaGrid  dataField="descSituacaoBxOperacional" width="120" headerText="Situação Baixa Operacional"  editable="false" headerWordWrap="true" wordWrap="true" />
+			</grid:columns>
+		</grid:Grid>
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Baixa Efetiva" x="{_xTitle}" y="280" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesBaixaEfetiva" width="100%" x="3" y="310">
+		<grid:Grid id="gridBaixaEfetiva" width="700" height="232" variableRowHeight="true" sortableColumns="false" x="17">
+			<grid:columns>
+				<grid:ColunaGrid  dataField="descricaoBanco" width="160" headerText="Banco Recebedor"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="dataHoraProcessamentoBaixaEfet" width="115" headerText="Data Hora Processamento" editable="false" headerWordWrap="true" wordWrap="true" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" />
+				<grid:ColunaGrid  dataField="descTpBaixaEfetiva" width="160" headerText="Tipo da Baixa"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="descCanalPagamento" width="140" headerText="Canal Pagamento" editable="false" headerWordWrap="true" wordWrap="true"  />
+				<grid:ColunaGrid  dataField="descMeioPagamento" width="140" headerText="Meio Pagamento"  editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="valorBaixaEfet" width="125" headerText="Valor Baixa Efetiva" editable="false" headerWordWrap="true" wordWrap="true" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+			</grid:columns>
+		</grid:Grid>
+	</containers:CanvasBancoob>
+	
+</cadastro:FormularioCadastroView>

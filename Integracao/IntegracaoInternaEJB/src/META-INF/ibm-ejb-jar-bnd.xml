@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+	
+	<session name="ADMServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interfaces.ADMServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaointerna/ADMServico" />
+	</session>
+
+	<session name="ContaCorrenteServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interfaces.ContaCorrenteServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaointerna/ContaCorrenteServico" />
+	</session>
+
+	<session name="SCIServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interfaces.SCIServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaointerna/SCIServico" />
+	</session>
+	
+		<session name="SSPBServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interfaces.SSPBServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaointerna/SSPBServico" />
+	</session>
+
+</ejb-jar-bnd>

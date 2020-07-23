@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="950" height="600" layout="vertical"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+								 xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 paddingLeft="1" paddingRight="1">
+	
+	
+	
+	<containers:VBoxBancoob width="100%" height="100%">
+			<titulo:SubtituloView texto="Dados Mensagem" width="100%" />
+		<containers:HBoxBancoob width="100%" height="30">
+			<mx:Canvas width="100%">
+				<Rotulo text="Nome:" width="50" textAlign="right" fontWeight="bold" x="0" y="3"/>
+				<Rotulo id="lblNome" x="60" y="2" fontSize="12" width="100" textAlign="left"/>
+			</mx:Canvas>
+			<titulo:SubtituloView texto="Mensagem de Origem" width="100%" />
+		</containers:HBoxBancoob>
+		<containers:HBoxBancoob width="100%" height="98%">
+			<mx:Canvas width="100%" height="100%" cornerRadius="10" borderStyle="solid" backgroundColor="#D5E6D2" backgroundAlpha=".7" borderThickness="1">
+				<mx:TextArea x="19" y="15" width="90%" height="95%" backgroundAlpha="0" borderStyle="none" id="txtMensagem" editable="false" selectable="true" verticalScrollBarStyleName="fseVerticalScrollBar"/>	
+			</mx:Canvas>
+			<mx:Canvas width="100%" height="100%" cornerRadius="10" borderStyle="solid" backgroundColor="#D5E6D2" backgroundAlpha=".7" borderThickness="1">
+				<mx:TextArea x="19" y="15" width="90%" height="95%" backgroundAlpha="0" borderThickness="0" id="txtMensagemOrigem" editable="false" selectable="false" verticalScrollBarStyleName="fseVerticalScrollBar"/>	
+			</mx:Canvas>
+		</containers:HBoxBancoob>	
+		<containers:HBoxBancoob width="100%" horizontalAlign="right">
+			<Botao id="btnImprimir" label="Imprimir"/>
+			<Botao id="btnFechar" label="Fechar" />
+		</containers:HBoxBancoob>	
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView> 

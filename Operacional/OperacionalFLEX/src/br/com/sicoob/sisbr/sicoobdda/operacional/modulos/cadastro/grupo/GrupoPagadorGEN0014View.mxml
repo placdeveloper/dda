@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*"
+						  xmlns:componentes="br.com.bancoob.componentes.*"
+						  xmlns:input="br.com.bancoob.componentes.input.*"
+						  width="100%">
+	
+	<componentes:Rotulo text="Tipo Sol Pagador: " width="147" textAlign="right" y="5"/>
+	<input:Combo id="cbTipoSolPagador" x="157" y="2" width="300" labelField="label" somenteMaiusculas="true"/>
+	
+</containers:CanvasBancoob>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false"
+			  xmlns="br.com.bancoob.componentes.*"
+			  xmlns:grid="br.com.bancoob.componentes.grid.*"
+			  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			  xmlns:componentes="br.com.bancoob.componentes.*"
+			  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+			  xmlns:bancoob="br.com.bancoob.componentes.*"
+			  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true"
+			  width="980" height="625" >
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			
+			/**
+			 * Método responsável por ordenar as datas.
+			 */
+			public static function criarDefaultDateSortFunction(objeto1:Object, objeto2:Object) : int {
+				var valor1:Date = objeto1.dataMovimento == null ? new Date(0) : objeto1.dataMovimento.data; 
+				var valor2:Date = objeto2.dataMovimento == null ? new Date(0) : objeto2.dataMovimento.data;
+				
+				return valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+			/**
+			 * Método responsável por ordenar as String em grupos por data.
+			 */
+			public static function criarDefaultStrinDategSortFunction(objeto1:Object, objeto2:Object) : int {
+				
+				var str1:String = objeto1.tipoErro == null ? "" : objeto1.tipoErro; 
+				var str2:String = objeto2.tipoErro == null ? "" : objeto2.tipoErro;
+				
+				var valor1:Date = objeto1.dataMovimento == null ? new Date(0) : objeto1.dataMovimento.data; 
+				var valor2:Date = objeto2.dataMovimento == null ? new Date(0) : objeto2.dataMovimento.data;
+				
+				return str1 > str2 ? 1 : str1 < str2 ? -1 : valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+			
+			/**
+			 * Método responsável por ordenar as String em grupos por data.
+			 */
+			public static function criarDefaultStrinDategSortPendenciaFunction(objeto1:Object, objeto2:Object) : int {
+				//Alterado valor de entrada dos objetos data e String .
+				var str1:String = objeto1.codTipoMensagemDDA == null ? "" : objeto1.codTipoMensagemDDA; 
+				var str2:String = objeto2.codTipoMensagemDDA == null ? "" : objeto2.codTipoMensagemDDA;
+				
+				var valor1:Date = objeto1.dataMovimento == null ? new Date(0) : objeto1.dataMovimento.data; 
+				var valor2:Date = objeto2.dataMovimento == null ? new Date(0) : objeto2.dataMovimento.data;
+				
+				return str1 > str2 ? 1 : str1 < str2 ? -1 : valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<containers:VBoxBancoob width="100%" height="100%">
+		
+		<titulo:SubtituloView texto="LISTA DE PENDÊNCIAS" width="100%"/>
+		<grid:Grid id="gridPendencia" height="100%" width="100%" variableRowHeight="true" doubleClickEnabled="true">
+			<grid:columns>
+				<grid:ColunaGrid editable="false" dataField="dataMovimento" headerText="Data" sortCompareFunction="{criarDefaultDateSortFunction}" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" textAlign="center" />
+				<grid:ColunaGrid editable="false" dataField="codTipoMensagemDDA" headerText="Cod. Tipo Msg." textAlign="center" sortCompareFunction="{criarDefaultStrinDategSortPendenciaFunction}"/>
+				<grid:ColunaGrid editable="false" dataField="qtdEnviar" headerText="A Enviar" textAlign="center" />
+				<grid:ColunaGrid editable="false" dataField="qtdSemRetornoSSPB" headerText="Sem Retorno SSPB" textAlign="center" />
+				<grid:ColunaGrid editable="false" dataField="qtdSemRetornoCIP" headerText="Sem Retorno CIP" textAlign="center" />
+				<grid:ColunaGrid editable="false" dataField="qtdRetornoErro" headerText="Retorno com Erro" textAlign="center" />
+			</grid:columns>
+		</grid:Grid>
+		
+		<containers:HBoxBancoob width="100%"  height="100%">
+			<containers:VBoxBancoob width="100%"  height="100%">
+				<titulo:SubtituloView texto="ERROS AGRUPADOS" width="100%"/>
+				<grid:Grid id="gridErrosAgrupados" height="100%" width="100%" variableRowHeight="true" doubleClickEnabled="true">
+					<grid:columns>
+						<grid:ColunaGrid editable="false" dataField="erroPrincipal" headerText="Cod. Tipo Erro" textAlign="center" width="40"/>
+						<grid:ColunaGrid editable="false" dataField="erroDependente" headerText="Desc. Tipo Erro" textAlign="left" showDataTips="true" width="300" />
+						<grid:ColunaGrid editable="false" dataField="qtdErro" headerText="QTD" textAlign="center" width="20"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:VBoxBancoob>
+			<containers:VBoxBancoob width="40%"  height="100%">
+				<titulo:SubtituloView texto="ERROS DE PROCESSAMENTO RETORNO CIP" width="100%"/>
+				<grid:Grid id="gridErrosProcessamento" height="100%" width="100%" variableRowHeight="true" doubleClickEnabled="true">
+					<grid:columns>
+						<grid:ColunaGrid editable="false" dataField="tipoErro" headerText="Tipo Mensagem" textAlign="left" sortCompareFunction="{criarDefaultStrinDategSortFunction}"/>
+						<grid:ColunaGrid editable="false" dataField="dataMovimento" headerText="Data" sortCompareFunction="{criarDefaultDateSortFunction}" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" textAlign="center" />
+						<grid:ColunaGrid editable="false" dataField="qtdErroProcessamento" headerText="QTD" textAlign="center" width="40"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:VBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<containers:CanvasBancoob  width="100%">
+			<componentes:Botao id="btnExecutarAutomatizado" label="Executar tratamento automatizado" toolTip="Executar tratamento automatizado" x="580" y="0" />
+			<componentes:Botao id="btnAtualizar" label="Atualizar" x="800" y="0" />
+			<componentes:Botao id="btnFechar" label="Fechar" x="887" y="0" />
+		</containers:CanvasBancoob>	
+		
+	</containers:VBoxBancoob>	
+</BaseModulo>

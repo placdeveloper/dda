@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  verticalScrollPolicy="auto"
+								  width="940" height="650"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  idModulo="teste">
+	<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			
+			//xFields ==================================
+			[Bindable]
+			protected var _xFieldLeft:Number = 150;
+			[Bindable]
+			protected var _yAlinharComLabel:Number = 2;
+			[Bindable]
+			protected var _xFieldRight:Number = 520;
+			
+			
+			//xLabels ==================================
+			[Bindable]
+			protected var _xLabelsRight:Number = 450;
+			
+			//Widths ===================================
+			[Bindable]
+			protected var _widthCodTipoPessoa:Number = 100;
+			[Bindable]
+			protected var _widthMoeda:Number = 60;
+			[Bindable]
+			protected var _widthLabelsLeft:Number = 147;
+			[Bindable]
+			protected var _widthLabelsRight:Number = 515;
+			[Bindable]
+			protected var _widthCity:Number = 200;
+			[Bindable]
+			protected var _widthCombos:Number = 100;
+			[Bindable]
+			protected var _widthCombosMaiores:Number = 220;
+			//maxLength ================================
+			[Bindable]
+			protected var _maxLength:Number = 2;
+			//values ===================================
+			[Bindable]
+			protected var _valorMaximo:Number = 99999999999.99;
+			
+			]]>
+	</mx:Script> 
+	
+	<containers:VBoxBancoob id="vBoxFather" width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<containers:VBoxBancoob width="100%">
+					
+				<titulo:SubtituloView texto="Dados do Boleto" left="0" width="100%" top="0"/>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Id MensagemDDA:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<Rotulo id="txtIdMensagemDDA" width="20%" x="{_xFieldLeft}" />
+				</containers:CanvasBancoob>
+
+				<titulo:SubtituloView texto="Dados do Beneficiário" left="0" width="100%" top="0"/>
+				<comumflex:PainelVerticalTipoPessoaCPFCNPJ id="panelTipoPessoaBeneficiario"/>			
+				<comumflex:PainelPessoaMensagemDDABoleto id="dadosBeneficiario"/>				
+				
+				<titulo:SubtituloView texto="Dados do Beneficiário Final" left="0" width="100%" top="0"/>
+				<comumflex:PainelVerticalTipoPessoaCPFCNPJ id="panelTipoPessoaBeneficiarioFinal"/>			
+				<comumflex:PainelPessoaMensagemDDABoleto id="dadosBeneficiarioFinal" includeEndereco="false"/>				
+
+				<titulo:SubtituloView texto="Dados do Pagador" left="0" width="100%" top="0"/>
+				<comumflex:PainelVerticalTipoPessoaCPFCNPJ id="panelTipoPessoaPagador"/>
+				<comumflex:PainelPessoaMensagemDDABoleto id="dadosPagador"/>
+				
+				<titulo:SubtituloView texto="Dados do Avalista" left="0" width="100%" top="0"/>
+				<comumflex:PainelVerticalTipoPessoaAvalista id="panelTipoPessoaAvalista" />
+				<comumflex:PainelPessoaMensagemDDABoleto id="dadosAvalista" includeEndereco="false" includeNomeFantasia="false"/>
+
+				<titulo:SubtituloView texto="Dados do Boleto" left="0" width="100%" top="0"/>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Código Moeda:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtCodMoeda" width="10%" x="{_xFieldRight}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="5"/>
+					
+					<Rotulo text="Id Carteira:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<input:Combo id="cmbIdCarteira" labelField="descricaoCarteira" width="{_widthCombosMaiores}" x="{_xFieldLeft}" y="{_yAlinharComLabel}" dropdownWidth="240" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Nosso Número:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right"/>
+					<input:Texto id="txtNossoNumero" width="30%" x="{_xFieldRight}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="20"/>
+					
+					<Rotulo text="Id Orgão Moeda:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtOrgaoMoeda" width="10%" x="{_xFieldLeft}" restrict="0-9" maxChars="5"/>
+				</containers:CanvasBancoob>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Código de Barras:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<input:Texto id="txtCodBarras" width="70%" x="{_xFieldLeft}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="44"/>
+				</containers:CanvasBancoob>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Linha Digitável:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<input:Texto id="txtLinhaDigitavel" width="70%" x="{_xFieldLeft}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="47"/>
+				</containers:CanvasBancoob>
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Valor Boleto:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<comumflex:CampoNumericoDDA id="txtValorBoleto" valorMaximo="{_valorMaximo}" width="10%" x="{_xFieldRight}" permitirValoreNegativos="false" casasDecimais="2"/>
+					
+					<Rotulo text="Data Vencimento:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<input:Data id="txtDataVencimento"  x="{_xFieldLeft}"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Num. Doc.:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}" />
+					<input:Texto id="txtNumDocumento" width="10%" x="{_xFieldRight}" maxChars="15"/>
+					
+					<Rotulo text="Data Emissão:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Data id="txtDataEmissao"  x="{_xFieldLeft}"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Dias de Protesto:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtDiasProtesto" width="10%" x="{_xFieldRight}" restrict="0-9" maxChars="5"/>
+					
+					<Rotulo text="Data Limite Pagto:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}" />
+					<input:Data id="txtDataLimitePgto"  x="{_xFieldLeft}"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Valor Abatimento:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"/>
+					<comumflex:CampoMoedaDDAView id="txtValorAbatimento"  x="{_xFieldLeft}" casasDecimais="2" permitirValoreNegativos="false" valorMaximo="{_valorMaximo}"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Valor Mínimo:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<comumflex:CampoNumericoDDA id="txtValorMinimo" width="10%" x="{_xFieldRight}" casasDecimais="2" permitirValoreNegativos="false" valorMaximo="{_valorMaximo}"/>
+					
+					<Rotulo text="Ind. Valor Mínimo:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="txtIndValorMinimo"  x="{_xFieldLeft}" width="{_widthCombosMaiores}" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Valor Máximo:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right"/>
+					<comumflex:CampoNumericoDDA id="txtValorMaximo" width="10%" x="{_xFieldRight}" y="{_yAlinharComLabel}" casasDecimais="2" permitirValoreNegativos="false" valorMaximo="{_valorMaximo}" />
+					
+					<Rotulo text="Ind. Valor Máximo:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="txtIndValorMaximo"  x="{_xFieldLeft}" width="{_widthCombosMaiores}" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Qtd. Total Parcelas:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtQtdTotalParcelas" width="10%" x="{_xFieldRight}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="10"/>
+					
+					<Rotulo text="Número Parcela:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtNumeroParcela"  x="{_xFieldLeft}" restrict="0-9" width="10%" maxChars="10"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Bol. Bloqueio Pgto:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="txtBolBloqueioPgto" width="{_widthCombos}" x="{_xFieldRight}" labelItemOpcional="---"  inserirItemOpcional="true"/>
+					
+					<Rotulo text="Bol. Tít. Negociado:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="txtBolTitNegociado"  x="{_xFieldLeft}" width="{_widthCombos}" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Qtd. Pgto Parcial:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtQtdPgtoParcial" width="10%" x="{_xFieldRight}" restrict="0-9" maxChars="10"/>
+					
+					<Rotulo text="Bol. Pgto Parcial:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="txtBolPgtoParcial"  x="{_xFieldLeft}" width="{_widthCombos}" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Aut. Valor Divergente:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="cmbAutorizacaoValorDivergente" labelField="descAutorizacaoValorDivergente" width="{_widthCombosMaiores}" x="{_xFieldRight}" dropdownWidth="280" labelItemOpcional="---"  inserirItemOpcional="true"/>
+					
+					<Rotulo text="Tp. Modelo Cálc.:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="cmbTpModeloCalc" labelField="getLabelTipoModeloCalculo" x="{_xFieldLeft}" width="{_widthCombosMaiores}" dropdownWidth="350" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Cod. Tipo Pagto:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="cmbCodTipoPagto" labelField="descMeioPagamento" width="{_widthCombosMaiores}" x="{_xFieldRight}" dropdownWidth="280" labelItemOpcional="---"  inserirItemOpcional="true"/>
+					
+					<Rotulo text="Espécie Doc.:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Combo id="cmbEspecieDoc" labelField="descEspecieDocumento" x="{_xFieldLeft}" width="{_widthCombosMaiores}" dropdownWidth="280" labelItemOpcional="---"  inserirItemOpcional="true"/>
+				</containers:CanvasBancoob>		
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Num. Seq. Atual Boleto:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtNumSeqAtualBoleto" width="10%" x="{_xFieldRight}" y="{_yAlinharComLabel}" restrict="0-9" maxChars="19"/>
+					
+					<Rotulo text="Num. Ref. Atual Boleto:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+					<input:Texto id="txtNumRefAtualBoleto"  x="{_xFieldLeft}" restrict="0-9" width="10%" maxChars="19"/>
+				</containers:CanvasBancoob>		
+			
+			<titulo:SubtituloView texto="Dados do Desconto" left="0" width="100%" top="0"/>
+			<comumflex:PainelTipoDataValor id="dadosDesconto1" rotuloTipo="Cod. Tipo Desconto:" rotuloData="Data Desconto:" rotuloValor="Valor Desconto:" labelField="descTipoDesconto" labelItemOpcional="Nenhum"/>
+			<comumflex:PainelTipoDataValor id="dadosDesconto2" rotuloTipo="Cod. Tipo Desconto:" rotuloData="Data Desconto:" rotuloValor="Valor Desconto:" labelField="descTipoDesconto" labelItemOpcional="Nenhum"/>
+			<comumflex:PainelTipoDataValor id="dadosDesconto3" rotuloTipo="Cod. Tipo Desconto:" rotuloData="Data Desconto:" rotuloValor="Valor Desconto:" labelField="descTipoDesconto" labelItemOpcional="Nenhum"/>
+
+			<titulo:SubtituloView texto="Dados de Juros Mora" left="0" width="100%" top="0"/>
+			<comumflex:PainelTipoDataValor id="dadosJuroMora" rotuloTipo="Cod. Tipo Juros:" rotuloData="Data Juros:" rotuloValor="Valor Juros:" labelField="descTipoJuros" labelItemOpcional="Nenhum"/>
+			
+			<titulo:SubtituloView texto="Dados de Multa" left="0" width="100%" top="0"/>
+			<comumflex:PainelTipoDataValor id="dadosMulta" rotuloTipo="Cod. Tipo Multa:" rotuloData="Data Multa:" rotuloValor="Valor Multa:" labelField="descTipoMulta" labelItemOpcional="Nenhum"/>
+			
+			<titulo:SubtituloView texto="Grupo de Cálculos" left="0" width="100%" top="0"/>
+			<comumflex:PainelBoletoGrupoCalculoView id="dadosGrupoCalculo1" />
+			<comumflex:PainelBoletoGrupoCalculoView id="dadosGrupoCalculo2" />
+			<comumflex:PainelBoletoGrupoCalculoView id="dadosGrupoCalculo3" />
+			<comumflex:PainelBoletoGrupoCalculoView id="dadosGrupoCalculo4" />
+			<comumflex:PainelBoletoGrupoCalculoView id="dadosGrupoCalculo5" />
+		
+		</containers:VBoxBancoob>		
+		<titulo:LinhaView width="100%"/>
+		<containers:CanvasBancoob width="100%">
+
+			<containers:HBoxBancoob x="650">
+				<bancoob:Botao label="Ok" id="btnConfirmar"/>
+				<bancoob:Botao label="Cancelar" id="btnCancelar"/>
+				<bancoob:Botao label="Fechar" id="btnFechar"/>
+			</containers:HBoxBancoob>			
+		</containers:CanvasBancoob>
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView >

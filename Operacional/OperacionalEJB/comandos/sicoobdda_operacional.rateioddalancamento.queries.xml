@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+<queries>
+	<query name="LISTA_SITUACAO_RATEIO_LANCAMENTO">
+		<use-case name="LISTA_SITUACAO_RATEIO_LANCAMENTO"></use-case>
+		<description>listar situacao rateio lancamento</description>
+		<command>
+			<![CDATA[
+				FROM SituacaoRateioLancamento srl
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_SITUACAO_RATEIO_LANCAMENTO">
+		<use-case name="OBTER_SITUACAO_RATEIO_LANCAMENTO"></use-case>
+		<description>obter situacao rateio lancamento</description>
+		<command>
+			<![CDATA[
+				FROM SituacaoRateioLancamento srl
+				<j:if test="${codSituacaoRateioLancamento != null}">
+					WHERE srl.codSituacaoRateioLancamento =  <bancoob:valorOql valor="${codSituacaoRateioLancamento}"/>
+				</j:if>	
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_RATEIO_DDA_LANCAMENTO">
+		<use-case name="OBTER_RATEIO_DDA_LANCAMENTO"></use-case>
+		<description>obter rateio dda lancamento</description>
+		<command>
+			<![CDATA[
+				FROM RateioDDALancamento rl
+				WHERE  rl.id = <bancoob:valorOql valor="${idLancamento}"/>
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_STATUS_DDA_LANCAMENTO">
+		<use-case name="OBTER_RATEIO_DDA_LANCAMENTO"></use-case>
+		<description>obter rateio dda lancamento</description>
+		<command>
+			<![CDATA[
+				SELECT l.codsituacaorateiolancamento FROM dda.rateioddalancamento  l WHERE l.idrateioddalancamento = <bancoob:valor valor="${idLancamento}"/>
+			]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_RATEIODDALANCAMENTO">
+		<use-case name="Pesquisar RateioDDALancamento"></use-case>
+		<description>Pesquisar RateioDDALancamento</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.ConsultaTarifasDDAPagasDto(rateioDDALanc.id, rateioDDA.id, rateioDDALanc.dataHoraLancamentoCCO,
+					view.numCooperativa, eventoTarifavel.descEventoTarifavelExtrato, rateioDDALanc.qtdMensagemTotalRateio,
+					(rateioDDALanc.valorTotalRateio / rateioDDALanc.qtdMensagemTotalRateio), rateioDDALanc.valorTotalRateio, 
+					rateioDDALanc.numContaLancamentoCCO, eventoTarifavel.numLoteLancamentoCCO)
+				FROM RateioDDALancamento rateioDDALanc
+				JOIN rateioDDALanc.rateioDDA rateioDDA
+				JOIN rateioDDALanc.eventoTarifavelDDA eventoTarifavel, ViewInstituicao view
+				
+				WHERE view.numPac = 0
+				AND ((rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND view.id = rateioDDALanc.idInstituicaoTransferenciaDebito)
+							OR (rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND view.id = rateioDDALanc.idInstituicao))
+				<!-- Se estiver efetivado, efetivado manualmente ou efetivado com ajustes -->
+				AND rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento in (2, 4, 5, 6)
+				<!-- Se só preencheu a instituição central -->
+				<j:if test="${criterios.filtro.idInstituicaoCentral != null and criterios.filtro.idInstituicaoCentral == criterios.filtro.idInstituicaoSingular}">
+					AND (
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND rateioDDALanc.idInstituicaoTransferenciaDebito in 
+						 <j:if test="${criterios.filtro.idInstituicaoCentral == 1}">
+							(<bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>))
+						 </j:if>
+						 <j:if test="${criterios.filtro.idInstituicaoCentral != 1}">
+							(SELECT v1.id FROM ViewInstituicao v1, ViewInstituicao v2
+						 	WHERE v1.numCooperativaPai = v2.numCooperativa AND v2.id = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>
+						 	GROUP BY v1.id))
+						 </j:if>
+						 
+						OR
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND rateioDDALanc.idInstituicao in
+						<j:if test="${criterios.filtro.idInstituicaoCentral == 1}">
+							(<bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>))
+						 </j:if>
+						 <j:if test="${criterios.filtro.idInstituicaoCentral != 1}">
+							(SELECT v1.id FROM ViewInstituicao v1, ViewInstituicao v2
+						 	WHERE v1.numCooperativaPai = v2.numCooperativa AND v2.id = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>
+						 	GROUP BY v1.id))
+						 </j:if>
+					)
+				</j:if>
+				<j:if test="${criterios.filtro.idInstituicaoSingular != null and criterios.filtro.idInstituicaoCentral != criterios.filtro.idInstituicaoSingular}">
+					AND (
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND 
+							rateioDDALanc.idInstituicaoTransferenciaDebito = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoSingular}"/>)
+						OR
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND
+							rateioDDALanc.idInstituicao = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoSingular}"/>)
+					)
+				</j:if>
+				<j:if test="${criterios.filtro.dataConciliacaoInicial != null and criterios.filtro.dataConciliacaoFinal != null}">
+					AND date(rateioDDALanc.dataHoraLancamentoCCO) between <bancoob:valorOql valor="${criterios.filtro.dataConciliacaoInicial}"/> and <bancoob:valorOql valor="${criterios.filtro.dataConciliacaoFinal}"/>
+				</j:if>
+				
+				ORDER BY rateioDDALanc.id, rateioDDALanc.dataHoraLancamentoCCO
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_NUMERO_REGISTROS_RATEIODDALANCAMENTO">
+		<use-case name="Total RateioDDALancamento"></use-case>
+		<description>Total RateioDDALancamento</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+				FROM RateioDDALancamento rateioDDALanc
+				JOIN rateioDDALanc.rateioDDA rateioDDA
+				JOIN rateioDDALanc.eventoTarifavelDDA eventoTarifavel, ViewInstituicao view
+				WHERE view.numPac = 0
+				AND ((rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND view.id = rateioDDALanc.idInstituicaoTransferenciaDebito)
+							OR (rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND view.id = rateioDDALanc.idInstituicao))
+				<!-- Se estiver efetivado, efetivado manualmente ou efetivado com ajustes -->
+				AND rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento in (2, 4, 5, 6)
+				<!-- Se só preencheu a instituição central -->
+				<j:if test="${criterios.filtro.idInstituicaoCentral != null and criterios.filtro.idInstituicaoCentral == criterios.filtro.idInstituicaoSingular}">
+					AND (
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND rateioDDALanc.idInstituicaoTransferenciaDebito in 
+							(SELECT v1.id FROM ViewInstituicao v1, ViewInstituicao v2
+						 	WHERE v1.numCooperativaPai = v2.numCooperativa AND v2.id = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>
+						 	GROUP BY v1.id))
+						OR
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND rateioDDALanc.idInstituicao in
+							(SELECT v1.id FROM ViewInstituicao v1, ViewInstituicao v2
+						 	WHERE v1.numCooperativaPai = v2.numCooperativa AND v2.id = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoCentral}"/>
+						 	GROUP BY v1.id))
+					)
+				</j:if>
+				<j:if test="${criterios.filtro.idInstituicaoSingular != null and criterios.filtro.idInstituicaoCentral != criterios.filtro.idInstituicaoSingular}">
+					AND (
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento = 5 AND 
+							rateioDDALanc.idInstituicaoTransferenciaDebito = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoSingular}"/>)
+						OR
+						(rateioDDALanc.situacaoRateioLancamento.codSituacaoRateioLancamento != 5 AND
+							rateioDDALanc.idInstituicao = <bancoob:valorOql valor="${criterios.filtro.idInstituicaoSingular}"/>)
+					)
+				</j:if>
+				<j:if test="${criterios.filtro.dataConciliacaoInicial != null and criterios.filtro.dataConciliacaoFinal != null}">
+					AND date(rateioDDALanc.dataHoraLancamentoCCO) between <bancoob:valorOql valor="${criterios.filtro.dataConciliacaoInicial}"/> and <bancoob:valorOql valor="${criterios.filtro.dataConciliacaoFinal}"/>
+				</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_LANCAMENTOS_TARIFAS">
+		<use-case name="LISTAR_LANCAMENTOS_TARIFAS"></use-case>
+		<description>LISTAR_LANCAMENTOS_TARIFAS</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.LancamentosTarifasDDADto(eventoConsolidado.id, eventoConsolidadoDetalhe.id, eventoConsolidado.dataMovimento, 
+					eventoConsolidadoDetalhe.qtdMensagemApurado, eventoConsolidado.valorTarifaBancoob, eventoConsolidado.valorTarifaBancoob * eventoConsolidadoDetalhe.qtdMensagemApurado)
+				FROM RateioDDALancamento rateioDDALanc
+				JOIN rateioDDALanc.rateioDDA rateioDDA
+				JOIN rateioDDA.listaEventoConsolidadoDDA eventoConsolidado
+				JOIN eventoConsolidado.listaEventoConsolidadoDDADetalhe eventoConsolidadoDetalhe
+				WHERE rateioDDALanc.id = <bancoob:valorOql valor="${idRateioDDALancamento}"/>
+				AND eventoConsolidadoDetalhe.idInstituicao = rateioDDALanc.idInstituicao
+				AND eventoConsolidado.eventoTarifavelDDA.codEventoTarifavel = rateioDDALanc.eventoTarifavelDDA.codEventoTarifavel
+				ORDER BY eventoConsolidado.dataMovimento
+			]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_MOVIMENTO_SICOOBDDA">
+		<use-case name="PESQUISAR_MOVIMENTO_SICOOBDDA"></use-case>
+		<description>PESQUISAR_MOVIMENTO_SICOOBDDA</description>
+		<command>
+			<![CDATA[
+				WITH SEL_ROLLOUT AS (
+					SELECT TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,1,10),'DD-MM-YYYY') DATA_INICIAL,
+                       	TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,12,10),'DD-MM-YYYY') DATA_FINAL,
+                       	SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) + 1,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) - 1 ) VALOR_INICIAL,
+                       	SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) + 1,LENGTH(PAR.VALORBASEPARAMETRO) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) ) VALOR_FINAL
+                		FROM DDA.PARAMETRO PAR
+                		WHERE PAR.NOMEPARAMETRO LIKE 'Faixa de Rollout - %' AND PAR.IDPARAMETRO IN ( 85, 86, 87, 88, 89, 90, 91, 92, 99, 101, 102 )
+             	)
+             	
+				SELECT * FROM (
+               		SELECT ROWNUMBER() OVER () AS linha, mensagemBoleto.NUMCODIGOBARRA, mensagemBoleto.NUMCPFCNPJBENEFICIARIO, mensagemBoleto.NOMEBENEFICIARIO,
+               			mensagem.DATAHORAMENSAGEM, mensagemBoleto.DATAVENCIMENTO, mensagemBoleto.VALORBOLETO
+					FROM dda.EVENTOCONSOLIDADODDADETALHE eventoConsolidadoDetalhe
+					JOIN dda.EVENTOCONSOLIDADODDA eventoConsolidado ON eventoConsolidado.IDEVENTOCONSOLIDADODDA = eventoConsolidadoDetalhe.IDEVENTOCONSOLIDADODDA
+					JOIN dda.EVENTOTARIFAVELDDA eventoTarifavel ON eventoTarifavel.CODEVENTOTARIFAVEL = eventoConsolidado.CODEVENTOTARIFAVEL
+					JOIN dda.MENSAGEMTARIFAVELDDA mensagemTarifavel ON mensagemTarifavel.CODEVENTOTARIFAVEL = eventoConsolidado.CODEVENTOTARIFAVEL
+					JOIN dda.histMENSAGEMDDA mensagem ON mensagem.CODTIPOMENSAGEMDDA = mensagemTarifavel.CODTIPOMENSAGEMDDA AND
+									mensagem.DATAMOVIMENTO = eventoConsolidado.DATAMOVIMENTO AND
+									mensagem.IDINSTITUICAOSOLICITANTE = eventoConsolidadoDetalhe.IDINSTITUICAO
+					JOIN dda.histMENSAGEMDDABOLETO mensagemBoleto ON mensagemBoleto.IDMENSAGEMDDA = mensagem.IDMENSAGEMDDA AND
+									mensagemBoleto.BOLDDA = CASE WHEN eventoTarifavel.CODTIPOEVENTOTARIFAVEL = 1 THEN 1
+																WHEN eventoTarifavel.CODTIPOEVENTOTARIFAVEL = 2 THEN 0 END
+					WHERE eventoConsolidadoDetalhe.IDEVENTOCONSOLIDADODDADETALHE = <bancoob:valor valor="${consultaDto.idEventoConsolidadoDDADetalhe}"/>
+						AND mensagem.CODSITUACAOMENSAGEMDDA = 8
+						AND (
+							mensagemBoleto.BOLDDA = 1 OR (
+							mensagemBoleto.BOLDDA = 0 AND NOT EXISTS ( 
+									SELECT NULL FROM SEL_ROLLOUT PAR
+									WHERE mensagem.DATAMOVIMENTO BETWEEN PAR.DATA_INICIAL AND PAR.DATA_FINAL
+										AND mensagemBoleto.VALORBOLETO BETWEEN CASE
+																					WHEN PAR.VALOR_INICIAL = '*' THEN mensagemBoleto.VALORBOLETO
+																					ELSE CAST(PAR.VALOR_INICIAL AS DECIMAL(18,2))
+																				END
+																				AND
+																				CASE
+																					WHEN PAR.VALOR_FINAL = '*' THEN mensagemBoleto.VALORBOLETO
+																					ELSE CAST(PAR.VALOR_FINAL AS DECIMAL(18,2))
+																				END
+									)
+							)
+						)
+						<j:if test="${consultaDto.numCodBarras != null}">
+							AND mensagemBoleto.NUMCODIGOBARRA = <bancoob:valor valor="${consultaDto.numCodBarras}"/>
+						</j:if>
+						<j:if test="${consultaDto.cpfCnpjBeneficiario != null}">
+							AND mensagemBoleto.NUMCPFCNPJBENEFICIARIO = <bancoob:valor valor="${consultaDto.cpfCnpjBeneficiario}"/>
+						</j:if>
+				) AS resultado
+				<j:if test="${pagina != null and tamanhoPagina != null}">
+					WHERE resultado.linha &gt; <bancoob:valor valor="${pagina * tamanhoPagina}" />
+					FETCH FIRST ${tamanhoPagina} ROWS ONLY
+				</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="COUNT_MOVIMENTO_SICOOBDDA">
+		<use-case name="COUNT_MOVIMENTO_SICOOBDDA"></use-case>
+		<description>COUNT_MOVIMENTO_SICOOBDDA</description>
+		<command>
+			<![CDATA[
+				WITH SEL_ROLLOUT AS (
+					SELECT TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,1,10),'DD-MM-YYYY') DATA_INICIAL,
+                       	TIMESTAMP_FORMAT(SUBSTR(PAR.VALORBASEPARAMETRO,12,10),'DD-MM-YYYY') DATA_FINAL,
+                       	SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) + 1,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,2) - 1 ) VALOR_INICIAL,
+                       	SUBSTR(PAR.VALORBASEPARAMETRO,LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) + 1,LENGTH(PAR.VALORBASEPARAMETRO) - LOCATE_IN_STRING(PAR.VALORBASEPARAMETRO,'|',1,3) ) VALOR_FINAL
+                		FROM DDA.PARAMETRO PAR
+                		WHERE PAR.NOMEPARAMETRO LIKE 'Faixa de Rollout - %' AND PAR.IDPARAMETRO IN ( 85, 86, 87, 88, 89, 90, 91, 92, 99, 101, 102 )
+              		)
+              		
+              	SELECT count(1)
+				FROM dda.EVENTOCONSOLIDADODDADETALHE eventoConsolidadoDetalhe
+				JOIN dda.EVENTOCONSOLIDADODDA eventoConsolidado ON eventoConsolidado.IDEVENTOCONSOLIDADODDA = eventoConsolidadoDetalhe.IDEVENTOCONSOLIDADODDA
+				JOIN dda.EVENTOTARIFAVELDDA eventoTarifavel ON eventoTarifavel.CODEVENTOTARIFAVEL = eventoConsolidado.CODEVENTOTARIFAVEL
+				JOIN dda.MENSAGEMTARIFAVELDDA mensagemTarifavel ON mensagemTarifavel.CODEVENTOTARIFAVEL = eventoConsolidado.CODEVENTOTARIFAVEL
+				JOIN dda.histMENSAGEMDDA mensagem ON mensagem.CODTIPOMENSAGEMDDA = mensagemTarifavel.CODTIPOMENSAGEMDDA AND
+								mensagem.DATAMOVIMENTO = eventoConsolidado.DATAMOVIMENTO AND
+								mensagem.IDINSTITUICAOSOLICITANTE = eventoConsolidadoDetalhe.IDINSTITUICAO
+				JOIN dda.histMENSAGEMDDABOLETO mensagemBoleto ON mensagemBoleto.IDMENSAGEMDDA = mensagem.IDMENSAGEMDDA AND
+								mensagemBoleto.BOLDDA = CASE WHEN eventoTarifavel.CODTIPOEVENTOTARIFAVEL = 1 THEN 1
+															WHEN eventoTarifavel.CODTIPOEVENTOTARIFAVEL = 2 THEN 0 END
+				WHERE eventoConsolidadoDetalhe.IDEVENTOCONSOLIDADODDADETALHE = <bancoob:valor valor="${consultaDto.idEventoConsolidadoDDADetalhe}"/>
+					AND mensagem.CODSITUACAOMENSAGEMDDA = 8
+					AND (
+						mensagemBoleto.BOLDDA = 1 OR (
+						mensagemBoleto.BOLDDA = 0 AND NOT EXISTS ( 
+								SELECT NULL FROM SEL_ROLLOUT PAR
+								WHERE mensagem.DATAMOVIMENTO BETWEEN PAR.DATA_INICIAL AND PAR.DATA_FINAL
+									AND mensagemBoleto.VALORBOLETO BETWEEN CASE
+																				WHEN PAR.VALOR_INICIAL = '*' THEN mensagemBoleto.VALORBOLETO
+																				ELSE CAST(PAR.VALOR_INICIAL AS DECIMAL(18,2))
+																			END
+																			AND
+																			CASE
+																				WHEN PAR.VALOR_FINAL = '*' THEN mensagemBoleto.VALORBOLETO
+																				ELSE CAST(PAR.VALOR_FINAL AS DECIMAL(18,2))
+																			END
+								)
+						)
+					)
+					<j:if test="${consultaDto.numCodBarras != null}">
+						AND mensagemBoleto.NUMCODIGOBARRA = <bancoob:valor valor="${consultaDto.numCodBarras}"/>
+					</j:if>
+					<j:if test="${consultaDto.cpfCnpjBeneficiario != null}">
+						AND mensagemBoleto.NUMCPFCNPJBENEFICIARIO = <bancoob:valor valor="${consultaDto.cpfCnpjBeneficiario}"/>
+					</j:if>
+			]]>
+		</command>
+	</query>
+
+</queries>

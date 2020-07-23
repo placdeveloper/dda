@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modulo:ModuloValidavel xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:modulo="br.com.bancoob.componentes.containers.validaveis.*"
+		   xmlns:containers="br.com.bancoob.componentes.containers.*" 
+		   xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		   xmlns:grid="br.com.bancoob.componentes.grid.*"
+		   verticalScrollPolicy="auto" width="100%" height="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil;
+			
+			
+		]]>
+	</mx:Script>
+	
+	<containers:VBoxBancoob width="99%" x="5" height="99%"> 
+		<mx:Canvas height="3"/>
+		
+		<comum:FieldSet title="Adesão/Cancelamento" width="500" height="25%" cornerRadius="5" titleGap="5" titleAlign="left">
+			<containers:HBoxBancoob width="100%" height="100%">
+				<mx:Canvas width="5"/>
+				<grid:Grid id="gridCCO" width="98%" height="98%" x="10">
+					<grid:columns>
+						<grid:ColunaGrid headerText="Número da Conta Corrente" sortable="false" dataField="numContaCorrente"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:HBoxBancoob>
+		</comum:FieldSet>
+		
+		<comum:FieldSet title="Agregados do produto DDA" width="95%" height="35%" cornerRadius="5">
+			<containers:HBoxBancoob width="100%" height="100%">
+				<mx:Canvas width="5"/>
+				<grid:Grid id="gridAgregados" width="98%" height="99%">
+					<grid:columns>
+						<grid:ColunaGrid headerText="CPF/CNPJ" dataField="numCpfCnpj" sortable="false" width="300" labelFunction="{TabelaUtil.defaultCPFCNPJLabelFunction}"/>
+						<grid:ColunaGrid headerText="Nome/Razão Social" dataField="nomePessoa" sortable="false" />
+					</grid:columns>
+				</grid:Grid>
+			</containers:HBoxBancoob>
+		</comum:FieldSet>
+		
+		<comum:FieldSet title="Solicitações pendentes de envio" width="95%" cornerRadius="5" height="50%">
+			<containers:HBoxBancoob width="100%" height="100%">
+				<mx:Canvas width="5"/>
+				<grid:Grid id="gridMensagensPendentes" width="98%" height="99%" >
+					<grid:columns>
+						<grid:ColunaGrid headerText="Data/Hora" dataField="dataHoraCadastro" sortable="false" width="200" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+						<grid:ColunaGrid headerText="Tipo" dataField="descTipoMensagem" sortable="false" width="400"/>
+						<grid:ColunaGrid headerText="Situação" dataField="descSituacaoMensagem" sortable="false" />
+						<grid:ColunaGrid headerText="CPF/CNPJ" dataField="numCpfCnpj" sortable="false" width="200" labelFunction="{TabelaUtil.defaultCPFCNPJLabelFunction}"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:HBoxBancoob>
+		</comum:FieldSet>
+	</containers:VBoxBancoob>
+</modulo:ModuloValidavel>
+

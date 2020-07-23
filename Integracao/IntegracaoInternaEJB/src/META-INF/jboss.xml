@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>SCIServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaointerna/SCIServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaointerna/SCIServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>SSPBServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaointerna/SSPBServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaointerna/SSPBServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ADMServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaointerna/ADMServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaointerna/ADMServicoRemote</jndi-name>
+    	</session>
+    	<session>
+			<ejb-name>ContaCorrenteServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_integracaointerna/ContaCorrenteServico</local-jndi-name>
+			<jndi-name>sicoobdda_integracaointerna/ContaCorrenteServicoRemote</jndi-name>
+    	</session>
+	</enterprise-beans>
+</jboss>

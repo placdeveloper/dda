@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	
+	<query name="OBTER_MENSAGEM_DDA">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen DDA</description>
+	    <command>
+				<![CDATA[
+					SELECT m.idmensagemdda, m.idmensagemddaorigem, m.codTipoMensagemdda, m.dataMovimento, m.datahoramensagem, m.qtdtotreg, m.datahoraprotocolo,
+					 m.numoperacao,	m.descerroprotocolo, m.xmlmensagem, m.bolorigemsicoob, m.datahoracadastro, m.numprioridadeenvio,  m.numControleDDA,
+					 m.bolExcedeuSLA, m.idCanal, m.idInstituicaoSolicitante , m.idUsuarioSolicitante
+						FROM DDA.MENSAGEMDDA m
+					WHERE   
+						m.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_MENSAGEMDDA_PAGADOR">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do Pagador para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT mp.idMensagemDDA, mp.numCpfCnpjPagador, mp.codTipoPessoaPagador, mp.bolPagadorEletronico, mp.numRefAtualCadPagador, mp.numSeqAtualCadPagador
+					 FROM 
+						DDA.MENSAGEMDDAPAGADOR mp  
+					WHERE   
+						mp.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGEMDDA_PAGADOR_AGREGADO">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Listar as mensagens do Pagador Agregado para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT mpa.idMensagemDDAPagadorAgregado, mpa.idMensagemDDA, mpa.numCpfCnpjAgregado, mpa.codTipoPessoaAgregado, mpa.codTipoOperacao
+					 FROM 
+						DDA.MENSAGEMDDAPAGADORAGREGADO mpa
+					WHERE mpa.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGEMDDA_PAGADOR_CONTA">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Listar as mensagens do Pagador Conta para envio.</description>
+	    <command>
+				<![CDATA[
+					SELECT mpc.idMensagemDDAPagadorConta, mpc.idMensagemDDA, mpc.numAgencia, mpc.numContaCorrente, mpc.codTipoOperacao, mpc.dataHoraAdesao
+					 FROM 
+						DDA.MENSAGEMDDAPAGADORCONTA mpc
+					WHERE   mpc.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+		
+		
+	<query name="OBTER_PAGADOR_POR_MENSAGEM_DDA">
+		<use-case name="Obter PagadorDDA"></use-case>
+	    <description>Obter pagadorDDA de acordo pela MensagemDDAPagador</description>
+	    <command>
+				<![CDATA[
+					select  pagador.idpagadordda, 
+                            pagador.numcpfcnpj, 
+                            pagador.codtipopessoacip,
+                            pagador.numidentificapagadorcip,
+                            pagador.numRefAtualCadPagador, 
+                            pagador.qtdadesaodda, 
+                            pagador.bolsacadoeletronico, 
+                            pagador.numseqatualcadpagador, 
+                            pagador.datahoraultimaatualizacao 
+					FROM 
+					     DDA.PAGADORDDA as pagador
+					INNER JOIN DDA.MENSAGEMDDAPAGADOR as mp
+						ON mp.NUMCPFCNPJPAGADOR = pagador.NUMCPFCNPJ
+					WHERE mp.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+		
+	<query name="OBTER_PAGADOR_DDA">
+		<use-case name="Obter PagadorDDA"></use-case>
+	    <description>Obter pagadorDDA de acordo com o cpf/cnpj</description>
+	    <command>
+				<![CDATA[
+					select  pagador.idpagadordda, 
+                            pagador.numcpfcnpj, 
+                            pagador.codtipopessoacip,
+                            pagador.numidentificapagadorcip,
+                            pagador.numRefAtualCadPagador, 
+                            pagador.qtdadesaodda, 
+                            pagador.bolsacadoeletronico, 
+                            pagador.numseqatualcadpagador, 
+                            pagador.datahoraultimaatualizacao 
+					FROM 
+					     DDA.PAGADORDDA as pagador
+					WHERE pagador.numcpfcnpj = <bancoob:valor valor="${numCpfCnpjPagador}"/>
+					<j:if test="${isLocarTabela}">
+						 FOR UPDATE WITH RS
+					 </j:if>
+				]]>
+	    </command>
+	</query>
+	
+	
+	<query name="OBTER_PAGADOR_DDA_CONTA">
+		<use-case name="Obter PagadorDDA Conta"></use-case>
+	    <description>Obter pagadorDDA Conta de acordo com o idPagadorDDA</description>
+	    <command>
+				<![CDATA[
+					select   pagadorConta.idpagadorDDAConta,
+					         pagadorConta.idpagadordda,
+					         pagadorConta.numagencia,
+					         pagadorConta.numcontacorrente,
+					         pagadorConta.datahoraadesao
+					FROM 
+					     DDA.PAGADORDDACONTA as pagadorConta
+					WHERE pagadorConta.idpagadordda =   <bancoob:valor valor="${idPagadorDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_PAGADOR_DDA_AGREGADO">
+		<use-case name="Obter PagadorDDA Agregado"></use-case>
+	    <description>Obter pagadorDDA Agregado de acordo com o idPagadorDDA</description>
+	    <command>
+				<![CDATA[
+					select pagadorAgregado.idPagadorDDAAgregado,
+					       pagadorAgregado.idpagadorDDA,
+					       pagadorAgregado.numCpfCnpjAgregado,
+					       pagadorAgregado.codTipoPessoaAgregado
+					FROM 
+					     DDA.PAGADORDDAAGREGADO as pagadorAgregado
+					WHERE pagadorAgregado.idpagadordda =     <bancoob:valor valor="${idPagadorDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="LISTAR_MENSAGEM_DDA">
+		<use-case name="Listar Mensagem DDA "></use-case>
+	    <description>Listar MensagemDDAPAGADor com JOIN no LogDetalheEnvioArquivoDDA. Utilizado na Geraçao e Postagem dos Arquivos</description>
+	    <command>
+				<![CDATA[
+					SELECT mp.idMensagemDDA, mp.numCpfCnpjPagador, mp.codTipoPessoaPagador, mp.bolPagadorEletronico, p.numRefAtualCadPagador, p.numSeqAtualCadPagador, p.numIdentificaPagadorCip
+					FROM 
+						  DDA.MENSAGEMDDAPAGADOR mp
+						  INNER JOIN DDA.LOGDETALHEENVIOARQUIVODDA log on log.idmensagemdda = mp.idmensagemdda 
+						  LEFT JOIN DDA.PAGADORDDA as p on p.numCpfCnpj = mp.numCpfCnpjPagador 
+					WHERE   
+						log.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				]]>
+	    </command>
+	</query>
+	
+	
+	<query name="ATUALIZAR_MENSAGEMDDA_PAGADOR">
+		<use-case name="Atualizar Mensagem Pagador "></use-case>
+	    <description>Atualizar o numero de referencia do pagador e o Numero Sequencial de acordo com o idMensagemDDAPagador</description>
+	    <command>
+				<![CDATA[
+				UPDATE DDA.MENSAGEMDDAPAGADOR
+					   SET numRefAtualCadPagador = <bancoob:valor valor="${numRefAtualCadPagador}"/>,
+					   numSeqAtualCadPagador = <bancoob:valor valor="${numSeqAtualCadPagador}"/>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagemDDAPagador}"/>
+				]]>
+	    </command>
+	</query>
+
+
+
+	<query name="OBTER_MENSAGEMDDA_PAGADOR_REFERENCIAS">
+		<use-case name="Obter Mensagem Pagador "></use-case>
+	    <description>Obter MensagenPagador com suas referencias</description>
+	    <command>
+				<![CDATA[
+					 SELECT mp.idMensagemDDA, mp.numCpfCnpjPagador, mp.codTipoPessoaPagador, mp.bolPagadorEletronico, p.numRefAtualCadPagador, p.numSeqAtualCadPagador, p.numIdentificaPagadorCip
+					 FROM DDA.MENSAGEMDDAPAGADOR mp
+				     	LEFT JOIN DDA.PAGADORDDA as p on p.numCpfCnpj = mp.numCpfCnpjPagador
+				     	WHERE mp.idMensagemDDA =  <bancoob:valor valor="${idMensagem}"/>
+				  	 GROUP BY mp.idMensagemDDA, mp.numCpfCnpjPagador, mp.codTipoPessoaPagador, mp.bolPagadorEletronico, p.numRefAtualCadPagador, p.numSeqAtualCadPagador,  p.numIdentificaPagadorCip
+				]]>
+	    </command>
+	</query>
+		
+	<query name="REMOVER_PAGADOR_AGREGADO">
+		<use-case name="Deletar Pagador DDA Agregado"></use-case>
+	    <description>Deletar Pagador DDA Agregado pelo IdPagador.</description>
+	    <command>
+				<![CDATA[
+					DELETE FROM DDA.PAGADORDDAAGREGADO P WHERE P.IDPAGADORDDA = <bancoob:valor valor="${idPagador}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="REMOVER_PAGADOR_CONTA">
+		<use-case name="Deletar Pagador DDA Conta"></use-case>
+	    <description>Deletar Pagador DDA Conta pelo IdPagador.</description>
+	    <command>
+				<![CDATA[
+					DELETE FROM DDA.PAGADORDDACONTA P WHERE P.IDPAGADORDDA = <bancoob:valor valor="${idPagador}"/>
+				]]>
+	    </command>
+	</query>
+	
+	<query name="PROCESSAR_PAGADORDDA_XML_ADDA002">
+		<use-case name="Motor de Recebimento de Arquivos"></use-case>
+	    <description>Gravar PagadorDDA em lote.</description>
+	    <command>
+				<![CDATA[
+                    WITH
+                    SEL_LOGDETREC AS ( SELECT CASE WHEN XML1.CODTIPOPESSOACIP = 'F' THEN LPAD(XML1.NUMCPFCNPJ, 11, 0) ELSE LPAD(XML1.NUMCPFCNPJ, 14, 0) END NUMCPFCNPJ, 
+                                              XML1.CODTIPOPESSOACIP,
+                                              XML1.NUMIDENTIFICAPAGADORCIP, 
+                                              XML1.NUMREFATUALCADPAGADOR, 
+                                              XML1.QTDADESAODDA,
+                                              CASE WHEN XML1.QTDADESAODDA > 0 THEN 1 ELSE 0 END BOLSACADOELETRONICO,
+                                              XML1.NUMSEQATUALCADPAGADOR,
+                                              XML1.SITPAGADORDDA,
+                                              XML1.XMLPAGADORCONTA,
+                                              XML1.XMLPAGADORAGREGADO,
+                                              L.IDLOGDETRECEBIMENTOOARQUIVODDA
+                                       FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L
+                                       CROSS JOIN XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA002_Pagdr' passing DESCXMLMENSAGEMRECEBIDA as "a" 
+					   COLUMNS 
+					        CODTIPOPESSOACIP                CHAR(1)       PATH	'TpPessoaPagdr',
+					        NUMCPFCNPJ		        		VARCHAR(14)   PATH	'CNPJ_CPFPagdr',
+					        QTDADESAODDA	                INTEGER	      PATH	'QtdAdesCliPagdrDDA',
+					        NUMIDENTIFICAPAGADORCIP	        BIGINT	      PATH	'Grupo_ADDA002_PagdrProprio/NumIdentcPagdr',
+					        NUMREFATUALCADPAGADOR	        BIGINT	      PATH	'Grupo_ADDA002_PagdrProprio/NumRefAtlCadCliPagdr',
+                                               NUMSEQATUALCADPAGADOR           BIGINT      PATH 'Grupo_ADDA002_PagdrProprio/NumSeqAtlzCadCliPagdr',
+                                               SITPAGADORDDA                   VARCHAR(1)  PATH 'Grupo_ADDA002_PagdrProprio/SitCliPagdrPart',
+                                               XMLPAGADORCONTA                 XML         PATH 'Grupo_ADDA002_PagdrProprio/Grupo_ADDA002_CtCliPagdr',
+                                               XMLPAGADORAGREGADO              XML         PATH 'Grupo_ADDA002_PagdrProprio/Grupo_ADDA002_AgrgdDDA'
+                                       ) AS XML1
+					WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+				  	  AND L.BOLPROCESSADO = 0
+				  	  AND L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                                    ),
+                    INSERT_PAGADOR AS ( SELECT
+                                        COUNT(*) AS QTD_INS_PAG
+                                        FROM FINAL TABLE ( INSERT
+                                                           INTO DDA.PAGADORDDA( NUMCPFCNPJ,
+                                                                                CODTIPOPESSOACIP,
+                                                                                NUMIDENTIFICAPAGADORCIP,
+                                                                                NUMREFATUALCADPAGADOR,
+                                                                                QTDADESAODDA,
+                                                                                BOLSACADOELETRONICO,
+                                                                                NUMSEQATUALCADPAGADOR,
+                                                                                DATAHORAULTIMAATUALIZACAO )
+                                                           SELECT REC1.NUMCPFCNPJ, 
+                                                                  REC1.CODTIPOPESSOACIP,
+                                                                  REC1.NUMIDENTIFICAPAGADORCIP, 
+                                                                  REC1.NUMREFATUALCADPAGADOR, 
+                                                                  REC1.QTDADESAODDA,
+                                                                  REC1.BOLSACADOELETRONICO,
+                                                                  REC1.NUMSEQATUALCADPAGADOR,
+                                                                  CURRENT TIMESTAMP
+                                                           FROM SEL_LOGDETREC REC1 ) ),
+                    INSERT_PAGCONTA AS ( SELECT
+                                         COUNT(*) AS QTD_INS_CONTA
+                                         FROM FINAL TABLE ( INSERT
+                                                            INTO DDA.PAGADORDDACONTA (IDPAGADORDDA,
+                                                                                      NUMAGENCIA,
+                                                                                      NUMCONTACORRENTE,
+                                                                                      DATAHORAADESAO)
+                                                            SELECT PAG2.IDPAGADORDDA,
+                                                                   XML2.NUMAGENCIA, 
+                                                                   XML2.NUMCONTACORRENTE,
+                                                                   XML2.DATAHORAADESAO
+                                                            FROM SEL_LOGDETREC REC2
+                                                            CROSS JOIN XMLTABLE ('$b/.' passing REC2.XMLPAGADORCONTA as "b" 
+					   COLUMNS 
+					        NUMAGENCIA	                INTEGER	      PATH	'AgCliPagdr',
+					        NUMCONTACORRENTE	        DECIMAL(14,0) PATH	'CtCliPagdr',
+					        DATAHORAADESAO	            DATE	      PATH	'DtAdesCliPagdrDDA'
+                                                                       ) AS XML2
+                                                            JOIN DDA.PAGADORDDA PAG2 ON PAG2.NUMCPFCNPJ = REC2.NUMCPFCNPJ
+                                                            WHERE REC2.SITPAGADORDDA != 2 ) ),
+                    INSERT_PAGAGREG AS ( SELECT
+                                         COUNT(*) AS QTD_INS_AGREG
+                                         FROM FINAL TABLE ( INSERT
+                                                            INTO DDA.PAGADORDDAAGREGADO (IDPAGADORDDA,
+                                                                                         NUMCPFCNPJAGREGADO,
+                                                                                         CODTIPOPESSOAAGREGADO)
+                                                            SELECT PAG3.IDPAGADORDDA,
+                                                                   CASE WHEN XML3.CODTIPOPESSOAAGREGADO = 'F' THEN LPAD(XML3.NUMCPFCNPJAGREGADO, 11, 0) ELSE LPAD(XML3.NUMCPFCNPJAGREGADO, 14, 0) END AS NUMCPFCNPJAGREGADO,
+                                                                   XML3.CODTIPOPESSOAAGREGADO
+                                                            FROM SEL_LOGDETREC REC3
+                                                            CROSS JOIN XMLTABLE ('$c/.' passing REC3.XMLPAGADORAGREGADO as "c" 
+					   COLUMNS 
+					        CODTIPOPESSOAAGREGADO       CHAR(1)       PATH	'TpPessoaAgrgd',
+					        NUMCPFCNPJAGREGADO			VARCHAR(14)   PATH	'CNPJ_CPFAgrgd'
+                                                                       ) AS XML3
+                                                            JOIN DDA.PAGADORDDA PAG3 ON PAG3.NUMCPFCNPJ = REC3.NUMCPFCNPJ
+                                                            WHERE REC3.SITPAGADORDDA != 2 ) ),
+                    /*Esse UPDATE realiza alteração de todos os registros lidos para processados (BOLPROCESSADO = 1)*/
+                    UPDATE_LOGDET AS (SELECT
+                                      COUNT(*) QTD_UPD_LOGDET
+                                      FROM FINAL TABLE ( UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+                                                         SET LOGU.BOLPROCESSADO = 1,
+                                                             LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+                                                         WHERE LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA IN ( SELECT REC4.IDLOGDETRECEBIMENTOOARQUIVODDA FROM SEL_LOGDETREC REC4 ) ) )
+                    /*
+                    Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+                    SELECT 
+                    QTD_INS_PAG, QTD_INS_CONTA, QTD_INS_AGREG, QTD_UPD_LOGDET
+                    FROM 
+                    INSERT_PAGADOR, INSERT_PAGCONTA, INSERT_PAGAGREG, UPDATE_LOGDET
+                    */
+                    /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+                    SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+				]]>
+	    </command>
+	</query>
+	<query name="MANUTENCAO_PAGADORDDA_ADDA003">
+		<use-case name="Processar Detalhes Arquivo Recebido CIP"></use-case>
+	    <description>Manutenção de Clientes Pagador Eletrônico</description>
+	    <command>
+				<![CDATA[
+					MERGE INTO DDA.PAGADORDDA AS PAGDDA
+        			USING (SELECT XML.INDRMANUTPAGDR,
+        				XML.CODTIPOPESSOAPAGDR,
+        				CASE WHEN XML.CODTIPOPESSOAPAGDR = 'F' THEN LPAD(XML.NUMCPFCNPJPAGADOR, 11, 0) ELSE LPAD(XML.NUMCPFCNPJPAGADOR, 14, 0) END  AS NUMCPFCNPJPAGADOR,
+        				XML.QTDADESCLIPAGDRDDA
+        			FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L
+        			CROSS JOIN XMLTABLE ('$logdet/ArqRecebimento/Grupo_ADDA003_PagdrDDA' passing DESCXMLMENSAGEMRECEBIDA AS "logdet" 
+                		COLUMNS 
+		                  	INDRMANUTPAGDR          CHAR(1)         PATH    'IndrManutPagdr',
+		                  	CODTIPOPESSOAPAGDR      CHAR(1)         PATH    'TpPessoaPagdr',
+		                  	NUMCPFCNPJPAGADOR       VARCHAR(14)     PATH    'CNPJ_CPFPagdr',
+		                  	QTDADESCLIPAGDRDDA      INTEGER         PATH    'QtdAdesCliPagdrDDA'
+                		) AS XML
+               		WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+         			AND   L.BOLPROCESSADO = 0
+         			AND   L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+        			) AS REC
+        			ON (PAGDDA.NUMCPFCNPJ = REC.NUMCPFCNPJPAGADOR)
+        			WHEN NOT MATCHED THEN
+						INSERT (NUMCPFCNPJ, 
+						        CODTIPOPESSOACIP, 
+						        NUMIDENTIFICAPAGADORCIP, 
+						        NUMREFATUALCADPAGADOR, 
+						        QTDADESAODDA, 
+						        BOLSACADOELETRONICO, 
+						        NUMSEQATUALCADPAGADOR, 
+						        DATAHORAULTIMAATUALIZACAO) 
+						VALUES (REC.NUMCPFCNPJPAGADOR, 
+						        REC.CODTIPOPESSOAPAGDR, 
+						        NULL, 
+						        NULL, 
+						        REC.QTDADESCLIPAGDRDDA, 
+								CASE 
+									WHEN REC.INDRMANUTPAGDR = 'I' THEN 1 
+							    	WHEN REC.INDRMANUTPAGDR IN ('A', 'E') AND REC.QTDADESCLIPAGDRDDA = 0 THEN 0
+							    	WHEN REC.INDRMANUTPAGDR IN ('A', 'E') AND REC.QTDADESCLIPAGDRDDA > 0 THEN 1        
+									ELSE 0 
+								END, 
+								NULL, 
+								CURRENT TIMESTAMP)
+					WHEN MATCHED THEN
+						UPDATE SET PAGDDA.QTDADESAODDA = REC.QTDADESCLIPAGDRDDA,
+						           PAGDDA.DATAHORAULTIMAATUALIZACAO = CURRENT TIMESTAMP,
+						           PAGDDA.BOLSACADOELETRONICO = CASE WHEN REC.QTDADESCLIPAGDRDDA = 0 AND REC.INDRMANUTPAGDR = 'E' THEN 0 ELSE PAGDDA.BOLSACADOELETRONICO END
+				]]>
+	    </command>
+	</query>
+	<query name="LISTAR_PAGADORDDA_MODIFICADOS_ADDA003">
+		<use-case name="Processar Detalhes Arquivo Recebido CIP"></use-case>
+	    <description>Lista Clientes Pagador Eletrônico Modificados</description>
+	    <command>
+				<![CDATA[
+                    WITH SELECT_LOGDET AS (SELECT CASE
+                                                  WHEN XML.CODTIPOPESSOAPAGDR = 'F' THEN
+                                                     LPAD(XML.NUMCPFCNPJPAGADOR, 11, '0')
+                                                  ELSE
+                                                     LPAD(XML.NUMCPFCNPJPAGADOR, 14, '0')
+									END AS NUMCPFCNPJPAGADOR_FORMATADO
+					FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L
+					CROSS JOIN XMLTABLE ('$logdet/ArqRecebimento/Grupo_ADDA003_PagdrDDA' passing DESCXMLMENSAGEMRECEBIDA AS "logdet"
+								COLUMNS
+									NUMCPFCNPJPAGADOR VARCHAR(14) PATH 'CNPJ_CPFPagdr',
+                                                         CODTIPOPESSOAPAGDR        CHAR(1)        PATH    'TpPessoaPagdr') AS XML
+					WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                                           AND   L.BOLPROCESSADO = 0
+                                           AND   L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                                           FETCH FIRST 999999999 ROWS ONLY)
+                    SELECT PAGDDA.NUMCPFCNPJ,
+                           PAGDDA.BOLSACADOELETRONICO,
+                           PAGDDACONTA.NUMAGENCIA
+                    FROM SELECT_LOGDET DET
+                    JOIN DDA.PAGADORDDA PAGDDA ON DET.NUMCPFCNPJPAGADOR_FORMATADO = PAGDDA.NUMCPFCNPJ
+                    LEFT JOIN DDA.PAGADORDDACONTA PAGDDACONTA ON PAGDDACONTA.IDPAGADORDDA = PAGDDA.IDPAGADORDDA
+				]]>
+	    </command>
+	</query>
+</queries>

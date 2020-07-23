@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:VBoxBancoob 
+	width="100%"
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*"
+	xmlns:componentes="br.com.bancoob.componentes.*"
+	xmlns:input="br.com.bancoob.componentes.input.*"
+	xmlns="br.com.bancoob.componentes.*">
+	
+		<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			//xFields ==================================
+			[Bindable]
+			protected var _xFieldLeft:Number = 150;
+			[Bindable]
+			protected var _yAlinharComLabel:Number = 2;
+			[Bindable]
+			protected var _xFieldRight:Number = 426;
+			//xLabels ==================================
+			[Bindable]
+			protected var _xLabelsRight:Number = 200;
+			//Widths ===================================
+			[Bindable]
+			protected var _widthCodTipoPessoa:Number = 100;
+			[Bindable]
+			protected var _widthMoeda:Number = 60;
+			[Bindable]
+			protected var _widthLabelsLeft:Number = 147;
+			[Bindable]
+			protected var _widthLabelsRight:Number = 422;
+			[Bindable]
+			protected var _widthCity:Number = 200;
+			//maxLength ================================
+			[Bindable]
+			protected var _maxLength:Number = 2;
+			//includes =================================
+			[Bindable]
+			protected var _includeEndereco:Boolean = true;
+			[Bindable]
+			protected var _includeNomeFantasia:Boolean = true;
+			
+		]]>
+	</mx:Script> 
+	
+	<containers:CanvasBancoob width="100%">
+		<Rotulo text="Nome/Razão Social:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right"  y="{_yAlinharComLabel}"/>
+		<input:Texto id="txtNome" width="70%" x="{_xFieldLeft}" maxChars="100"/>
+	</containers:CanvasBancoob>
+	<containers:CanvasBancoob width="100%" includeInLayout="{_includeNomeFantasia}" visible="{_includeNomeFantasia}">
+		<Rotulo text="Nome Fantasia:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+		<input:Texto id="txtNomeFantasia" width="70%" x="{_xFieldLeft}" maxChars="160"/>
+	</containers:CanvasBancoob>
+	<containers:VBoxBancoob id="vBoxEndereco" includeInLayout="{_includeEndereco}" visible="{_includeEndereco}" width="100%">
+		<containers:CanvasBancoob width="100%" id="canvasLogradouro">
+			<Rotulo text="Logradouro:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+			<input:Texto id="txtLogradouro" width="70%" x="{_xFieldLeft}" maxChars="80"/>
+		</containers:CanvasBancoob>
+		<containers:CanvasBancoob width="100%" id="canvasCidade">
+			<Rotulo text="Cidade:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+			<input:Texto id="txtCidade" width="40%" x="{_xFieldLeft}" maxChars="100"/>
+		</containers:CanvasBancoob>
+		<containers:CanvasBancoob width="100%" id="canvasUFandCEP">
+			<Rotulo text="CEP:" width="{_widthLabelsRight}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+			<input:Mascara id="txtCep" width="10%" x="{_xFieldRight}" inputMask="##.###-###" restrict="0-9" />
+		
+			<Rotulo text="UF:" width="{_widthLabelsLeft}"  styleName="negrito" textAlign="right" y="{_yAlinharComLabel}"/>
+			<input:Combo id="cmbUf" width="10%" x="{_xFieldLeft}" />
+		</containers:CanvasBancoob>
+	</containers:VBoxBancoob>
+</containers:VBoxBancoob>

@@ -1,0 +1,393 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<!-- MDB -->
+	<message-driven name="RecebedorMensagensDDAMDB">
+		<jca-adapter
+			activation-spec-binding-name="as/QL.RSP.BANCOOB.DDA.01.AS"
+			destination-binding-name="queue/QL.RSP.BANCOOB.DDA.01" />
+	</message-driven>
+	<!-- MDB -->
+
+
+	<!-- JOB -->
+	<session name="AbrirArquivoRecebidoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AbrirArquivoRecebidoCIPJobServicoRemote" />
+	</session>
+
+	<session
+		name="AtualizarArquivosEmProcessamentoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarArquivosEmProcessamentoCIPJobServicoRemote" />
+	</session>
+
+	<session name="AtualizarArquivosProcessadosCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarArquivosProcessadosCIPJobServicoRemote" />
+	</session>
+
+	<session name="AtualizarDataMovimentoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarDataMovimentoJobServicoRemote" />
+	</session>
+
+	<session name="AtualizarSacadoEletronicoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarSacadoEletronicoJobServicoRemote" />
+	</session>
+
+	<session name="AtualizarSituacaoBoletoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarSituacaoBoletoJobServicoRemote" />
+	</session>
+
+	<session name="BloquearEnvioArquivoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/BloquearEnvioArquivoJobServicoRemote" />
+	</session>
+
+	<session name="BloquearEnvioMensagensJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/BloquearEnvioMensagensJobServicoRemote" />
+	</session>
+
+	<session name="BloquearMotorAberturaArquivoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/BloquearMotorAberturaArquivoCIPJobServicoRemote" />
+	</session>
+
+	<session name="BloquearMotorCargaJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/BloquearMotorCargaJobServicoRemote" />
+	</session>
+
+	<session name="BloquearMotorRecebimentoArquivoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/BloquearMotorRecebimentoArquivoCIPJobServicoRemote" />
+	</session>
+
+	<session
+		name="ConciliarGravarDetalheArquivoRecebidoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ConciliarGravarDetalheArquivoRecebidoJobServicoRemote" />
+	</session>
+
+	<session name="ArquivarMensagensDDAJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ArquivarMensagensDDAJobServicoRemote" />
+	</session>
+
+	<session name="DesbloquearEnvioArquivoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/DesbloquearEnvioArquivoJobServicoRemote" />
+	</session>
+
+	<session name="DesbloquearEnvioMensagensJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/DesbloquearEnvioMensagensJobServicoRemote" />
+	</session>
+
+	<session name="DesbloquearMotorAberturaArquivoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/DesbloquearMotorAberturaArquivoCIPJobServicoRemote" />
+	</session>
+
+	<session name="DesbloquearMotorCargaJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/DesbloquearMotorCargaJobServicoRemote" />
+	</session>
+
+	<session
+		name="DesbloquearMotorRecebimentoArquivoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/DesbloquearMotorRecebimentoArquivoCIPJobServicoRemote" />
+	</session>
+
+	<session name="GerarArquivoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/GerarArquivoJobServicoRemote" />
+	</session>
+
+	<session name="GerarCargaMensagensLegadoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/GerarCargaMensagensLegadoJobServicoRemote" />
+	</session>
+
+	<session name="GravarDetalheArquivoRecebidoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/GravarDetalheArquivoRecebidoCIPJobServicoRemote" />
+	</session>
+
+	<session name="IncluirParametroJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/IncluirParametroJobServicoRemote" />
+	</session>
+
+	<session name="PostarArquivoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/PostarArquivoJobServicoRemote" />
+	</session>
+
+	<session name="ProcessarCargaMensagensJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ProcessarCargaMensagensJobServicoRemote" />
+	</session>
+
+	<session name="ProcessarDetalheArquivoRecebidoCIPJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ProcessarDetalheArquivoRecebidoCIPJobServicoRemote" />
+	</session>
+
+	<session name="ProcessarEnvioMensagensJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ProcessarEnvioMensagensJobServicoRemote" />
+	</session>
+
+	<session
+		name="ProcessarEnvioMensagensPrioritariasJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ProcessarEnvioMensagensPrioritariasJobServicoRemote" />
+	</session>
+
+	<session name="ProcessarGradeHorariaJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ProcessarGradeHorariaJobServicoRemote" />
+	</session>
+
+	<session name="RegistrarArquivoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/RegistrarArquivoJobServicoRemote" />
+	</session>
+
+	<session name="TratamentoAutomatizadoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/TratamentoAutomatizadoJobServicoRemote" />
+	</session>
+
+	<session name="TratamentoMensagemContingenciaJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/TratamentoMensagemContingenciaJobServicoRemote" />
+	</session>
+
+	<session name="TratarArquivosErroFluxoJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/TratarArquivosErroFluxoJobServicoRemote" />
+	</session>
+
+	<session name="ConsolidarEventosTarifaveisCipJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ConsolidarEventosTarifaveisCipJobServicoRemote" />
+	</session>
+
+	<session name="ConsolidarLancamentosCCOJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ConsolidarLancamentosCCOJobServicoRemote" />
+	</session>
+
+	<session name="EfetivarLancamentosCCOJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/EfetivarLancamentosCCOJobServicoRemote" />
+	</session>
+
+	<session name="AtualizarSituacaoRateioCCOJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/AtualizarSituacaoRateioCCOJobServicoRemote" />
+	</session>
+
+	<session name="RegistrarMensagensTabelaTmpJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/RegistrarMensagensTabelaTmpJobServicoRemote" />
+	</session>
+
+	<session name="ExcluirMensagensTabelaTmpJobServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.JobServico"
+			binding-name="sicoobdda_processamento/ExcluirMensagensTabelaTmpJobServicoRemote" />
+	</session>
+
+	<!-- JOB -->
+
+	<!-- STEP -->
+	<session name="AbrirArquivoRecebidoCIPStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AbrirArquivoRecebidoCIPStepServicoRemote" />
+	</session>
+
+	<session name="AtualizarDataMovimentoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AtualizarDataMovimentoStepServicoRemote" />
+	</session>
+
+	<session name="AtualizarSacadoEletronicoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AtualizarSacadoEletronicoStepServicoRemote" />
+	</session>
+
+	<session name="AtualizarSituacaoBoletoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AtualizarSituacaoBoletoStepServicoRemote" />
+	</session>
+
+	<session
+		name="AtualizarSituacaoProcessamentoArquivoCIPStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AtualizarSituacaoProcessamentoArquivoCIPStepServicoRemote" />
+	</session>
+
+	<session name="BloquearDesbloquearMotorStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/BloquearDesbloquearMotorStepServicoRemote" />
+	</session>
+
+	<session name="CadastrarGradeHorariaSicoobStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/CadastrarGradeHorariaSicoobStepServicoRemote" />
+	</session>
+
+	<session
+		name="CadastrarMensagensCargaBaixaEfetivaBoletoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/CadastrarMensagensCargaBaixaEfetivaBoletoStepServicoRemote" />
+	</session>
+
+	<session name="CadastrarMensagensCargaBoletoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/CadastrarMensagensCargaBoletoStepServicoRemote" />
+	</session>
+
+	<session name="CadastrarMensagensCargaPagadorStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/CadastrarMensagensCargaPagadorStepServicoRemote" />
+	</session>
+	
+	<session
+		name="CadastrarMensagensCargaEspecificasStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/CadastrarMensagensCargaEspecificasStepServicoRemote" />
+	</session>
+
+	<session
+		name="ConciliarGravarDetalheArquivoRecebidoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ConciliarGravarDetalheArquivoRecebidoStepServicoRemote" />
+	</session>
+
+	<session name="ArquivarMensagensDDAStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ArquivarMensagensDDAStepServicoRemote" />
+	</session>
+
+	<session name="GerarArquivoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/GerarArquivoStepServicoRemote" />
+	</session>
+
+	<session
+		name="GerarCargaAlteracaoMensagensLegadoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/GerarCargaAlteracaoMensagensLegadoStepServicoRemote" />
+	</session>
+
+	<session name="GerarCargaBaixaMensagensLegadoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/GerarCargaBaixaMensagensLegadoStepServicoRemote" />
+	</session>
+
+	<session name="GerarCargaInclusaoMensagensLegadoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/GerarCargaInclusaoMensagensLegadoStepServicoRemote" />
+	</session>
+
+	<session name="GravarDetalheArquivoRecebidoCIPStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/GravarDetalheArquivoRecebidoCIPStepServicoRemote" />
+	</session>
+
+	<session name="IncluirParametroStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/IncluirParametroStepServicoRemote" />
+	</session>
+
+	<session name="PostarArquivoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/PostarArquivoStepServicoRemote" />
+	</session>
+
+	<session
+		name="ProcessarDetalheArquivoRecebidoCIPStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ProcessarDetalheArquivoRecebidoCIPStepServicoRemote" />
+	</session>
+
+	<session
+		name="ProcessarEnvioMensagensPrioritariasStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ProcessarEnvioMensagensPrioritariasStepServicoRemote" />
+	</session>
+
+	<session name="ProcessarEnvioMensagensStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ProcessarEnvioMensagensStepServicoRemote" />
+	</session>
+
+	<session name="RegistrarArquivoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/RegistrarArquivoStepServicoRemote" />
+	</session>
+
+	<session name="TratamentoAutomatizadoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/TratamentoAutomatizadoStepServicoRemote" />
+	</session>
+
+	<session name="TratamentoMensagemContingenciaStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/TratamentoMensagemContingenciaStepServicoRemote" />
+	</session>
+
+	<session name="TratarArquivosErroFluxoStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/TratarArquivosErroFluxoStepServicoRemote" />
+	</session>
+
+	<session name="ConsolidarEventosTarifaveisCipStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ConsolidarEventosTarifaveisCipStepServicoRemote" />
+	</session>
+
+	<session name="ConsolidarLancamentosCCOStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ConsolidarLancamentosCCOStepServicoRemote" />
+	</session>
+
+	<session name="EfetivarLancamentosCCOStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/EfetivarLancamentosCCOStepServicoRemote" />
+	</session>
+
+	<session name="AtualizarSituacaoRateioCCOStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/AtualizarSituacaoRateioCCOStepServicoRemote" />
+	</session>
+
+	<session name="RegistrarMensagensTabelaTmpStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/RegistrarMensagensTabelaTmpStepServicoRemote" />
+	</session>
+
+	<session name="ExcluirMensagensTabelaTmpStepServicoEJB">
+		<interface class="br.com.sicoob.sws.api.servico.StepServico"
+			binding-name="sicoobdda_processamento/ExcluirMensagensTabelaTmpStepServicoRemote" />
+	</session>
+	<!-- STEP -->
+	
+	<session name="TimerContigenciaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.processamento.negocio.servicos.interfaces.TimerContigenciaServicoLocal"
+			binding-name="ejblocal:sicoobdda_processamento/TimerContigenciaServico" />
+	</session>
+	
+</ejb-jar-bnd>

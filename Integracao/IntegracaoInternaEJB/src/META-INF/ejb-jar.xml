@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar id="EJBModule_sicoobdda_integracaointerna" version="3.1"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+
+	<display-name>SicoobDDA.Integracao.Interna</display-name>
+
+	<interceptors>
+		<interceptor>
+			<interceptor-class>br.com.bancoob.negocio.servicos.interceptors.TempoExecucaoInterceptor</interceptor-class>
+		</interceptor>
+		<interceptor>
+			<interceptor-class>br.com.bancoob.negocio.servicos.interceptors.UsuarioInterceptor</interceptor-class>
+		</interceptor>
+		<interceptor>
+			<interceptor-class>br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interceptors.IntegracaoInternaInternacionalizacaoInterceptor</interceptor-class>
+		</interceptor>
+		<interceptor>
+			<interceptor-class>br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interceptors.SicoobDDAInterceptorLog</interceptor-class>
+			<around-invoke>
+				<method-name>interceptarMetodo</method-name>
+			</around-invoke>
+		</interceptor>
+	</interceptors>
+
+	<assembly-descriptor>
+		<interceptor-binding>
+			<ejb-name>*</ejb-name>
+			<interceptor-order>
+				<interceptor-class>br.com.bancoob.negocio.servicos.interceptors.UsuarioInterceptor</interceptor-class>
+				<interceptor-class>br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interceptors.SicoobDDAInterceptorLog</interceptor-class>
+				<interceptor-class>br.com.bancoob.negocio.servicos.interceptors.TempoExecucaoInterceptor</interceptor-class>
+				<interceptor-class>br.com.sicoob.sisbr.sicoobdda.integracaointerna.negocio.servicos.interceptors.IntegracaoInternaInternacionalizacaoInterceptor</interceptor-class>
+			</interceptor-order>
+		</interceptor-binding>
+	</assembly-descriptor>
+
+</ejb-jar>

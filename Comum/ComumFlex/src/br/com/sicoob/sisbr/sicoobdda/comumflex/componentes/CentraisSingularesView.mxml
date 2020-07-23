@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CanvasBancoob xmlns="br.com.bancoob.componentes.containers.*"
+			   xmlns:mx="http://www.adobe.com/2006/mxml"
+			   xmlns:componentes="br.com.bancoob.componentes.*"
+			   xmlns:input="br.com.bancoob.componentes.input.*"
+			   width="100%" height="100%" >
+	
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			private var _widthLabel:int = 70;
+			
+			public function set widthLabel(widthLabel:int):void {
+				this._widthLabel = widthLabel;
+			}
+			
+			public function get widthLabel():int {
+				return _widthLabel;
+			}
+			[Bindable]
+			private var _exibirPorAgenciaLogada:Boolean;
+			
+			public function get exibirPorAgenciaLogada():Boolean {
+				return _exibirPorAgenciaLogada;
+			}
+			
+			public function set exibirPorAgenciaLogada(exibirPorAgenciaLogada:Boolean):void {
+				this._exibirPorAgenciaLogada = exibirPorAgenciaLogada;
+			}
+		]]>
+	</mx:Script>
+	
+	<HBoxBancoob width="100%" verticalAlign="middle" id="hboxCentral" x="0" y="0">
+		<componentes:Rotulo text="Central:" width="{widthLabel}" textAlign="right" id="lblCentral" />
+		<input:Combo width="100%" id="cmbCentral" labelField="numeroCooperativa" enabled="true" editable="false" />
+	</HBoxBancoob>
+	
+	<HBoxBancoob width="100%" verticalAlign="middle" id="hboxSingular" x="0" y="30">
+		<componentes:Rotulo text="Cooperativa:" width="{widthLabel}" textAlign="right" id="lblSingular" />
+		<input:Combo width="100%" id="cmbSingular" labelField="numeroCooperativa" enabled="true" editable="false" />
+	</HBoxBancoob>
+	
+	<HBoxBancoob width="100%" verticalAlign="middle" id="hboxUnidade" x="0" y="60">
+		<componentes:Rotulo text="Unidade:" width="{widthLabel}" textAlign="right" id="lblUnidade" />
+		<input:Combo width="100%" id="cmbUnidade" enabled="true" editable="false" labelField="descricao" inserirItemOpcional="true" labelItemOpcional="TODOS" />
+	</HBoxBancoob>
+	
+	
+</CanvasBancoob>

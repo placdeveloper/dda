@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="90"
+		   xmlns:input="br.com.bancoob.componentes.input.*"
+		   xmlns:componentes="br.com.bancoob.componentes.*"
+		   xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+		   xmlns:painellista="br.com.bancoob.componentes.painellista.*">
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Filtrar Cache" left="0" right="0" top="0"/>
+	
+	<componentes:Rotulo x="0" y="30" width="90" text="Servidor Destino:" textAlign="right" />
+	<input:Combo x="100" y="28" id="cbServidor" width="250" labelField="codServidorDDA" inserirItemOpcional="true" editable="false"/>
+	
+	<componentes:Rotulo x="0" y="60" width="90" text="Cache:" textAlign="right" />
+	<input:Combo x="100" y="58" id="cbCache" width="250" labelField="label" inserirItemOpcional="true" dataProvider="{Constantes.CACHE}" editable="false"/>
+	
+	<componentes:Rotulo x="360" y="30" width="90" text="Perfil Destino:" textAlign="right" />
+	<input:Combo x="455" y="28" id="cbPerfil" width="150" labelField="label" inserirItemOpcional="true" dataProvider="{Constantes.PERFIL_SERVIDORDDA}" editable="false"/>
+	
+	<componentes:Rotulo x="360" y="60" width="90" text="Data Requisição:" textAlign="right" />
+	<input:Data x="455" y="58" id="dataRequisicao" width="100" dataDefault="{new Date()}" />
+	
+	<mx:HBox x="610" y="60">
+		<painellista:BotaoProcurarView id="btnProcura" acionarComEnter="true" />
+		<componentes:Botao id="btnLimpar" label="LIMPAR" />
+	</mx:HBox>
+	
+</mx:Canvas>

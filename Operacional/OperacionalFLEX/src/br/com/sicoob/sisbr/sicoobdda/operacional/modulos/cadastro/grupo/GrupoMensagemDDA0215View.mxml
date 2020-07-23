@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*"
+						  xmlns:componentes="br.com.bancoob.componentes.*"
+						  xmlns:input="br.com.bancoob.componentes.input.*"
+						  width="100%">
+	
+	<componentes:Rotulo text="Código Mensagem: " width="147" textAlign="right" y="5" />
+	<input:ComboBoxFiltro id="cbCodTipoMensagem" x="157" y="2" width="150" labelField="codTipo" prompt=" ---" somenteMaiusculas="true" validarObrigatorio="true"/>
+	<componentes:Rotulo text="Número Único Operação: " width="147" textAlign="right" y="35"/>
+	<input:Texto id="txtNumOpMensagem" x="157" y="32" width="300" maxChars="23" restrict="0123456789" validarObrigatorio="true"/>
+	
+</containers:CanvasBancoob>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="900" height="500"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:bancoob="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:gradehoraria="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.gradehoraria.*"
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.cobrancabancaria.comumflex.botoes.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							deveLimparPesquisa="false">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.GradeHorariaDTO;
+			
+			public static function labelTipoGradeHoraria(obj:Object, obj2:Object = null):String{
+				var gradeHoraria:GradeHorariaDTO = obj as GradeHorariaDTO;
+				return gradeHoraria.tipoGradeHorariaDto.codTipoGradeHoraria + " - " + gradeHoraria.tipoGradeHorariaDto.descTipoGradeHoraria ;
+			}
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaPainel">
+			<painellista:metodoPesquisa>pesquisarGradeHorariaPaginada</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+				<painellista:servicoPesquisa>
+					<servico:ServicoJava id="pesquisarGradeHorariaPaginada">
+						<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.GradeHorariaServico</servico:source>
+						<servico:bloquearOperacao>true</servico:bloquearOperacao>
+						<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+					</servico:ServicoJava>
+				</painellista:servicoPesquisa>
+			
+				<painellista:painelFiltro>
+					<gradehoraria:GradeHorariaFiltroView id="painelFiltro" width="100%"/>
+				</painellista:painelFiltro>
+					
+				<painellista:tabelaPaginada>
+					<tabelapaginada:TabelaPaginadaBanco id="listaGradeHoraria" width="97%" height="350" titulo="Lista de Grades Horárias" tamanhoPagina="10" top="65" doubleClickEnabled="false">
+						<tabelapaginada:MetadadosTabela id="metadados">
+							<grid:ColunaGrid dataField="idGradeHoraria" visible="false" labelFunction="{labelTipoGradeHoraria}" headerText="id GradeHoraria" headerWordWrap="false" wordWrap="false" sortable="false" />
+							<grid:ColunaGrid dataField="tipoGradeHoraria" labelFunction="{labelTipoGradeHoraria}" headerText="Cód. Tipo Grade Horária" headerWordWrap="false" wordWrap="false" sortable="false" width="350"/>
+							<grid:ColunaGrid dataField="dataReferencia" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" headerText="Data Movimento" headerWordWrap="false" wordWrap="false" sortable="false" />
+							<grid:ColunaGrid dataField="dataHoraAbertura" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" headerText="Dt Hora Abertura" headerWordWrap="false" wordWrap="false" sortable="false" />
+							<grid:ColunaGrid dataField="dataHoraFechamento" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" headerText="Dt. Hora Fechamento" headerWordWrap="false" wordWrap="false" sortable="false" />
+						</tabelapaginada:MetadadosTabela>
+					</tabelapaginada:TabelaPaginadaBanco>
+				</painellista:tabelaPaginada>
+
+				<Botao id="btnDetalhar" toolTip="Detalhar Grade Horária" styleName="botaoCrudProcurarPeq" enabled="false" x="865" y="342" />
+				<Botao id="btnAlterar" toolTip="Alterar Grade Horária" styleName="botaoCrudAlterarPeq" enabled="false" x="865" y="362"/>
+				<Botao id="btnRemover" toolTip="Remover Grade Horária" styleName="botaoCrudRemoverPeq" enabled="false" x="865" y="382" />
+			
+				<containers:HBoxBancoob width="100%" height="5%"  x="690" y="455">
+					<bancoob:Botao label="Incluir" id="btnIncluir" verticalCenter="0"/>
+					<bancoob:Botao label="Fechar" id="btnFechar" verticalCenter="0"/>
+				</containers:HBoxBancoob>
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

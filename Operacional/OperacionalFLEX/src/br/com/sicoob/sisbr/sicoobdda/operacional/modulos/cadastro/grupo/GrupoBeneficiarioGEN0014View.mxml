@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*"
+						  xmlns:componentes="br.com.bancoob.componentes.*"
+						  xmlns:input="br.com.bancoob.componentes.input.*"
+						  width="100%">
+	
+	<componentes:Rotulo text="Tipo Sol. Beneficiario: " width="147" textAlign="right" y="5"/>
+	<input:Combo id="cbTipoSolBeneficiario" x="157" y="2" width="400" labelField="label" somenteMaiusculas="true"/>
+	<componentes:Rotulo text="Situacao Beneficiário: " width="120" textAlign="right" y="5" x="580"/>
+	<input:Combo id="cbSitBeneficiario" y="2" x="710" width="150" labelField="label" somenteMaiusculas="true" inserirItemOpcional="true"/>
+	
+</containers:CanvasBancoob>

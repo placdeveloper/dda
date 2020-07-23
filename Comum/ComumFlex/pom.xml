@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>br.com.sicoob.sdda</groupId>
+		<artifactId>sdda-comum</artifactId>
+		<version>2.3.9.4-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sdda-comum-flex</artifactId>
+	<packaging>swc</packaging>
+	<name>SDDA - ComumFLEX</name>
+
+	<scm>
+		<connection>scm:svn:http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Comum/ComumFlex</connection>
+		<developerConnection>scm:svn:http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Comum/ComumFlex</developerConnection>
+		<url>http://svn.sicoob.com.br/fontesbancoob/SISBR/Aplicativos/JAVA/trunk/SicoobDDA/trunk/Comum/ComumFlex</url>
+	</scm>
+
+	<properties>
+		<sonar.language>flex</sonar.language>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<inherited>true</inherited>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>datavisualization</artifactId>
+			<classifier>en_US</classifier>
+			<type>rb.swc</type>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>playerglobal</artifactId>
+			<classifier>10</classifier>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>datavisualization</artifactId>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.graniteds</groupId>
+			<artifactId>granite-hibernate-swc</artifactId>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.graniteds</groupId>
+			<artifactId>granite-swc</artifactId>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.graniteds</groupId>
+			<artifactId>granite-gravity-swc</artifactId>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework.portal</groupId>
+			<artifactId>prt-base-componentes-flex</artifactId>
+			<type>swc</type>
+			<scope>external</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework.portal</groupId>
+			<artifactId>prt-base-sicoob-flex</artifactId>
+			<type>swc</type>
+			<scope>external</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework.portal</groupId>
+			<artifactId>prt-base-sisbr-flex</artifactId>
+			<type>swc</type>
+			<scope>external</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.com.sicoob.framework.relatorio</groupId>
+			<artifactId>relatorio-flex</artifactId>
+			<type>swc</type>
+			<scope>external</scope>
+		</dependency>
+	</dependencies>
+</project>

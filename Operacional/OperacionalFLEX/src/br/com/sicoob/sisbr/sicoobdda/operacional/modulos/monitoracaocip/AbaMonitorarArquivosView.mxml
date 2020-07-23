@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" 
+							width="980" height="565" 
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+							xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.bancoob.util.FormataData;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.LogArquivoCargaDTO;
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+			
+			public static function bolOrigem(obj:Object, obj2:Object = null):String{
+				var arquivo:LogArquivoCargaDTO = obj as LogArquivoCargaDTO;
+				if(arquivo.bolOrigemSicoob){
+					return Constantes.ORIGEM_SICOOB;
+				}else{
+					return Constantes.ORIGEM_CIP;
+				}
+			}
+			
+			public static function nomeArquivo(obj:Object, obj2:Object = null):String{
+				var arquivo:LogArquivoCargaDTO = obj as LogArquivoCargaDTO;
+				if(arquivo.bolOrigemSicoob){
+					return arquivo.descNomeArquivoEnviado;
+				}else{
+					return arquivo.descNomeArquivoRecebido;
+				}
+			}
+			
+			public static function dataHora(obj:Object, obj2:Object = null):String{
+				var arquivo:LogArquivoCargaDTO = obj as LogArquivoCargaDTO;
+				if(arquivo.bolOrigemSicoob){
+					return FormataData.formataDataHora(arquivo.dataHoraMovimento.data);
+				}else{
+					return FormataData.formataDataHora(arquivo.dataHoraArquivoRecebido.data);
+				}
+			}
+			
+			public static function bolStatusArquivoLabel(objeto:Object, objeto2:Object = null):String{
+				var arquivo:LogArquivoCargaDTO = objeto as LogArquivoCargaDTO;
+				if(arquivo.statusArquivo == 1){
+					return Constantes.SUCESSO_ENVIO;
+				}else{
+					return Constantes.ERRO_ENVIO;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaArquivo">
+			<painellista:metodoPesquisa>pesquisarPainelArquivosPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+			
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="pesquisarPainelArquivosPaginado">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.MonitoramentoMensagensDDAServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>
+			</painellista:servicoPesquisa>
+			
+			<painellista:painelFiltro>
+				<monitoracaocip:MonitorarArquivosFiltroView id="painelFiltro" width="100%" height="100%"/>
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				<tabelapaginada:TabelaPaginadaBanco id="listaArquivos" width="97%" titulo="Lista de arquivos" height="100%" tamanhoPagina="15">
+					<tabelapaginada:MetadadosTabela id="metadados">
+						<grid:ColunaGrid dataField="bolOrigemSicoob" width="45" headerText="Origem" labelFunction="{bolOrigem}" headerWordWrap="true" wordWrap="false" editable="false" />
+						<grid:ColunaGrid dataField="dataHoraDDA" headerText="Data Hora DDA" width="60" headerWordWrap="true" wordWrap="false" editable="false" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+						<grid:ColunaGrid labelFunction="{nomeArquivo}" headerText="Nome Arquivo" width="120" headerWordWrap="true" wordWrap="false" editable="false" />
+						<grid:ColunaGrid labelFunction="{dataHora}" headerText="Data Hora Movimento\Recebimento" width="90" headerWordWrap="true" wordWrap="false" editable="false"/>
+						<grid:ColunaGrid dataField="descSituacaoArquivo" width="100" headerText="Situação Arquivo" headerWordWrap="true" wordWrap="false" editable="false"/>
+						<grid:ColunaGrid dataField="statusArquivo" width="50" labelFunction="{bolStatusArquivoLabel}" headerText="Status Arquivo" headerWordWrap="true" wordWrap="false" editable="false"/>
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>
+			</painellista:tabelaPaginada>
+			
+			<containers:VBoxBancoob x="935" y="395">
+				<botoesComumFlex:BotaoImprimirCobrancaView id="btnImpArquivo" toolTip="Imprimir Arquivo"/>
+				<Botao id="btnDetalharArquivo" toolTip="Detalhar Arquivo" styleName="botaoCrudProcurarPeq" />
+			</containers:VBoxBancoob>
+			
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

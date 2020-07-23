@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>BloquearEnvioMensagensJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearEnvioMensagensJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>DesbloquearEnvioMensagensJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/DesbloquearEnvioMensagensJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>BloquearDesbloquearMotorStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearDesbloquearMotorStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ProcessarEnvioMensagensJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarEnvioMensagensJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ProcessarEnvioMensagensStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarEnvioMensagensStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ProcessarEnvioMensagensPrioritariasJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarEnvioMensagensPrioritariasJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ProcessarEnvioMensagensPrioritariasStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarEnvioMensagensPrioritariasStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizarSacadoEletronicoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSacadoEletronicoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizarSacadoEletronicoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSacadoEletronicoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>GerarCargaMensagensLegadoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GerarCargaMensagensLegadoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>GerarCargaMensagensLegadoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GerarCargaMensagensLegadoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>BloquearMotorCargaJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearMotorCargaJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ProcessarCargaMensagensJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarCargaMensagensJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarMensagensCargaAceiteStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarMensagensCargaAceiteStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarMensagensCargaPagadorStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarMensagensCargaPagadorStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarMensagensCargaTerceiroAutorizadoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarMensagensCargaTerceiroAutorizadoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarMensagensCargaBoletoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarMensagensCargaBoletoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarMensagensCargaBaixaEfetivaBoletoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarMensagensCargaBaixaEfetivaBoletoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>DesbloquearMotorCargaJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/DesbloquearMotorCargaJobServicoRemote</jndi-name>
+		</session>
+		<!-- Envio de arquivo -->
+		<session>
+			<ejb-name>BloquearEnvioArquivoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearEnvioArquivoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>DesbloquearEnvioArquivoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/DesbloquearEnvioArquivoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>RegistrarArquivoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/RegistrarArquivoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>RegistrarArquivoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/RegistrarArquivoStepServicoRemote</jndi-name>
+		</session>
+
+		<session>
+			<ejb-name>GerarArquivoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GerarArquivoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>GerarArquivoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GerarArquivoStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>PostarArquivoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/PostarArquivoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>PostarArquivoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/PostarArquivoStepServicoRemote</jndi-name>
+		</session>
+		
+			<session>
+			<ejb-name>TratarArquivosErroFluxoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratarArquivosErroFluxoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>TratarArquivosErroFluxoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratarArquivosErroFluxoStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>IncluirParametroJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/IncluirParametroJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>IncluirParametroStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/IncluirParametroStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>TratamentoAutomatizadoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratamentoAutomatizadoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>TratamentoAutomatizadoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratamentoAutomatizadoStepServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizarDataMovimentoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarDataMovimentoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizarDataMovimentoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarDataMovimentoStepServicoRemote</jndi-name>
+		</session>
+		
+		
+	   <!-- =========================== processamento de arquivos recebidos ==========================-->
+		
+		<session>
+			<ejb-name>BloquearMotorRecebimentoArquivoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearMotorRecebimentoArquivoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>BloquearMotorAberturaArquivoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/BloquearMotorAberturaArquivoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<!--  =====   -->
+		
+		<session>
+			<ejb-name>AbrirArquivoRecebidoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AbrirArquivoRecebidoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>AbrirArquivoRecebidoCIPStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AbrirArquivoRecebidoCIPStepServicoRemote</jndi-name>
+		</session>
+		
+		<!--  =====   -->
+
+		
+		<session>
+			<ejb-name>GravarDetalheArquivoRecebidoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GravarDetalheArquivoRecebidoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>GravarDetalheArquivoRecebidoCIPStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/GravarDetalheArquivoRecebidoCIPStepServicoRemote</jndi-name>
+		</session>
+		
+		
+		<!--  =====   -->
+		
+		<session>
+			<ejb-name>ConciliarGravarDetalheArquivoRecebidoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConciliarGravarDetalheArquivoRecebidoJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ConciliarGravarDetalheArquivoRecebidoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConciliarGravarDetalheArquivoRecebidoStepServicoRemote</jndi-name>
+		</session>
+
+		<!--  =====   -->
+
+		<session>
+			<ejb-name>ProcessarDetalheArquivoRecebidoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarDetalheArquivoRecebidoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ProcessarDetalheArquivoRecebidoCIPStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarDetalheArquivoRecebidoCIPStepServicoRemote</jndi-name>
+		</session>
+		
+		
+		<!-- ===== -->
+		
+		<session>
+			<ejb-name>AtualizarArquivosProcessadosCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarArquivosProcessadosCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>AtualizarArquivosEmProcessamentoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarArquivosEmProcessamentoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>AtualizarSituacaoProcessamentoArquivoCIPStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSituacaoProcessamentoArquivoCIPStepServicoRemote</jndi-name>
+		</session>
+		
+		<!-- ===== -->
+		
+		<session>
+			<ejb-name>DesbloquearMotorRecebimentoArquivoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/DesbloquearMotorRecebimentoArquivoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>DesbloquearMotorAberturaArquivoCIPJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/DesbloquearMotorAberturaArquivoCIPJobServicoRemote</jndi-name>
+		</session>
+		
+		<!-- ===== -->
+		<session>
+			<ejb-name>ProcessarGradeHorariaJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ProcessarGradeHorariaJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CadastrarGradeHorariaSicoobStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CadastrarGradeHorariaSicoobStepServicoRemote</jndi-name>
+		</session>
+		<!-- ========================= fim recebimento de arquivo da CIP ========================== -->
+		
+		
+		<session>
+			<ejb-name>TratamentoMensagemContingenciaJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratamentoMensagemContingenciaJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>TratamentoMensagemContingenciaStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/TratamentoMensagemContingenciaStepServicoRemote</jndi-name>
+		</session>
+		
+		
+		<session>
+			<ejb-name>CopiarMensagensDDAHistoricoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CopiarMensagensDDAHistoricoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>CopiarMensagensDDAHistoricoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/CopiarMensagensDDAHistoricoStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ExpurgarMensagensDDAHistoricoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ExpurgarMensagensDDAHistoricoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>ExpurgarMensagensDDAHistoricoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ExpurgarMensagensDDAHistoricoStepServicoRemote</jndi-name>
+		</session> 
+		
+		<session>
+			<ejb-name>AtualizarSituacaoBoletoJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSituacaoBoletoJobServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizarSituacaoBoletoStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSituacaoBoletoStepServicoRemote</jndi-name>
+		</session>  
+		
+		<session>
+			<ejb-name>ConsolidarEventosTarifaveisCipJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConsolidarEventosTarifaveisCipJobServicoRemote</jndi-name>
+		</session>  
+		<session>
+			<ejb-name>ConsolidarEventosTarifaveisCipStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConsolidarEventosTarifaveisCipStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ConsolidarLancamentosCCOJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConsolidarLancamentosCCOJobServicoRemote</jndi-name>
+		</session>  
+		<session>
+			<ejb-name>ConsolidarLancamentosCCOStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/ConsolidarLancamentosCCOStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>EfetivarLancamentosCCOJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/EfetivarLancamentosCCOJobServicoRemote</jndi-name>
+		</session>  
+		<session>
+			<ejb-name>EfetivarLancamentosCCOStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/EfetivarLancamentosCCOStepServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>AtualizarSituacaoRateioCCOJobServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSituacaoRateioCCOJobServicoRemote</jndi-name>
+		</session>  
+		<session>
+			<ejb-name>AtualizarSituacaoRateioCCOStepServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_processamento/AtualizarSituacaoRateioCCOStepServicoRemote</jndi-name>
+		</session>
+	</enterprise-beans>
+</jboss>

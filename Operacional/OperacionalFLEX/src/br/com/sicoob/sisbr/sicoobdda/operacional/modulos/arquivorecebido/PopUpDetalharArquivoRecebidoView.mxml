@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" 
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*" 
+			xmlns:input="br.com.bancoob.componentes.input.*" 
+			xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*" 
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+			xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+			xmlns:servico="br.com.bancoob.util.servico.*"
+			xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+			width="755" height="635" xmlns:arquivorecebido="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.arquivorecebido.*" >
+	<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.vo.LogDetRecebimentoArquivoDDAVO;
+			
+			private static function retornaLabel(objeto1:Object, objeto2:Object = null):String {
+				var detRecArqDDAVO:LogDetRecebimentoArquivoDDAVO = objeto1 as LogDetRecebimentoArquivoDDAVO;
+				if(detRecArqDDAVO.bolProcessado){
+					return "Processado";
+				}else{
+					return "Não Processado";
+				}
+			}
+		]]>
+	</mx:Script>
+		
+		<cadastro:painelLista>
+			<painellista:PainelListaBancoView id="painelListaBanco">
+				<painellista:metodoPesquisa>pesquisarLogDetRecArquivoDDAPaginado</painellista:metodoPesquisa>
+				<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+				<painellista:servicoPesquisa>
+					<servico:ServicoJava id="pesquisarLogDetRecArquivoDDAPaginado">
+						<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ArquivoRecebidoServico</servico:source>
+						<servico:bloquearOperacao>true</servico:bloquearOperacao>
+						<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+					</servico:ServicoJava>
+				</painellista:servicoPesquisa>
+				
+				
+				<painellista:painelFiltro>
+					<arquivorecebido:PopUpDetalharFiltroView id="painelFiltro" width="100%"/>
+				</painellista:painelFiltro>
+				
+				<painellista:tabelaPaginada>
+					<tabelapaginada:TabelaPaginadaBanco id="listaLogDetRecArquivoDDA" width="97%" height="360" titulo="Registros" tamanhoPagina="50" top="190" doubleClickEnabled="false">
+						<tabelapaginada:MetadadosTabela id="metadados">
+							<grid:ColunaGrid dataField="id" headerText="IdLogDetRecebimento ArquivoDDA" textAlign="left"  width="80" headerWordWrap="true"/>
+							<grid:ColunaGrid dataField="logRecebimentoArquivoDDA.id" headerText="IdLogRecebimento ArquivoDDA"  width="75" textAlign="left" headerWordWrap="true"/>
+							<grid:ColunaGrid dataField="bolProcessado" labelFunction="{retornaLabel}" headerText="Processado"  textAlign="left" width="75"/>
+							<grid:ColunaGrid dataField="descXMLMensagemRecebida" headerText="XML" textAlign="left"  width="300" />
+						</tabelapaginada:MetadadosTabela>
+					</tabelapaginada:TabelaPaginadaBanco>
+				</painellista:tabelaPaginada>
+				
+				<Botao id="btnDetalhar" toolTip="Detalhar" styleName="botaoCrudProcurarPeq" enabled="false" x="720" y="490" />
+				<Botao id="btnAlterar" toolTip="Alterar Situação Registro" styleName="botaoCrudAlterarPeq" enabled="false" x="720" y="{btnDetalhar.y - 20}"/>
+			</painellista:PainelListaBancoView>
+		</cadastro:painelLista>	
+</cadastro:ListaCadastroView>

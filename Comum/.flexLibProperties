@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="1">
+  <includeClasses>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.BotaoAtivarCobrancaView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.BotaoImprimirCobrancaView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.BarraBotoesFormularioCadastroCobranca"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.BarraBotoesFormularioCadastroCobrancaView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CampoNumerico"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CentraisSingulares"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CentraisSingularesView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CheckBoxTreeAC"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CheckBoxTreeACView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CheckBoxTreeEnum"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.CheckTreeRendererAC"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.DataHora"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.DataHoraView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.FieldSet"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.FieldSetBorder"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.GraficoDDAView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.JanelaCobranca"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.PainelTipoPessoaCPFCNPJ"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.PainelTipoPessoaCPFCPNJView"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.TextoCobranca"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ArquivoRecebidoDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.BancoCafDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.BeneficiarioAlertaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.BeneficiariosAlertaFiltroDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.CadastroGen0014DTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.CadastroSerie0200DTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.CentralSingularDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ConsultaParametroDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ConsultaTipoErroCipDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ContingenciaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.DadosTratamentoMensagemDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ErroAgrupadoDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ErroProcessamentoCipDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.GradeContingenciaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.GradeHorariaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.HistoricoContingenciaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.LogArquivoCargaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.LogErroCargaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MensagemDDADTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MensagemErroDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MensagemFilaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MensagemPendentePagadorDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.MonitoracaoFilaDDADTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.PagadorAgregadoDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.PagadorDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.PendenciaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TipoErroCipDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TipoGradeHorariaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TipoMensagemDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TratamentoMesagemDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TratamentoPendenciaErroDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.dto.TreeSelecaoCheckCobrancaDTO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesRelatorios"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesTipoMensagem"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.DataPesquisaUtil"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.DataUtil"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.DominioCIP"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.Funcoes"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.MensagensComum"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.NumeroUtil"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.CategoriaMensagemDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.CentralSingularVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.GradeHorariaVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.LogDetRecebimentoArquivoDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.LogDetalheEnvioArquivoDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.LogEnvioArquivoDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.LogRecebimentoArquivoDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAAceiteVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDABeneficiarioConvenioVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDABeneficiarioRepresentanteVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDABeneficiarioVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAConsultaBoletoVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAPagadorAgregadoVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAPagadorContaVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAPagadorVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.MensagemDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.ParametroVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.RegistroVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.SituacaoArquivoDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.SituacaoArquivoVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.SituacaoMensagemDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.SituacaoProcessamentoArquivoVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.SubTipoGradeVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoAjusteVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoArquivoVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoErroCipVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoGradeHorariaVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoMensagemDDAVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoParametroVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.TipoTratamentoErroCipVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.ValorParametroVO"/>
+    <classEntry path="br.com.sicoob.sisbr.sicoobdda.comumflex.vo.ViewTempoMensagemVO"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/css/style.css" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/css/style.css"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/amarelo.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/azul.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/cinza.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/close_16.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/close_16.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/confirm.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/confirm.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/hist_16.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/hist_16.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/icoImpressora.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/icoImpressora.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.fla" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.fla"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesIcones.swf"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/botoesPlataforma.swf"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/imgCarregando.swf" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/imgCarregando.swf"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/linha.swf" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/imgsTelas/linha.swf"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/laranja.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/opts_16.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/opts_16.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/verde.png"/>
+    <resourceEntry destPath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png" sourcePath="br/com/sicoob/sisbr/sicoobdda/comumflex/imagens/vermelho.png"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>

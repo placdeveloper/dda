@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDA001"
+	xmlns="http://www.bcb.gov.br/ARQ/ADDA001.xsd" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" 
+	targetNamespace="http://www.bcb.gov.br/ARQ/ADDA001.xsd" 
+	elementFormDefault="qualified" version="9.1.0">
+
+	<!-- Definição dos Tipos Globais -->
+	<xs:include schemaLocation="ADDATIPOS.xsd"/>
+
+	<!-- Definicao da mensagem -->
+	<xs:element name="ADDADOC" type="ADDADOCComplexType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfEvento>
+					<cat:Evento>ADDA001 - Inclusão de clientes pagadores eletrônicos</cat:Evento>
+					<cat:Descricao>Destinado ao Participante Recebedor requisitar inclusão de clientes pagadores eletrônicos.</cat:Descricao>
+					<cat:Observacao>
+						Para detalhamento da utilização da mensagem, observar o manual de operações do DDA.
+					</cat:Observacao>
+					<cat:Servico>Manutenção Cadastral de Clientes Pagadores Eletrônicos</cat:Servico>
+					<cat:TipoFluxo>Fluxo3</cat:TipoFluxo>
+				</cat:InfEvento>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="ADDADOCComplexType">
+		<xs:sequence>
+			<xs:element name="BCARQ" type="BCARQComplexType"/>
+			<xs:element name="SISARQ" type="SISARQComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definição do SISARQ -->
+	<xs:complexType name="SISARQComplexType">
+		<xs:choice>
+			<xs:element name="ADDA001" type="ADDA001ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>Participante informa inclusão de pagador</cat:Mensagem>
+							<cat:Emissor>Participante Recebedor</cat:Emissor>
+							<cat:Destinatario>DDA</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ADDA001RET" type="ADDA001RETComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>DDA informa resposta da requisição de inclusão na base de pagadores</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante Recebedor</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+ 
+	<xs:complexType name="ADDA001ComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA001_Pagdr" type="Grupo_ADDA001_PagdrComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Grupo_ADDA001_PagdrComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle Requisição Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Recebedor Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB_CodErro">
+				<xs:annotation>
+				 	<xs:documentation>
+				 		<cat:InfCampo>
+				 			<cat:NomeCampo>ISPB Participante Recebedor Administrado</cat:NomeCampo>
+				 		</cat:InfCampo>
+				 	</xs:documentation>
+				 </xs:annotation>
+		</xs:element>
+		 <xs:element name="TpPessoaPagdr" type="TpPessoa_CodErro">
+		 	<xs:annotation>
+		 		<xs:documentation>
+		 			<cat:InfCampo>
+		 				<cat:NomeCampo>Tipo Pessoa Pagador</cat:NomeCampo>
+		 			</cat:InfCampo>
+		 		</xs:documentation>
+		 	</xs:annotation>
+		 </xs:element>
+		 <xs:element name="CNPJ_CPFPagdr" type="CNPJ_CPF_CodErro">
+		 	<xs:annotation>
+		 		<xs:documentation>
+		 			<cat:InfCampo>
+		 				<cat:NomeCampo>CNPJ ou CPF Pagador</cat:NomeCampo>
+		 			</cat:InfCampo>
+		 		</xs:documentation>
+		 	</xs:annotation>
+		 </xs:element>
+		 <xs:element name="NumIdentcPagdr" type="NumIdentcPagdr_CodErro" minOccurs="0">
+		 	<xs:annotation>
+		 		<xs:documentation>
+		 			<cat:InfCampo>
+			 				<cat:NomeCampo>Número Identificação Pagador</cat:NomeCampo>
+			 			</cat:InfCampo>
+			 		</xs:documentation>
+			 	</xs:annotation>
+			 </xs:element>
+			 <xs:element name="NumRefAtlCadCliPagdr" type="NumRefCad_CodErro" minOccurs="0">
+			 	<xs:annotation>
+			 		<xs:documentation>
+			 			<cat:InfCampo>
+			 				<cat:NomeCampo>Número Referência Atual Cadastro Cliente Pagador</cat:NomeCampo>
+			 			</cat:InfCampo>
+			 		</xs:documentation>
+			 	</xs:annotation>
+			 </xs:element>
+			 	<xs:element name="Grupo_ADDA001_CtCliPagdr" type="Grupo_ADDA001_CtCliPagdrComplexType" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>
+							<cat:InfCampo>
+								<cat:NomeCampo>Grupo Conta Pagador</cat:NomeCampo>
+							</cat:InfCampo>
+						</xs:documentation>
+					</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrAdesCliPagdrDDA" type="Indr_CodErro">
+			 	<xs:annotation>
+			 		<xs:documentation>
+			 			<cat:InfCampo>
+			 				<cat:NomeCampo>Indicador Adesão Cliente Pagador DDA</cat:NomeCampo>
+			 			</cat:InfCampo>
+			 		</xs:documentation>
+			 	</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA001_AgrgdDDA" type="Grupo_ADDA001_AgrgdDDAComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Agregado DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA001_CtCliPagdrComplexType">
+		<xs:sequence>
+			<xs:element name="TpAgCliPagdr" type="TpAg_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Agência Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AgCliPagdr" type="Agencia_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Agência Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpCtCliPagdr" type="TpCtDDA_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Conta Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CtCliPagdr" type="CtBancaria_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Conta Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtAdesCliPagdrDDA" type="Data_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Adesão Cliente Pagador DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA001_AgrgdDDAComplexType">
+		<xs:sequence>
+			<xs:element name="TpPessoaAgrgd" type="TpPessoa_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Tipo Pessoa Agregado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFAgrgd" type="CNPJ_CPF_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>CNPJ ou CPF Agregado</cat:NomeCampo>
+							<cat:DescricaoCampo>CNPJ ou CPF Agregado</cat:DescricaoCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+
+	<xs:complexType name="ADDA001RETComplexType">
+		<xs:sequence>
+			<xs:element name="Grupo_ADDA001RET_PagdrActo" type="Grupo_ADDA001RET_PagdrActoComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Pagador Aceito</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA001RET_PagdrRecsd" type="Grupo_ADDA001_PagdrComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Pagador Recusado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name='CodErro' type='CodErro' use='optional'/>
+	</xs:complexType>
+
+	<xs:complexType name="Grupo_ADDA001RET_PagdrActoComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqPart" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle Requisição Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Recebedor Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartRecbdrAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Participante Recebedor Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcPagdr" type="NumIdentcPagdr">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Identificação Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlCadCliPagdr" type="NumRefCad">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Referência Atual Cadastro Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzCadCliPagdr" type="NumSeqAtlzCadDDA">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Sequência Atualização Cadastro Cliente Pagador</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="QtdAdesCliPagdrDDA" type="Qtd">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Quantidade Adesões Pagador DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

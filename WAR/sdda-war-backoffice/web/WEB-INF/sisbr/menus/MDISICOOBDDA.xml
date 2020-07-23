@@ -1,0 +1,130 @@
+﻿<?xml version="1.0"?>
+<sisbrweb>
+	<MDISICOOBDDA>
+		<menu id="MNUCONSULTADDA" label="CONSULTA" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNUCONSULTADDAPAGADORCOOPERADO" label="Pagador Eletrônico - Cooperado" titulo="Consulta de Pagadores Eletrônicos - Cooperado"
+				swf="/SicoobDDA/Operacional/pesquisapagadoreletronico" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes" parametros="COOPERADO"/>
+				
+			<item id="MNUCONSULTADDAPAGADORGESTOR" label="Pagador Eletrônico - Gestor" titulo="Consulta de Pagadores Eletrônicos - Gestor"
+				swf="/SicoobDDA/Operacional/pesquisapagadoreletronico" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes" parametros="GESTOR"/>
+				
+			<item id="MNUCONSULTADDACONSULTABOLETO" label="Boleto DDA" titulo="Consulta de Boletos DDA"
+                swf="/SicoobDDA/Operacional/consultaboletodda"
+                icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                parametros=""/>
+             
+           	<item id="MNUCONSULTADDAHISTORICOCONSULTAMENSAGEM" label="Histórico Boleto via Mensagem (106)" titulo=" Histórico de Consultas Boletos via Mensagem (106)"
+                 swf="/SicoobDDA/Operacional/historicomensagem106"
+                 icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                 parametros=""/>
+		</menu>
+		
+		<menu id="MNUCADASTRODDA" label="CADASTRO" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNUTIPOMENSAGEM" label="TIPO MENSAGEM" titulo="TIPO MENSAGEM" 
+				swf="/SicoobDDA/Operacional/tipomensagem" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUTIPOERROCIP" label="TIPO ERRO CIP" titulo="TIPO ERRO CIP" 
+				swf="/SicoobDDA/Operacional/mantertipoerrocip" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUTIPOGRADEHORARIA" label="TIPO GRADE HORÁRIA" titulo="TIPO GRADE HORÁRIA" 
+				swf="/SicoobDDA/Operacional/tipogradehoraria" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUCADASTROMENSAGEM" label="MENSAGEM AVULSO" titulo="MENSAGEM AVULSO" 
+				swf="/SicoobDDA/Operacional/cadastromensagem" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+		</menu>
+		
+		<menu id="MNUBENEFICIARIO" label="BENEFICIÁRIOS" icone="br/com/bancoob/imagens/icos/menu/cliente">
+		</menu>
+
+		<menu id="MNUPAGADOR" label="PAGADOR" icone="br/com/bancoob/imagens/icos/menu/cliente">
+		</menu>
+               	
+		<menu id="MNUBOLETO" label="BOLETO" icone="br/com/bancoob/imagens/icos/menu/cliente">
+		</menu>
+
+		<menu id="MNUCONF" label="CONFIGURAÇÕES" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<menu id="MNUMANTPAR" label="PARAMETRO" icone="br/com/bancoob/imagens/icos/menu/cliente">
+				<item id="MNUMANTPARAMETRO" label="PARÂMETROS GLOBAIS" titulo="PARÂMETROS GLOBAIS" 
+					swf="/SicoobDDA/Operacional/manterparametro" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+				<item id="MNUMANTPARAMETROINST" label="PARÂMETROS POR INSTITUIÇÃO" titulo="PARÂMETROS POR INSTITUIÇÃO" 
+					swf="/SicoobDDA/Operacional/manterparametroinstituicao" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			</menu>
+			<item id="MNUGRADEHORARIA" label="GRADE HORÁRIA" titulo="GRADE HORÁRIA" 
+					swf="/SicoobDDA/Operacional/gradehoraria" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUMANTERSERVIDOR" label="SERVIDOR DDA" titulo="SERVIDOR DDA" 
+					swf="/SicoobDDA/Operacional/manterservidor" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+		</menu>
+		
+		<menu id="MNUMONITORACAO" label="MONITORAÇÃO" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNUMONITORACAOPAINEL" label="PAINEL DE MONITORAÇÃO CIP" titulo="PAINEL DE MONITORAÇÃO CIP" 
+				swf="/SicoobDDA/Operacional/painelmonitoracaocip" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUPAINELTRATAMENTOPENDENCIAERRO" label="TRATAMENTO DE PENDÊNCIAS E ERROS" titulo="TRATAMENTO DE PENDÊNCIAS E ERROS" 
+				swf="/SicoobDDA/Operacional/paineltratamentopendenciaerro" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUARQUIVORECEBIDO" label="ARQUIVOS RECEBIDOS" titulo="ARQUIVOS RECEBIDOS" 
+					swf="/SicoobDDA/Operacional/arquivorecebido" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUARQUIVOENVIADOS" label="ARQUIVOS ENVIADOS" titulo="ARQUIVOS ENVIADOS" 
+					swf="/SicoobDDA/Operacional/arquivoenviado" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUABRIRARQUIVORECEBIDO" label="ABRIR ARQUIVOS" titulo="ABRIR ARQUIVOS" 
+					swf="/SicoobDDA/Operacional/abrirarquivo" 
+					icone="br/com/bancoob/imagens/icos/modulos/arquivos"/>	
+			<item id="MNUMANUTENCAOMENSAGEMBOLETO" label="MANUTENÇÃO MENSAGEM BOLETO" titulo="MANUTENÇÃO MENSAGEM BOLETO" 
+					swf="/SicoobDDA/Operacional/manutencaomensagemddaboleto" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+			<item id="MNUMONITORACAOCACHE" label="CACHE" titulo="MONITORAÇÃO CACHE" 
+					swf="/SicoobDDA/Operacional/monitoracaocache" 
+					icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>	
+		</menu>
+		
+		<menu id="MNUTARIFAPCR" label="TARIFAS PCR" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNUMANTERVENTOTARIFAVEL" label="MANTER EVENTO TARIFÁVEL" titulo="MANTER EVENTO TARIFÁVEL"
+                 swf="/SicoobDDA/Operacional/mantereventotarifavel"
+                 icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                 parametros=""/>
+			<item id="MNUAPROVARRATEIOTARIFAS" label="APROVAR RATEIO DE TARIFAS" titulo="APROVAR RATEIO DE TARIFAS"
+                 swf="/SicoobDDA/Operacional/controlerateio"
+                 icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                 parametros=""/>
+			<item id="MNUCONSTARIFASPAGAS" label="CONSULTA DE TARIFAS PAGAS" titulo="CONSULTA DE TARIFAS PAGAS"
+                 swf="/SicoobDDA/Operacional/consultatarifasddapagas"
+                 icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                 parametros=""/>
+			<item id="MNUVISUALIZARATEIOTARIFAS" label="VISUALIZAR RATEIO DE TARIFAS" titulo="VISUALIZAR RATEIO DE TARIFAS"
+                 swf="/SicoobDDA/Operacional/visualizarateiotarifa"
+                 icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"
+                 parametros=""/>
+		</menu>
+		
+		<menu id="MNUCONTINGENCIA" label="CONTINGÊNCIA" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNUMANTCONTINGENCIA" label="MANTER CONTINGÊNCIA" titulo="MANTER CONTINGÊNCIA" 
+				swf="/SicoobDDA/Operacional/mantercontingencia" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes" />
+		</menu>
+
+		<menu id="MNURELATORIO" label="RELATÓRIO" icone="br/com/bancoob/imagens/icos/menu/cliente">
+			<item id="MNURELATORIOBENEFALERTA" label="BENEFICIÁRIOS EM ALERTA" titulo="BENEFICIÁRIOS EM ALERTA"
+				swf="/SicoobDDA/Operacional/beneficiariosalerta" 
+				icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes"/>
+		</menu>
+		
+<!-- 	ADRIANO 	menus fora da aplicação -->
+		
+		<menu id="MNUMONITORDDA" label="Sicoob DDA" icone="br/com/bancoob/imagens/icos/modulos/cadastroClientes">
+			<item id="MNUMONITORFILASDDA" label="Plataforma de Monitoração" icone="br/com/bancoob/imagens/icos/performance.png" swf="/SicoobDDA/Operacional/plataformamonitoracaodda" tipo="1"  />
+			
+			<item id="MNUPAGADORELETRONICODDA" label="Adesão/Cancelamento DDA" swf="/SicoobDDA/Operacional/plataformapagadordda" tipo="1" />
+		</menu>
+		
+		
+	</MDISICOOBDDA>
+</sisbrweb>

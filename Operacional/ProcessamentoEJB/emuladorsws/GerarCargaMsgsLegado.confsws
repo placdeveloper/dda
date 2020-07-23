@@ -1,0 +1,1 @@
+{"host":"localhost","porta":"1099","servidor":"JBOSS","jndi":"sicoobdda_processamento/GerarCargaMensagensLegadoJobServicoRemote","bolSequencial":false,"paramDinamico":["numCooperativa","3007","INTEIRO"],"valoresParamFluxo":[],"valoresParamJob":[]}

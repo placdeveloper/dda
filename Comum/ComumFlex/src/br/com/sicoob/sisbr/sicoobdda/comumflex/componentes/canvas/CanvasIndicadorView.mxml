@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:Modulo xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" 
+	xmlns:bancoob="br.com.bancoob.componentes.*" 
+	xmlns:bancoobGrid="br.com.bancoob.componentes.grid.*" 
+	width="100%" minHeight="50"
+	cornerRadius="5" paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5"
+	borderStyle="solid" borderThickness="1"	borderColor="#FFFFFF" backgroundColor="#cad4cb"
+	clipContent="true" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:VBox width="100%" height="100%" verticalGap="0">
+		<mx:Canvas width="100%" height="20" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+			<mx:Canvas width="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off" verticalCenter="0">
+				<bancoob:Rotulo id="labelNomeFila" fontWeight="bold" fontSize="10" truncateToFit="true" horizontalCenter="0" paddingTop="2"/>
+			</mx:Canvas>
+		</mx:Canvas>
+		<mx:Canvas id="canvasIndicador" width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+			<mx:Canvas width="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off" verticalCenter="0">
+				<bancoob:Rotulo width="100%" id="labelNumeroMensagens" fontSize="{this.width * 0.1}" text="" horizontalCenter="0"
+					fontWeight="bold" color="#FFFFFF" textAlign="center" height="100%" paddingTop="2"/>		
+			</mx:Canvas>
+		</mx:Canvas>			
+	</mx:VBox>
+</bancoob:Modulo>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>InstituicaoServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_comum/InstituicaoServico</local-jndi-name>
+			<jndi-name>sicoobdda_comum/InstituicaoServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>AtualizaParametroServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_comum/AtualizaParametroServico</local-jndi-name>
+			<jndi-name>sicoobdda_comum/AtualizaParametroServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>CapesServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_comum/CapesServico</local-jndi-name>
+			<jndi-name>sicoobdda_comum/CapesServicoRemote</jndi-name>
+		</session>
+	</enterprise-beans>
+</jboss>

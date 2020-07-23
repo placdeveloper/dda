@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   implements="mx.core.IToolTip"
+		   backgroundColor="#F5F7F8"
+		   borderStyle="solid"
+		   borderThickness="2"
+		   borderColor="#AEC2C5"
+		   cornerRadius="5"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		   xmlns:tooltip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.tooltip.*">
+	
+	<mx:Script>
+		<![CDATA[
+			public var _text:String;
+			
+			[Bindable]
+			protected var _percentualAceitavel:String;
+			
+			public function get text():String {
+				return _text;
+			}
+			
+			public function set text(value:String):void {
+				this._text = text;
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:VBox verticalGap="2">
+		<mx:Canvas width="100%" height="20" verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#AEC2C5" backgroundAlpha="0.8">
+			<mx:Canvas width="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off" verticalCenter="0">
+				<bancoob:Rotulo text="LEGENDA" fontWeight="bold"  truncateToFit="true" horizontalCenter="0" paddingTop="2"/>
+			</mx:Canvas>
+		</mx:Canvas>
+		<mx:Canvas id="cvLegenda" width="100%" height="100%">
+			<mx:VBox id="vbox" width="100%" verticalGap="3" paddingBottom="5" paddingLeft="5" paddingTop="5" paddingRight="5">
+				<tooltip:TooltipMonitoracaoLegenda modo="{TooltipMonitoracaoLegenda.MODO_DDA0110_NORMAL}"/>
+				<tooltip:TooltipMonitoracaoLegenda modo="{TooltipMonitoracaoLegenda.MODO_DDA0110_ATENCAO}"/>
+				<tooltip:TooltipMonitoracaoLegenda modo="{TooltipMonitoracaoLegenda.MODO_DDA0110_CRITICO}"/>
+			</mx:VBox>
+		</mx:Canvas>
+		<mx:Canvas width="100%">
+			<comum:FieldSet title="Parâmetros" width="100%" left="5" right="5" bottom="5">
+				<mx:HBox width="100%" horizontalAlign="center">
+					<bancoob:Rotulo text="Percentual aceitável de rejeições: "/>
+					<bancoob:Rotulo text="{_percentualAceitavel}" textAlign="left"/>
+				</mx:HBox>
+			</comum:FieldSet>
+		</mx:Canvas>
+	</mx:VBox>
+	
+</mx:Canvas>

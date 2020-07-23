@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="90"
+		   xmlns:input="br.com.bancoob.componentes.input.*"
+		   xmlns:componentes="br.com.bancoob.componentes.*"
+		   xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+		   xmlns:painellista="br.com.bancoob.componentes.painellista.*" >
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum;
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Filtrar Servidor" left="0" right="0" top="0"/>
+	
+	<componentes:Rotulo x="0" y="30" width="90" text="Servidor:" textAlign="right" />
+	<input:Combo x="100" y="28" id="cbServidor" width="335" labelField="codServidorDDA" inserirItemOpcional="true" editable="false"/>
+	
+	<componentes:Rotulo x="0" y="60" width="90" text="Perfil:" textAlign="right" />
+	<input:Combo x="100" y="58" id="cbPerfil" width="150" labelField="label" inserirItemOpcional="true" dataProvider="{Constantes.PERFIL_SERVIDORDDA}" editable="false"/>
+	
+	<componentes:Rotulo x="260" y="60" width="70" text="Status:" textAlign="right" />
+	<input:Combo x="335" y="58" id="cbStatus" width="100" labelField="label" dataProvider="{ConstantesComum.ARRAY_SITUACAO}" editable="false"/>
+	
+	<mx:HBox x="463" y="60">
+		<painellista:BotaoProcurarView id="btnProcura" acionarComEnter="true" />
+		<componentes:Botao id="btnLimpar" label="LIMPAR" />
+	</mx:HBox>
+	
+</mx:Canvas>

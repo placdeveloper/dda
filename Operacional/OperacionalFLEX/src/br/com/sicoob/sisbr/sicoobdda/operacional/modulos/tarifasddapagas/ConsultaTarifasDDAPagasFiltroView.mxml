@@ -1,0 +1,26 @@
+<validaveis:CanvasValidavel
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns="br.com.bancoob.componentes.*"
+		xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+		xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+		xmlns:input="br.com.bancoob.componentes.input.*" 
+		xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+		xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		xmlns:bancoob="br.com.bancoob.componentes.*"
+		xmlns:containers="br.com.bancoob.componentes.containers.*"
+		xmlns:inputDDA="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.input.*"
+		width="100%" height="90">
+
+	<titulo:SubtituloView id="tituloFiltro" texto="Filtro" width="930" />
+	
+	<componentes:CentraisSingulares id="cvInstituicao" x="0" y="30" width="450" height="100" visible="true" mostrarUnidade="false" /> 
+	
+	<bancoob:Rotulo x="470" y="33" width="120" text="Período de Conciliação:" textAlign="right" />
+	<input:Data x="597" y="30" id="dataInicial" width="100" dataDefault="{null}" validarObrigatorio="true" />
+	<bancoob:Rotulo x="700" y="33" width="20" text="até" textAlign="right" />
+	<input:Data x="725" y="30" id="dataFinal" width="100" dataDefault="{null}" validarObrigatorio="true" />
+	
+	<painellista:BotaoProcurarView id="btnProcurar" x="645" y="60" acionarComEnter="true" />
+	<bancoob:Botao id="btnLimpar" x="746" y="60" acionarComEnter="true" label="Limpar" />
+	
+</validaveis:CanvasValidavel>

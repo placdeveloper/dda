@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="900" height="550"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:bancoob="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:arquivoenviado="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.arquivoenviado.*"
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.cobrancabancaria.comumflex.botoes.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							deveLimparPesquisa="false"
+							xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaBanco">
+			<painellista:metodoPesquisa>pesquisarArquivoEnviadoPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>true</painellista:deveExibirMensagemNenhumRegistro>
+				<painellista:servicoPesquisa>
+					<servico:ServicoJava id="pesquisarArquivoEnviadoPaginado">
+						<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ArquivoEnviadoServico</servico:source>
+						<servico:bloquearOperacao>true</servico:bloquearOperacao>
+						<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+					</servico:ServicoJava>
+				</painellista:servicoPesquisa>
+			
+				<painellista:painelFiltro>
+					<arquivoenviado:ArquivoEnviadoFiltroView id="painelFiltro" width="100%"/>
+				</painellista:painelFiltro>
+					
+				<painellista:tabelaPaginada>
+					<tabelapaginada:TabelaPaginadaBanco id="listaArquivoEnviado" width="97%" height="100%" titulo="Arquivos" tamanhoPagina="10" top="85" doubleClickEnabled="false">
+						<tabelapaginada:MetadadosTabela id="metadados">
+							<grid:ColunaGrid dataField="idLogEnvioArquivodda" headerText="ID" headerWordWrap="false" wordWrap="false" sortable="false"  width="35"/>
+							<grid:ColunaGrid dataField="descNomeArquivoEnviado" headerText="Nome Arquivo"  headerWordWrap="false" wordWrap="false" sortable="false" width="200" />
+							<grid:ColunaGrid dataField="dataMovimento"  headerText="Data Movimento" headerWordWrap="false" wordWrap="false" sortable="false"  width="100"  labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}"/>
+							<grid:ColunaGrid dataField="dataHoraArquivo"  headerText="Data Hora Arq." headerWordWrap="false" wordWrap="false" sortable="false"  width="100"  labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+							<grid:ColunaGrid dataField="codTipoMensagem" headerText="Cód. Tipo Mensagem" headerWordWrap="true" wordWrap="false" sortable="false"  width="65"/>
+							<grid:ColunaGrid dataField="dataHoraEnvio"  headerText="Data Hora Envio" headerWordWrap="false" wordWrap="false" sortable="false"  width="100"  labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+						</tabelapaginada:MetadadosTabela>
+					</tabelapaginada:TabelaPaginadaBanco>
+				</painellista:tabelaPaginada>
+
+				<Botao id="btnAlterar" toolTip="Alterar Sitaução Arquivo" styleName="botaoCrudAlterarPeq" enabled="false" x="865" y="425"/>
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

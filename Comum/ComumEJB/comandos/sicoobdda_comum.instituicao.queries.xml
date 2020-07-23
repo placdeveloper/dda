@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+<queries>
+
+	<query name="OBTER_CENTRAIS">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém as centrais para o componente 'centrais e
+			singulares' utilizado nos relatórios
+		</description>
+		<command>
+      <![CDATA[
+        SELECT INST1.IDINSTITUICAO,
+          CASE 
+            WHEN INST1.IDINSTITUICAO = 1 THEN 1
+            ELSE COALESCE(INST1.NUMCOOPERATIVA,0)
+          END AS NUMCOOPERATIVA 
+        FROM SCI.VIW_INSTITUICAO INST1,
+          (SELECT IDINSTITUICAO, 
+            CASE 
+              WHEN IDINSTITUICAO = 1 THEN 1
+              ELSE COALESCE(NUMCOOPERATIVA,0)
+            END AS NUMCOOPERATIVA,    
+                NUMCOOPPAI,
+                CODTIPOGRAUCOOP
+          FROM SCI.VIW_INSTITUICAO
+          WHERE CODTIPOUNIDADE = 1
+          AND IDINSTITUICAO  = <bancoob:valor valor="${idInstituicao}" />) INST2
+        WHERE INST1.CODTIPOUNIDADE = 1
+          AND ((INST2.CODTIPOGRAUCOOP = 2 AND INST1.NUMCOOPERATIVA = INST2.NUMCOOPPAI)
+          OR (INST2.CODTIPOGRAUCOOP = 1 AND INST1.NUMCOOPERATIVA = INST2.NUMCOOPERATIVA)
+          OR (INST2.IDINSTITUICAO IN (1,2) AND (INST1.CODTIPOGRAUCOOP = 1 OR INST1.IDINSTITUICAO IN (1,2))))
+        ORDER BY 2
+      ]]>
+		</command>
+	</query>
+
+	<query name="OBTER_SINGULARES">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém as singulares para o componente 'centrais e
+			singulares' utilizado nos relatórios
+		</description>
+		<command>
+      <![CDATA[
+        SELECT INST1.IDINSTITUICAO,
+           CASE 
+              WHEN INST1.IDINSTITUICAO = 1 THEN 1
+              ELSE COALESCE(INST1.NUMCOOPERATIVA,0)
+           END as NUMCOOPERATIVA,
+           INST1.NUMCOOPPAI
+        FROM SCI.VIW_INSTITUICAO INST1,
+           (SELECT IDINSTITUICAO, 
+                   CASE 
+                      WHEN IDINSTITUICAO = 1 THEN 1
+                      ELSE COALESCE(NUMCOOPERATIVA,0)
+                   END NUMCOOPERATIVA,
+                   NUMCOOPPAI,
+                   CODTIPOGRAUCOOP
+           FROM SCI.VIW_INSTITUICAO
+           WHERE CODTIPOUNIDADE = 1
+             AND IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" /> ) INST2
+        WHERE INST1.CODTIPOUNIDADE = 1
+          AND ((INST2.CODTIPOGRAUCOOP = 2 AND INST1.NUMCOOPERATIVA = INST2.NUMCOOPERATIVA)
+           OR (INST2.CODTIPOGRAUCOOP = 1 AND (INST1.NUMCOOPPAI = INST2.NUMCOOPERATIVA OR INST1.NUMCOOPERATIVA = INST2.NUMCOOPERATIVA))
+           OR (((INST1.NUMCOOPERATIVA = <bancoob:valor valor="${numeroCooperativa}" /> OR INST1.NUMCOOPPAI = <bancoob:valor valor="${numeroCooperativa}" />) AND INST2.IDINSTITUICAO IN (1,2)) 
+           OR (INST1.IDINSTITUICAO IN (1,2) AND INST2.IDINSTITUICAO IN (1,2) AND COALESCE(INST1.NUMCOOPERATIVA,1) = <bancoob:valor valor="${numeroCooperativa}" />))
+                 )
+        ORDER BY 2
+      ]]>
+		</command>
+	</query>
+
+	<query name="OBTER_PACS">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém os pacs de uma singular para o componente 'centrais
+			e singulares' utilizado nos relatórios
+		</description>
+		<command>
+      <![CDATA[
+		SELECT
+		    INST1.IDINSTITUICAO,
+		    INST2.DESCNOMECOOP  DESCNOMECOOPPAI,
+		    INST2.DESCSIGLACOOP DESCSIGLACOOPPAI,
+		    INST1.IDUNIDADEINST,
+		    INST1.DESCNOMECOOP DESCNOMEUNIDADE
+		FROM
+		    SCI.VIW_INSTITUICAO INST1
+		INNER JOIN
+		    SCI.VIW_INSTITUICAO INST2
+		ON
+		    INST1.IDINSTITUICAO = INST2.IDINSTITUICAO
+		AND INST2.CODTIPOUNIDADE = 1
+		WHERE 1 = 1
+			<j:if test="${idInstituicao != null}"> 
+				AND INST1.IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+			</j:if>
+			
+			<j:if test="${numeroCooperativa != null}"> 
+				AND
+				    CASE INST1.IDINSTITUICAO
+				        WHEN 1
+				        THEN 1
+				        ELSE COALESCE(INST1.NUMCOOPERATIVA,0)
+				    END = <bancoob:valor valor="${numeroCooperativa}" />
+			</j:if>
+		ORDER BY
+		    INST1.IDUNIDADEINST
+      ]]>
+		</command>
+	</query>
+
+	<query name="OBTER_INSTITUICAO_PAI">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém o número de uma cooperativa pai por meio do id da
+			instituicao
+		</description>
+		<command>
+      <![CDATA[
+			SELECT
+				IDINSTITUICAO,
+			    (CASE WHEN NUMCOOPPAI = 0 THEN NUMCOOPERATIVA WHEN IDINSTITUICAO = 1 THEN 1 WHEN IDINSTITUICAO = 2 THEN 300 ELSE  NUMCOOPPAI END) as NUMCOOPERATIVA
+			FROM
+			    SCI.VIW_INSTITUICAO
+			WHERE
+			    CODTIPOUNIDADE = 1
+		  	<j:if test="${idInstituicao != null}"> 
+		  		AND IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" /> 
+		  	</j:if>
+		  	<j:if test="${numeroCooperativa != null}"> 
+		  		AND NUMCOOPERATIVA = <bancoob:valor valor="${numeroCooperativa}" /> 
+		  	</j:if>
+      ]]>
+		</command>
+	</query>
+
+	<query name="OBTER_COOPERATIVA_POR_INSTITUICAO">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém o número de uma cooperativa pai por meio do id da
+			instituicao
+		</description>
+		<command>
+      <![CDATA[
+			SELECT
+			    CASE
+			        WHEN IDINSTITUICAO = 1
+			        THEN 1
+			        ELSE COALESCE(NUMCOOPERATIVA,0)
+			    END AS NUMCOOPERATIVA
+			FROM
+			    SCI.VIW_INSTITUICAO
+			WHERE
+			    CODTIPOUNIDADE = 1
+			AND IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+      ]]>
+		</command>
+	</query>
+
+	<query name="OBTER_TIPO_GRAU_COOPERATIVA">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém o grau de uma cooperativa por meio do id da
+			instituicao</description>
+		<command>
+      <![CDATA[
+			SELECT
+				IDINSTITUICAO,
+			    CODTIPOGRAUCOOP,
+			    DESCTIPOGRAUCOOP
+			FROM
+			    SCI.VIW_INSTITUICAO
+			WHERE
+			    CODTIPOUNIDADE = 1
+			AND IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+      ]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_CENTRAIS">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém as centrais para o componente 'centrais e
+			singulares' utilizado nos relatórios
+		</description>
+		<command>
+      <![CDATA[
+			SELECT INST1.IDINSTITUICAO,
+			       INST1.NUMCOOPERATIVA,
+			       INST1.DESCNOMECOOP,
+			       INST1.DESCSIGLACOOP,
+			       INST1.IDLOCALIDADE
+			FROM SCI.VIW_INSTITUICAO INST1
+			WHERE INST1.CODTIPOGRAUCOOP = 1
+			  AND INST1.CODTIPOUNIDADE  = 1
+			  ORDER BY INST1.NUMCOOPERATIVA ASC
+      ]]>
+		</command>
+	</query>
+
+	<query name="LISTAR_SINGULARES">
+		<use-case name="Componente de centrais e singulares" />
+		<description>Obtém as centrais para o componente 'centrais e
+			singulares' utilizado nos relatórios
+		</description>
+		<command>
+	      <![CDATA[
+				SELECT INST1.IDINSTITUICAO,
+				       INST1.NUMCOOPERATIVA,
+				       INST1.DESCNOMECOOP,
+				       INST1.DESCSIGLACOOP,
+				       INST1.IDLOCALIDADE
+				FROM SCI.VIW_INSTITUICAO INST1 INNER JOIN SCI.VIW_INSTITUICAO INST2
+				                                 ON INST1.NUMCOOPPAI = INST2.NUMCOOPERATIVA
+				WHERE INST1.CODTIPOGRAUCOOP = 2
+				  AND INST1.CODTIPOUNIDADE  = 1
+				  AND INST2.CODTIPOGRAUCOOP = 1
+				  AND INST2.CODTIPOUNIDADE  = 1    
+				  AND INST2.IDINSTITUICAO   = <bancoob:valor valor="${idInstituicao}" />
+				  ORDER BY INST1.NUMCOOPERATIVA ASC
+				  
+				
+	      ]]>
+		</command>
+	</query>
+	<query name="LISTAR_INSTITUICAO_VIW_INSTITUICAO">
+		<use-case name="Instituicao"></use-case>
+		<description>Recupera uma lista de instituições para o cache</description>
+		<command>
+			<![CDATA[
+				SELECT INST1.IDINSTITUICAO,
+				       INST1.IDUNIDADEINST,
+				       CASE INST1.IDINSTITUICAO
+				          WHEN 1 THEN 1
+				          ELSE INST1.NUMCOOPERATIVA
+				       END NUMCOOPERATIVA,
+				       INST2.IDINSTITUICAO IDINSTITUICAOPAI,
+				       INST1.NUMCOOPPAI,
+				       INST1.DESCNOMECOOP,
+				       INST1.DESCSIGLACOOP,
+				       INST1.CODTIPOGRAUCOOP,
+				       INST1.DESCTIPOGRAUCOOP,
+				       INST1.NUMCNPJ,
+				       INST1.NUMCONTACONVENIO
+				FROM SCI.VIW_INSTITUICAO INST1 LEFT JOIN SCI.VIW_INSTITUICAO INST2 ON INST1.NUMCOOPPAI = INST2.NUMCOOPERATIVA AND INST2.CODTIPOUNIDADE = 1
+				WHERE INST1.CODTIPOUNIDADE = 1
+			  	<j:if test="${idInstituicao != null}"> 
+			  		AND INST1.IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" /> 
+			  	</j:if>
+			  	<j:if test="${numeroCooperativa != null}"> 
+			  		AND INST1.NUMCOOPERATIVA = <bancoob:valor valor="${numeroCooperativa}" /> 
+			  	</j:if>
+			  	<j:if test="${listaIdInstituicao != null}">
+				  	AND INST1.IDINSTITUICAO IN (<bancoob:valor valor="${listaIdInstituicao}" />)
+			    </j:if>
+			  	<j:if test="${idInstituicao == null and numeroCooperativa == null and listaIdInstituicao == null}"> 
+			  		AND INST1.DATAIMPLANTACAOSICOOB IS NOT NULL
+			  	</j:if>
+				ORDER BY 3
+ 			]]>
+		</command>
+	</query>
+
+	<query name="OBTER_ENDERECO_INSTITUICAO_VIW_INSTITUICAO">
+		<use-case name="UnidadeInstituicao"></use-case>
+		<description>Recupera informações de endereço de uma unidadeInstituicao</description>
+		<command>
+			<![CDATA[
+				SELECT INST1.NUMPAC,
+				       INST1.IDINSTITUICAO,
+				       INST1.DESCENDERECOCOOP,
+				       INST1.DESCNUMEROCOOP,
+				       INST1.DESCCOMPLEMENTOCOOP,
+				       INST1.DESCBAIRROCOOP,
+				       INST1.DESCCIDADECOOP,
+				       INST1.SIGLAUF,
+				       INST1.NUMCEPCOOP,
+				       INST1.IDLOCALIDADE
+				FROM SCI.VIW_INSTITUICAO INST1
+				WHERE INST1.IDINSTITUICAO = <bancoob:valor valor="${idInstituicao}" />
+				  AND INST1.IDUNIDADEINST = <bancoob:valor valor="${idUnidadeInstituicao}" />
+ 			]]>
+		</command>
+	</query>
+	
+</queries>

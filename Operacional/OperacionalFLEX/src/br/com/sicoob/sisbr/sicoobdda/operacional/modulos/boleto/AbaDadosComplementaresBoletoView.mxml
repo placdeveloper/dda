@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="550" height="520" layout="absolute"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:campos="br.com.bancoob.componentes.campos.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+								 xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								 xmlns:consultaBoleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.boleto.*" 
+								 verticalScrollPolicy="off" paddingLeft="1" paddingRight="1">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.vo.BoletoDDATerceiroAutVO;
+			
+			[Bindable]
+			protected var _allLabelWidth:Number = 110;
+			
+			[Bindable]
+			protected var _allTitleWidth:Number = 700;
+			
+			[Bindable]
+			protected var _yInit:Number = 10;
+			
+			[Bindable]
+			protected var _ySpace:Number = 29;
+			
+			[Bindable]
+			protected var _xTitle:Number = 4;
+			
+			[Bindable]
+			protected var _xLeftLabel:Number = 26;
+			
+			[Bindable]
+			protected var _xLeftField:Number = 120;
+			
+			[Bindable]
+			protected var _xCenterField:Number = 410;
+			
+			[Bindable]
+			protected var _xCenterLabel:Number = 310;
+			
+			[Bindable]
+			protected var _xRightField:Number = 637;
+			
+			[Bindable]
+			protected var _xRightLabel:Number = 530;
+			
+			public static function labelComboMensagemTerceiro(obj:Object, obj2:Object = null):String{
+				var boletoDDATerceiroAutVO:BoletoDDATerceiroAutVO = obj as BoletoDDATerceiroAutVO;
+				if(boletoDDATerceiroAutVO.codTipoPessoaTerceiro != null && boletoDDATerceiroAutVO.codTipoPessoaTerceiro == "F"){
+					return ConstantesComum.PESSOA_FISICA;
+				}else{
+					return ConstantesComum.PESSOA_JURIDICA;
+				}
+			}
+			
+			public static function labelComboMensagemAutorizado(obj:Object, obj2:Object = null):String{
+				var boletoDDATerceiroAutVO:BoletoDDATerceiroAutVO = obj as BoletoDDATerceiroAutVO;
+				if(boletoDDATerceiroAutVO.codTipoPessoaAutorizador != null && boletoDDATerceiroAutVO.codTipoPessoaAutorizador == "F"){
+					return ConstantesComum.PESSOA_FISICA;
+				}else{
+					return ConstantesComum.PESSOA_JURIDICA;
+				}
+			}
+			
+			
+			public static function labelComboMensagemAgregado(obj:Object, obj2:Object = null):String{
+				if(obj != null && obj.codTipoPessoaAgregado == "F"){
+					return ConstantesComum.PESSOA_FISICA;
+				}else{
+					return ConstantesComum.PESSOA_JURIDICA;
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Dados do Desconto" x="{_xTitle}" y="0" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesDadosDesconto" width="100%" x="0" y="10">
+		<Rotulo text="Tipo Desconto 1:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpDesconto1" x="{_xLeftField}"  y="{_yInit}" width="120" selectable="true"/>
+		
+		<Rotulo text="Data Desconto 1:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtDesconto1" x="{_xCenterField}"  y="{_yInit}" />
+		
+		<Rotulo text="Valor Desconto 1:" x="{_xRightLabel}" y="{_yInit}" width="140" fontWeight="bold"/>
+		<Rotulo id="vlrDesconto1" x="{_xRightField}"  y="{_yInit}" selectable="true"/>
+		
+		<!-- #####################################################################-->
+		
+		<Rotulo text="Tipo Desconto 2:" x="{_xLeftLabel}" y="{vlrDesconto1.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpDesconto2" x="{_xLeftField}" y="{vlrDesconto1.y + _ySpace}" width="120" selectable="true"/>
+		
+		<Rotulo text="Data Desconto 2:" x="{_xCenterLabel}" y="{vlrDesconto1.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtDesconto2" x="{_xCenterField}" y="{vlrDesconto1.y + _ySpace}" />
+		
+		<Rotulo text="Valor Desconto 2:" x="{_xRightLabel}" y="{vlrDesconto1.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="vlrDesconto2" x="{_xRightField}" y="{vlrDesconto1.y + _ySpace}" selectable="true"/>
+		
+		<!-- #####################################################################-->
+		
+		<Rotulo text="Tipo Desconto 3:" x="{_xLeftLabel}" y="{vlrDesconto2.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpDesconto3" x="{_xLeftField}" y="{vlrDesconto2.y + _ySpace}" width="120" selectable="true"/>
+		
+		<Rotulo text="Data Desconto 3:" x="{_xCenterLabel}" y="{vlrDesconto2.y + _ySpace}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtDesconto3" x="{_xCenterField}" y="{vlrDesconto2.y + _ySpace}" />
+		
+		<Rotulo text="Valor Desconto 3:" x="{_xRightLabel}" y="{vlrDesconto2.y + _ySpace}" width="140" fontWeight="bold"/>
+		<Rotulo id="vlrDesconto3" x="{_xRightField}" y="{vlrDesconto2.y + _ySpace}" selectable="true"/>
+		
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Dados do Juros de Mora" x="{_xTitle}" y="95" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesDadosJurosMora" width="100%" x="0" y="110">
+		<Rotulo text="Tipo Juros:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpJuros" x="{_xLeftField}"  y="{_yInit}" width="155" selectable="true"/>
+		
+		<Rotulo text="Data Juros:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtJuros" x="{_xCenterField}"  y="{_yInit}" />
+		
+		<Rotulo text="Valor Juros:" x="{_xRightLabel}" y="{_yInit}" width="140" fontWeight="bold"/>
+		<Rotulo id="vlrJuros" x="{_xRightField}"  y="{_yInit}" selectable="true"/>
+		
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Dados de Multa" x="{_xTitle}" y="145" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesMulta" width="100%" x="0" y="160">
+		<Rotulo text="Tipo Multa:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="tpMulta" x="{_xLeftField}"  y="{_yInit}" selectable="true"/>
+		
+		<Rotulo text="Data Multa:" x="{_xCenterLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="dtMulta" x="{_xCenterField}"  y="{_yInit}" />
+		
+		<Rotulo text="Valor Multa:" x="{_xRightLabel}" y="{_yInit}" width="140" fontWeight="bold"/>
+		<Rotulo id="vlrMulta" x="{_xRightField}"  y="{_yInit}" selectable="true"/>
+		
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Aceite" x="{_xTitle}" y="195" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesAceite" width="100%" x="0" y="210">
+		<Rotulo text="Aceite:" x="{_xLeftLabel}" y="{_yInit}" width="110" fontWeight="bold"/>
+		<Rotulo id="bolAceite" x="{_xLeftField}" y="{_yInit}" />
+		
+		<Rotulo text="Data Hora Situacao Aceite:" x="{_xCenterLabel}" y="{_yInit}" width="160" fontWeight="bold"/>
+		<Rotulo id="dtHoraSituacaoAceite" x="{_xCenterField + 35}"  y="{_yInit}" width="150" />
+		
+	</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Terceiro Autorizado" x="{_xTitle}" y="238" width="{_allTitleWidth}"/>
+	<containers:CanvasBancoob id="cvInformacoesTerceiroAutorizado" width="100%" x="5" y="270">
+		<grid:Grid id="gridTerceiroAutorizado" width="{_allTitleWidth}" height="118" variableRowHeight="true" sortableColumns="false" x="17">
+			<grid:columns>
+				<grid:ColunaGrid  dataField="codTipoPessoaAutorizador" width="80" headerText="Tipo Pessoa Autorizador" labelFunction="{labelComboMensagemAutorizado}" editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="numCpfCnpjAutorizador" width="125" headerText="CPF/CNPJ Autorizador" editable="false" headerWordWrap="true" wordWrap="true"  labelFunction="{TabelaPaginadaUtils.defaultCNPJLabelFunction}"/>
+				<grid:ColunaGrid  dataField="codTipoPessoaTerceiro" width="80" headerText="Tipo Pessoa Terceiro" labelFunction="{labelComboMensagemTerceiro}" editable="false" headerWordWrap="true" wordWrap="true" />
+				<grid:ColunaGrid  dataField="numCpfCnpjTerceiro" width="125" headerText="CPF/CNPJ Terceiro" editable="false" headerWordWrap="true" wordWrap="true"  labelFunction="{TabelaPaginadaUtils.defaultCNPJLabelFunction}"/>
+			</grid:columns>
+		</grid:Grid>
+	</containers:CanvasBancoob>
+		
+		<titulo:SubtituloView texto="Pagador Agregado" x="{_xTitle}" y="398" width="{(_allTitleWidth)/2}"/>
+		<containers:CanvasBancoob id="cvInformacoesPagadorAgregado" width="400" x="5" y="433">
+			<grid:Grid id="gridPagadorAgregado" width="306" height="105" variableRowHeight="true" sortableColumns="false" x="17">
+				<grid:columns>
+					<grid:ColunaGrid  dataField="codTipoPessoaAgregado" width="80" headerText="Tipo Pessoa Agregado" labelFunction="{labelComboMensagemAgregado}"  editable="false" headerWordWrap="true" wordWrap="true" />
+					<grid:ColunaGrid  dataField="numCpfCnpjAgregado" width="125" headerText="CPF/CNPJ Agregado" editable="false" headerWordWrap="true" wordWrap="true"  labelFunction="{TabelaPaginadaUtils.defaultCNPJLabelFunction}"/>
+				</grid:columns>
+			</grid:Grid>
+			
+		</containers:CanvasBancoob>
+	
+	<titulo:SubtituloView texto="Instruções Beneficiário" x="360" y="398" width="{(_allTitleWidth)/2}"/>
+	<containers:CanvasBancoob id="cvInformacoesBeneficiario" width="100%" x="0" y="426">
+		<Rotulo text="Instrução:" x="365" y="0" width="80" fontWeight="bold"/>
+		<mx:TextArea x="420" y="6" width="300" height="105"  textAlign="justify" backgroundAlpha="0" borderStyle="none" id="txtMensagem" editable="false" selectable="true" verticalScrollBarStyleName="fseVerticalScrollBar"/>	
+	</containers:CanvasBancoob>
+		
+</cadastro:FormularioCadastroView>

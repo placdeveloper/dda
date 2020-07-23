@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<comum:GraficoDDAView xmlns:mx="http://www.adobe.com/2006/mxml" 
+					xmlns="br.com.bancoob.componentes.*"
+					xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	<mx:Style>
+		.alerta{
+			backgroundColor: #F00;
+		}
+		.teste{
+			backgroundColor: #FFF;
+		}
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			protected var _listaDadosMonitoracao:ArrayCollection = new ArrayCollection();
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas width="100%" height="100%" verticalScrollPolicy="off" id="canvasGrafico">
+		<mx:Canvas width="100%" height="100%" verticalScrollPolicy="off" id="canvasAlerta">
+			<mx:Canvas width="100%" height="100%" verticalScrollPolicy="off" id="canvasTeste" styleName="teste">
+			</mx:Canvas>
+		</mx:Canvas>
+		<mx:VBox width="100%" height="100%" verticalScrollPolicy="off" verticalGap="2">
+			<mx:HBox width="100%" height="3%">
+				<mx:Legend dataProvider="{lineChart}"/>
+			</mx:HBox>
+			<mx:LineChart id="lineChart" height="100%" width="100%" color="0x323232" showDataTips="true" dataProvider="{_listaDadosMonitoracao}">
+				<mx:horizontalAxis>
+					<mx:CategoryAxis dataProvider="{_listaDadosMonitoracao}" categoryField="horaAfericao"/>
+				</mx:horizontalAxis>
+				<mx:series>
+					<mx:LineSeries yField="dda0110Sucesso" displayName="Qtde MSGs Dentro do SLA(SicoobDDA)" >
+						<mx:lineStroke>
+							<mx:Stroke color="#003DB8" weight="5"/>
+						</mx:lineStroke>
+					</mx:LineSeries>
+					<mx:LineSeries yField="dda0110Rejeitada" displayName="Qtde MSGs Fora do SLA(SicoobDDA)">
+						<mx:lineStroke>
+							<mx:Stroke color="#F01919" weight="5"/>
+						</mx:lineStroke>
+					</mx:LineSeries>
+				</mx:series>
+			</mx:LineChart>
+		</mx:VBox>
+	</mx:Canvas>
+</comum:GraficoDDAView>

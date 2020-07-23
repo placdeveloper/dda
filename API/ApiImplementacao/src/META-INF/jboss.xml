@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>BeneficiarioAPIServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_apicliente/BeneficiarioAPIServico</local-jndi-name>
+			<jndi-name>sicoobdda_apicliente/BeneficiarioAPIServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>PagadorEletronicoDDAAPIServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_apicliente/PagadorEletronicoDDAAPIServico</local-jndi-name>
+			<jndi-name>sicoobdda_apicliente/PagadorEletronicoDDAAPIServicoRemote</jndi-name>
+		</session>
+		<session>
+			<ejb-name>BoletoDDAAPIServicoEJB</ejb-name>
+			<local-jndi-name>sicoobdda_apicliente/BoletoDDAAPIServico</local-jndi-name>
+			<jndi-name>sicoobdda_apicliente/BoletoDDAAPIServicoRemote</jndi-name>
+		</session>
+	</enterprise-beans>
+</jboss>
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox
+	width="100%"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*"
+	xmlns:componentes="br.com.bancoob.componentes.*"
+	xmlns:input="br.com.bancoob.componentes.input.*">
+
+	<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			protected var _includeInLayout:Boolean = true;
+			[Bindable] 
+			protected var _isAvalista:Boolean = false;
+		]]>
+	</mx:Script>
+	
+	<containers:CanvasBancoob width="100%">
+		<componentes:Rotulo text="Tipo Pessoa: " width="147" textAlign="right" y="2" styleName="negrito"/>
+		<input:Combo id="cbTipoPessoaAvalista" x="150" y="2" width="150" labelField="descTipoPessoaDDAAvalista" somenteMaiusculas="true" inserirItemOpcional="true"/>	
+	</containers:CanvasBancoob>
+	
+	<containers:CanvasBancoob width="100%">
+		<componentes:Rotulo id="labelDocumento" text="Documento: " width="150" textAlign="right" y="2" styleName="negrito" visible="true"/>
+		
+		<input:Texto id="txtDoc" width="150" visible="true" y="2" x="150" restrict="0-9" maxChars="14" />
+		<input:InputCPF id="txtCpfAvalista" width="150" visible="false" y="2" x="150"/>		
+		<input:InputCNPJ id="txtCnpjAvalista" width="150" visible="false" y="2" x="150"/>		
+		<input:Texto id="txtPisPasep" width="150" visible="false" y="2" x="150" restrict="0-9" maxChars="11"/>		
+	</containers:CanvasBancoob>
+	
+</mx:VBox>
+	

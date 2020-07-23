@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<jboss>
+	<enterprise-beans>
+		<session>
+			<ejb-name>ConsultaBoletoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ConsultaBoletoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>IndicadorAceiteDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/IndicadorAceiteDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>TermoAdesaoDDAPeloTipoServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/TermoAdesaoDDAPeloTipoServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>IncluirAdesaoSacadoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/IncluirAdesaoSacadoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>TermoAdesaoDDAPeloSacadoServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/TermoAdesaoDDAPeloSacadoServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>CancelarAdesaoSacadoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/CancelarAdesaoSacadoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ComprovanteAdesaoSacadoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ComprovanteAdesaoSacadoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ManterDDATerceiroServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ManterDDATerceiroServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>VerificaPagadorEletronicoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/VerificaPagadorEletronicoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ListarBoletoContaCorrenteDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ListarBoletoContaCorrenteDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ListarSituacaoBoletoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ListarSituacaoBoletoDDAServicoRemote</jndi-name>
+		</session>
+		
+		<session>
+			<ejb-name>ListarBoletoTerceiroAutorizadoDDAServicoEJB</ejb-name>
+			<jndi-name>sicoobdda_integracaotransacional/ListarBolTerceiroAutorizadoServicoRemote</jndi-name>
+		</session>
+	</enterprise-beans>
+</jboss>

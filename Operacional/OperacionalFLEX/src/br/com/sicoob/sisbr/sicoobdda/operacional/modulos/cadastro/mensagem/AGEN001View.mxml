@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*"
+						  xmlns:componentes="br.com.bancoob.componentes.*"
+						  xmlns:input="br.com.bancoob.componentes.input.*"
+						  width="100%">
+	<containers:VBoxBancoob width="100%" >
+		
+		<comum:FieldSet id="fsMensagemEco" title="AGEN001" width="80%" height="120" >
+			<containers:CanvasBancoob width="100%" height="100%">
+				<componentes:Rotulo text="Mensagem de ECO padrão: " width="147" textAlign="left" y="5"/>
+				<mx:CheckBox id="chPadrao"  y="5" x="140" width="240" selected="true"/>
+			
+				<componentes:Rotulo text="Mensagem customizada:   " width="147" textAlign="left" y="30"/>
+				<mx:TextInput id="txMensagem"  y="30" x="140" width="240" />
+			</containers:CanvasBancoob>
+			
+		</comum:FieldSet>
+		
+		
+		
+	</containers:VBoxBancoob>
+	
+</containers:CanvasBancoob>

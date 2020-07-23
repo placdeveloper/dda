@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<session name="BeneficiarioAPIServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.apicliente.negocio.servicos.interfaces.BeneficiarioAPIServicoRemote"
+			binding-name="sicoobdda_apicliente/BeneficiarioAPIServicoRemote" />
+	</session>
+
+	<session name="BoletoDDAAPIServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.apicliente.negocio.servicos.interfaces.BoletoDDAAPIServicoRemote"
+			binding-name="sicoobdda_apicliente/BoletoDDAAPIServicoRemote" />
+	</session>
+
+	<session name="PagadorEletronicoDDAAPIServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.apicliente.negocio.servicos.interfaces.PagadorEletronicoDDAAPIServicoRemote"
+			binding-name="sicoobdda_apicliente/PagadorEletronicoDDAAPIServicoRemote" />
+	</session>
+
+</ejb-jar-bnd>

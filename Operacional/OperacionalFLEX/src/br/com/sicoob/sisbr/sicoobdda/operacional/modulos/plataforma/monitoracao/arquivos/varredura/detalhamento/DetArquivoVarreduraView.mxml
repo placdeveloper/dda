@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="900" height="600"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+		   xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+		   xmlns:canvas="br.com.sicoob.sisbr.sicoobdda.comumflex.canvas.*"
+		   xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		   xmlns:abas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.arquivos.varredura.abas.*"
+		   xmlns:indicador="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.arquivos.varredura.indicadores.*">
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum;
+		]]>
+	</mx:Script>
+	
+	
+	<mx:VBox width="100%" height="100%">
+		<indicador:IndicadorArquivoVarredura id="indicadores" width="100%" height="100"/>
+		
+		<titulo:SubtituloView texto="Detalhamento" width="100%"/>
+		
+		<navegacao:Tab id="tabDetalhamento" borderThickness="2" styleName="fonteVerticalTab"  paddingTop="0" width="100%" height="100%" focusEnabled="false">
+			<abas:ListaArquivoVarredura id="abaArqDisponivel" label="DIPONÍVEL" width="100%" height="100%"/>
+			<abas:ListaArquivoVarredura id="abaGEN0015SemArq" label="GEN0015 SEM ARQ" width="100%" height="100%"/>
+			<abas:ListaArquivoVarredura id="abaArqSemGEN0015" label="ARQ SEM GEN0015" modoArqSemGEN0015="true" width="100%" height="100%"/>
+			<abas:ListaArquivoVarredura id="abaArqEmProcessamento" label="EM PROCESSAMENTO" width="100%" height="100%"/>
+		</navegacao:Tab>
+		
+		<mx:HBox width="100%">
+			<mx:Canvas width="100%"/>
+			<bancoob:Botao id="btnAtualizar" label="ATUALIZAR"/>
+			<bancoob:Botao id="btnFechar" label="FECHAR" icon="{ConstantesComum.icoFechar}"/>
+		</mx:HBox>
+	</mx:VBox>
+</bancoob:BaseModulo>

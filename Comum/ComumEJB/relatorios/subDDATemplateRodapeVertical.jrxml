@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subRodapeVertical" language="groovy" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<style name="texto" isDefault="false" vAlign="Middle" markup="none" fontName="Arial" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="textoCentralizado" isDefault="false" style="texto" hAlign="Center" markup="none" pattern=""/>
+	<style name="textoNegrito" isDefault="false" style="texto" isBold="true" isItalic="false"/>
+	<style name="textoNegritoCentralizado" isDefault="false" style="textoNegrito" hAlign="Center"/>
+	<style name="borda" isDefault="false" fill="Solid">
+		<pen lineWidth="0.75"/>
+	</style>
+	<style name="linha" isDefault="false" style="borda" radius="0" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\SisbrIDE-4.5\\workspace\\COBRANCA\\AtendimentoBackoffice\\AtendimentoBackofficeEJB\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codigoRelatorio" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["COB300"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="loginUsuario" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["sicoob.gesin1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numeroDaPagina" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageFooter>
+		<band height="13">
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="40" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="398" y="0" width="1" height="13"/>
+			</line>
+			<textField>
+				<reportElement style="texto" x="402" y="0" width="80" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{loginUsuario}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="103" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement key="linha" style="linha" x="0" y="7" width="40" height="1"/>
+			</line>
+			<line>
+				<reportElement key="linhaMaior" style="linha" x="104" y="7" width="294" height="1"/>
+			</line>
+			<line>
+				<reportElement key="linhaVertical" style="linha" x="514" y="0" width="1" height="13"/>
+			</line>
+			<textField>
+				<reportElement style="textoCentralizado" x="43" y="0" width="59" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{codigoRelatorio}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="linha" style="linha" x="515" y="7" width="40" height="1"/>
+			</line>
+			<textField>
+				<reportElement style="texto" x="481" y="0" width="30" height="13"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{numeroDaPagina}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

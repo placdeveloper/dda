@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<cadastro:FormularioCadastroView 
+	xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" autoLayout="true" standAlone="true" 
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	clipContent="false" verticalScrollPolicy="off" paddingLeft="1" paddingRight="1"
+	width="100%" height="25">
+	
+	<containers:VBoxBancoob width="100%" height="100%" id="vbox1">
+		
+		<titulo:SubtituloView texto="Detalhamento Arquivo" width="97%" />
+		<containers:HBoxBancoob width="100%" >
+			<containers:VBoxBancoob width="100%" >
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="IdLogRecebimentoArquivoDDA:" width="195"  styleName="negrito" />
+					<Rotulo id="txtIdLogRecebimentoArquivoDDA" width="50" x="190" y="2"/>
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Nome Arquivo:" width="100"  styleName="negrito" />
+					<Rotulo id="txtDescNomeArquivo" width="100%" x="90" y="2"/>
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Tipo Mensagem:" width="100"  styleName="negrito" />
+					<Rotulo id="txtTipoMensagem" width="200" x="97" y="2" />
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Data Movimento:" width="115"  styleName="negrito" />
+					<mx:Label id="txtDataMovimento" width="200" x="105" y="0" />
+				</containers:CanvasBancoob>
+				
+			</containers:VBoxBancoob>
+			
+			<containers:VBoxBancoob width="50%" >
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Tipo Arquivo:" width="100"  styleName="negrito" />
+					<Rotulo id="txtDescTipoArquivo" width="200" x="80" y="2"/>
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Cód. Erro Cip:" width="100"  styleName="negrito" />
+					<Rotulo id="txtCodErroCip" width="200" x="80" y="2"/>
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Qtd. Registros:" width="100"  styleName="negrito" />
+					<Rotulo id="txtQtdRegistro" width="200" x="95" y="2"/>
+				</containers:CanvasBancoob>
+			</containers:VBoxBancoob>
+			
+			<containers:VBoxBancoob width="75%" >
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Data/Hora Arq.:" width="100"  styleName="negrito" />
+					<Rotulo id="txtDataHoraArquivo" width="100" x="100" y="2" />
+				</containers:CanvasBancoob>
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="Situação:" width="100"  styleName="negrito" />
+					<Rotulo id="txtSituacao" width="100%" x="60" y="2"/>
+				</containers:CanvasBancoob>
+				
+				
+				<containers:CanvasBancoob width="100%" >
+					<Rotulo text="IdLogEnvioArquivoDDA:" width="145"  styleName="negrito" />
+					<Rotulo id="txtIdLogEnvioArquivoDDA" width="50" x="145" y="2"/>
+				</containers:CanvasBancoob>
+			</containers:VBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<titulo:SubtituloView id="tituloFiltro" texto="Filtro" width="97%" />
+		
+		<containers:HBoxBancoob width="100%" >
+			<containers:HBoxBancoob  width="50%"  horizontalAlign="left" >
+				<Rotulo text="IdLogDetRecebimentoArq: " styleName="negrito" width="170" textAlign="right"/>
+				<input:Texto id="txtIdLogDetRecebimentoArqDDA" width="120" somenteMaiusculas="false" maxChars="20" restrict="0-9"/>
+			</containers:HBoxBancoob>
+			<mx:Spacer width="20"/>
+			<containers:HBoxBancoob  width="100%" horizontalAlign="left" paddingRight="50">
+				<Rotulo text="Status:" width="50"  styleName="negrito"/>
+				<input:Radio id="optTodos" label="Todos" groupName="grpProcessado" width="80" />
+				<input:Radio id="optProcessado" label="Processado" groupName="grpProcessado" width="100" />
+				<input:Radio id="optNaoProcessado" label="Não Processado" groupName="grpProcessado" width="120"/>
+				<input:RadioGrupoBancoob id="grpProcessado" />
+			</containers:HBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob  width="100%" horizontalAlign="right" paddingRight="50">
+			<painellista:BotaoProcurarView id="btnProcurar"  acionarComEnter="true" />
+			<mx:Spacer width="10"/>
+			<componentes:Botao id="btnLimpar" width="70" acionarComEnter="true" label="Limpar" />
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+</cadastro:FormularioCadastroView> 

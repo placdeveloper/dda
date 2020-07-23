@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="940" height="510"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:arquivorecebido="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.arquivorecebido.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							deveLimparPesquisa="false"
+							xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaBanco">
+			<painellista:metodoPesquisa>pesquisarArquivoRecebidoPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+				<painellista:servicoPesquisa>
+					<servico:ServicoJava id="pesquisarArquivoRecebidoPaginado">
+						<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ArquivoRecebidoServico</servico:source>
+						<servico:bloquearOperacao>true</servico:bloquearOperacao>
+						<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+					</servico:ServicoJava>
+				</painellista:servicoPesquisa>
+			
+				<painellista:painelFiltro>
+					<arquivorecebido:ArquivoRecebidoFiltroView id="painelFiltro" width="100%"/>
+				</painellista:painelFiltro>
+					
+				<painellista:tabelaPaginada>
+					<tabelapaginada:TabelaPaginadaBanco id="listaArquivoRecebido" width="97%" height="100%" titulo="Arquivos" tamanhoPagina="10" top="80" doubleClickEnabled="false">
+						<tabelapaginada:MetadadosTabela id="metadados">
+							<grid:ColunaGrid dataField="idLogRecebimentoArqDDA" headerText="ID" headerWordWrap="false" wordWrap="false" sortable="false"  width="35"/>
+							<grid:ColunaGrid dataField="descTipoArquivo" headerText="Tipo Arquivo" headerWordWrap="true" wordWrap="false" sortable="false" width="55"/>
+							<grid:ColunaGrid dataField="descNomeArquivoRecebido" headerText="Nome Arquivo"  headerWordWrap="false" wordWrap="false" sortable="false" width="200" />
+							<grid:ColunaGrid dataField="dataHoraArquivo"  headerText="Data Hora Arq." headerWordWrap="false" wordWrap="false" sortable="false"  width="100"  labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+							<grid:ColunaGrid dataField="codTipoErroCip" headerText="Cód. Tipo Erro" headerWordWrap="false" wordWrap="false" sortable="false"  width="75"/>
+							<grid:ColunaGrid dataField="idLogEnvioArqDDA" headerText="Id Log Envio Arq. DDA" headerWordWrap="true" wordWrap="false" sortable="false"  width="70"/>
+							<grid:ColunaGrid dataField="codTipoMensagem" headerText="Cód. Tipo Mensagem" headerWordWrap="true" wordWrap="false" sortable="false"  width="65"/>
+							<grid:ColunaGrid dataField="descSituacaoProcessamentoArquivo" headerText="Situação" headerWordWrap="false" wordWrap="false" sortable="false"  width="125"/>
+							<grid:ColunaGrid dataField="qtdRegistros" headerText="Qtd. Reg. Arq." headerWordWrap="true" wordWrap="true" sortable="false" width="50" />
+						</tabelapaginada:MetadadosTabela>
+					</tabelapaginada:TabelaPaginadaBanco>
+				</painellista:tabelaPaginada>
+
+				<Botao id="btnDetalhar" toolTip="Detalhar Arquivo" styleName="botaoCrudProcurarPeq" enabled="false" x="905" y="368" />
+				<Botao id="btnAlterar" toolTip="Alterar Situação Arquivo" styleName="botaoCrudAlterarPeq" enabled="false" x="905" y="{btnDetalhar.y + 20}"/>
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

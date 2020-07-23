@@ -1,0 +1,24 @@
+<bancoob:Modulo  xmlns:mx="http://www.adobe.com/2006/mxml" width="960" height="465" 
+				 xmlns="br.com.bancoob.componentes.*"
+				 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+				 xmlns:bancoob="br.com.bancoob.componentes.*"
+				 xmlns:abaPagador="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.pagadoreletronico.cooperativa.abas.pagador.*"
+				 xmlns:abaAgregado="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.pagadoreletronico.cooperativa.abas.agregado.*"
+				 xmlns:containers="br.com.bancoob.componentes.containers.*">
+	
+		<mx:Style>
+		.alerta{
+			backgroundColor: #F00;
+		}
+		
+	</mx:Style>
+	<containers:VBoxBancoob width="100%" height="100%">	
+		<navegacao:Tab id="tabBeneficiarioCip" x="0" backgroundAlpha="0" borderThickness="2" styleName="fonteVerticalTab"  paddingTop="0" width="100%" height="100%" focusEnabled="false">
+			<abaPagador:AbaPesquisaPagador id="abaPagador" label="Pesquisar Pagador Eletrônico" focusEnabled="false" width="100%" height="100%" parametros="{this.parametros}" />
+			<abaAgregado:AbaPesquisaAgregado id="abaAgregado" label="Pesquisar Agregado" focusEnabled="false" width="100%" height="100%" parametros="{this.parametros}"/>
+		</navegacao:Tab>
+		<containers:VBoxBancoob width="100%" horizontalAlign="right">
+			<Botao label="Fechar" id="btnFechar" />
+		</containers:VBoxBancoob>
+	</containers:VBoxBancoob>	
+</bancoob:Modulo>

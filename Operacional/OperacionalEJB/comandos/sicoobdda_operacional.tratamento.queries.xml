@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="OBTER_LISTA_PENDENCIA">
+		<use-case name="Obter lista pendencia"></use-case>
+	    <description>Obter lista de pendências.</description>
+	    <command>
+			<![CDATA[
+			     SELECT M.DATAMOVIMENTO,
+			           M.CODTIPOMENSAGEMDDA,
+			           SUM(CASE WHEN M.CODSITUACAOMENSAGEMDDA = 1 THEN 1
+					       ELSE 0
+					   END) AS A_ENVIAR,
+			           
+					   SUM(CASE WHEN M.CODSITUACAOMENSAGEMDDA = 2 OR M.CODSITUACAOMENSAGEMDDA = 9 THEN 1
+					       ELSE 0
+					   END) AS SEM_RETORNO_SSPB,
+			           
+					   SUM(CASE WHEN M.CODSITUACAOMENSAGEMDDA = 3 THEN 1
+					       ELSE 0
+					   END) AS SEM_RETORNO_CIP,
+			           
+					   SUM(CASE WHEN M.CODSITUACAOMENSAGEMDDA = 4 THEN 1
+					       ELSE 0
+					   END) AS RETORNO_COM_ERRO
+				FROM DDA.MENSAGEMDDA M
+				INNER JOIN DDA.TIPOMENSAGEMDDA TM ON TM.CODTIPOMENSAGEMDDA = M.CODTIPOMENSAGEMDDA
+				WHERE M.BOLMENSAGEMPENDENTE = 1
+				AND TM.CODCATEGORIAMENSAGEMDDA IN ('E', 'A')
+				GROUP BY M.DATAMOVIMENTO, M.CODTIPOMENSAGEMDDA
+				ORDER BY M.DATAMOVIMENTO
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_ERRO_AGRUPADO">
+		<use-case name="Obter lista de erros agrupados"></use-case>
+	    <description>Obter lista de erros agrupados.</description>
+	    <command>
+			<![CDATA[
+				SELECT TE.CODTIPOERROCIP ERRO_PRINCIPAL,
+				       TE.DESCTIPOERROCIP ERRO_DEPENDENTE, 
+				       COUNT(*) QTD_ERRO
+				FROM DDA.ERROMENSAGEMRETORNOCIP E
+				           INNER JOIN DDA.TIPOERROCIP TE
+				           ON TE.CODTIPOERROCIP = E.CODTIPOERROCIP
+				WHERE E.CODTIPOTRATAMENTOERROCIP IS NULL
+				GROUP BY TE.CODTIPOERROCIP,
+				         TE.DESCTIPOERROCIP
+				ORDER BY 3 DESC
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_ERRO_PROCESSAMENTO_CIP">
+		<use-case name="Obter lista de erros de processamento CIP"></use-case>
+	    <description>Obter lista de erros de processamento CIP.</description>
+	    <command>
+			<![CDATA[
+				SELECT CASE
+				       WHEN SUBSTR(M.XMLMENSAGEM, 85,8)  =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 93,  10 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 81,8)  =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 89,  7 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 260,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 268, 9 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 222,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 230, 9 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 258,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 266, 7 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 257,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 265, 9 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 304,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 312, 7 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 277,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 285, 9 )
+				       WHEN SUBSTR(M.XMLMENSAGEM, 255,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 263, 8 )
+				       ELSE SUBSTR(M.XMLMENSAGEM, INSTR(M.XMLMENSAGEM,  '${inicioCODMSG}') + 8, INSTR(M.XMLMENSAGEM, '${finalCODMSG}') - INSTR(M.XMLMENSAGEM,  '${inicioCODMSG}') - 8 )
+				       END AS CODTIPOMENSAGEMDDA,
+				       M.DATAMOVIMENTO,
+				       COUNT(M.IDMENSAGEMDDA) QTD
+				FROM DDA.MENSAGEMDDA M
+				WHERE M.CODTIPOMENSAGEMDDA = 'ERRO001'
+				GROUP BY CASE
+				         WHEN SUBSTR(M.XMLMENSAGEM, 85,8)  =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 93,  10 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 81,8)  =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 89,  7 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 260,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 268, 9 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 222,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 230, 9 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 258,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 266, 7 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 257,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 265, 9 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 304,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 312, 7 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 277,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 285, 9 )
+				         WHEN SUBSTR(M.XMLMENSAGEM, 255,8) =  '${inicioCODMSG}' THEN SUBSTR(M.XMLMENSAGEM, 263, 8 )
+				         ELSE SUBSTR(M.XMLMENSAGEM, INSTR(M.XMLMENSAGEM,  '${inicioCODMSG}') + 8, INSTR(M.XMLMENSAGEM, '${finalCODMSG}') - INSTR(M.XMLMENSAGEM,  '${inicioCODMSG}') - 8 )
+				         END,
+				         DATAMOVIMENTO
+				ORDER BY 2,1
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_TRATAMENTO_ERRO_CIP">
+		<use-case name="Obter lista de tratamentos"></use-case>
+	    <description>Obter lista de tratamentos.</description>
+	    <command>
+			<![CDATA[
+				  		 SELECT  M.DATAMOVIMENTO,
+			          M.IDMENSAGEMDDA,
+				      M.CODTIPOMENSAGEMDDA,
+				      CASE
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA504','DDA0501',
+				                                         'DDA0502','DDA0503',
+				                                         'DDA0504','DDA0505') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BENEFICIARIO'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA001','ADDA002',
+				                                         'ADDA005','ADDA006',
+				                                         'DDA0001','DDA0002',
+				                                         'DDA0005','DDA0006') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'PAGADOR'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA101','ADDA102',
+				                                         'DDA0101','DDA0102') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BOLETO'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0115','ADDA115',
+				                                         'DDA0108','ADDA108',
+				                                         'ADDA114')           AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA OPERACIONAL'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0118','ADDA118') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA EFETIVA'
+				           ELSE 'OUTROS'
+				       END TIPODOC,
+				       M.IDMENSAGEMDDA AS IDENTIFICADOR,
+				       MERC.CODTIPOERROCIP,
+				       TEC.DESCTIPOERROCIP,
+				       MRET.IDMENSAGEMDDA AS IDERROMENSAGEMRETORNOCIP,
+				       SIT.DESCSITUACAOMENSAGEMDDA,
+				       M.DATAHORACADASTRO,
+				       M.DATAHORAMENSAGEM
+				FROM DDA.MENSAGEMDDA M
+				LEFT JOIN DDA.MENSAGEMDDA MRET            ON MRET.IDMENSAGEMDDAORIGEM   = M.IDMENSAGEMDDA
+				LEFT JOIN DDA.ERROMENSAGEMRETORNOCIP MERC ON MERC.IDMENSAGEMDDA         = MRET.IDMENSAGEMDDA
+				LEFT JOIN DDA.TIPOERROCIP TEC             ON TEC.CODTIPOERROCIP         = MERC.CODTIPOERROCIP
+				JOIN DDA.SITUACAOMENSAGEMDDA SIT     ON SIT.CODSITUACAOMENSAGEMDDA = M.CODSITUACAOMENSAGEMDDA
+				JOIN DDA.TIPOMENSAGEMDDA TM          ON TM.CODTIPOMENSAGEMDDA      = M.CODTIPOMENSAGEMDDA
+				WHERE TM.CODCATEGORIAMENSAGEMDDA IN ('E','A')
+				AND M.BOLMENSAGEMPENDENTE = 1
+				AND M.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}"/> 
+				AND M.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+				<j:if test="${codSituacaoMensagemDDA != 2}">
+					AND M.CODSITUACAOMENSAGEMDDA = ${codSituacaoMensagemDDA}
+				</j:if>
+				<j:if test="${codSituacaoMensagemDDA == 2}">
+					AND M.CODSITUACAOMENSAGEMDDA in (2,9)
+				</j:if>
+				ORDER BY M.IDMENSAGEMDDA
+			  	<j:if test="${maxResult != 0}">
+				   FETCH FIRST ${maxResult} ROWS ONLY
+			  	</j:if>
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_TRATAMENTO_RETORNO_ERRO">
+		<use-case name="Obter lista de retorno com erro e com erros agrupados"></use-case>
+	    <description>Obter lista de retorno com erro e com erros agrupados.</description>
+	    <command>
+			<![CDATA[
+				SELECT DISTINCT 
+				       M.DATAMOVIMENTO,
+				       M.DATAHORAMENSAGEM,
+				       M.IDMENSAGEMDDA,
+				       M.DATAHORACADASTRO,
+				       M.CODTIPOMENSAGEMDDA,
+				       CASE
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA504','DDA0501',
+				                                         'DDA0502','DDA0503',
+				                                         'DDA0504','DDA0505') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BENEFICIARIO'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA001','ADDA002',
+				                                         'ADDA005','ADDA006',
+				                                         'DDA0001','DDA0002',
+				                                         'DDA0005','DDA0006') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'PAGADOR'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA101','ADDA102',
+				                                         'DDA0101','DDA0102') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BOLETO'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0115','ADDA115',
+				                                         'DDA0108','ADDA108',
+				                                         'ADDA114')           AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA OPERACIONAL'
+				           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0118','ADDA118') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA EFETIVA'
+				           ELSE 'OUTROS'
+				       END TIPODOC,
+				       M.IDMENSAGEMDDA AS IDENTIFICADOR,
+				       MERC.CODTIPOERROCIP,
+				       TEC.DESCTIPOERROCIP,
+				       MRET.IDMENSAGEMDDA AS IDERROMENSAGEMRETORNOCIP,
+				       SIT.DESCSITUACAOMENSAGEMDDA
+				FROM DDA.MENSAGEMDDA M
+				JOIN DDA.MENSAGEMDDA MRET                  ON MRET.IDMENSAGEMDDAORIGEM   = M.IDMENSAGEMDDA
+				LEFT JOIN DDA.ERROMENSAGEMRETORNOCIP MERC       ON MERC.IDMENSAGEMDDA         = MRET.IDMENSAGEMDDA
+				LEFT JOIN DDA.TIPOERROCIP TEC                   ON TEC.CODTIPOERROCIP         = MERC.CODTIPOERROCIP
+				JOIN DDA.SITUACAOMENSAGEMDDA SIT           ON SIT.CODSITUACAOMENSAGEMDDA = M.CODSITUACAOMENSAGEMDDA
+				JOIN DDA.TIPOMENSAGEMDDA TM                ON TM.CODTIPOMENSAGEMDDA      = M.CODTIPOMENSAGEMDDA
+				WHERE TM.CODCATEGORIAMENSAGEMDDA IN ('E','A')
+				AND M.BOLMENSAGEMPENDENTE = 1
+				AND M.CODSITUACAOMENSAGEMDDA = 4
+				<j:if test="${codTipoErroCIP != null}">
+				   AND MERC.CODTIPOERROCIP  = <bancoob:valor valor="${codTipoErroCIP}" tipo="String"/> 
+			  	</j:if>
+			   AND M.DATAMOVIMENTO   = <bancoob:valor valor="${dataMovimento}"/> 
+			   AND M.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+				ORDER BY M.IDMENSAGEMDDA
+				<j:if test="${maxResult != 0}">
+				   FETCH FIRST ${maxResult} ROWS ONLY
+				</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="LISTA_TRATAMENTO_ERRO_AGRUPADO">
+		<use-case name="Obter lista de retorno com erro e com erros agrupados"></use-case>
+	    <description>Obter lista de retorno com erro e com erros agrupados.</description>
+	    <command>
+			<![CDATA[
+			SELECT M.IDMENSAGEMDDA,
+			       M.DATAHORACADASTRO,
+			       M.DATAMOVIMENTO,
+			       M.CODTIPOMENSAGEMDDA,
+			       CASE
+			           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA504','DDA0501',
+			                                         'DDA0502','DDA0503',
+			                                         'DDA0504','DDA0505') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BENEFICIARIO'
+			           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA001','ADDA002',
+			                                         'ADDA005','ADDA006',
+			                                         'DDA0001','DDA0002',
+			                                         'DDA0005','DDA0006') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'PAGADOR'
+			           WHEN M.CODTIPOMENSAGEMDDA IN ('ADDA101','ADDA102',
+			                                         'DDA0101','DDA0102') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BOLETO'
+			           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0115','ADDA115',
+			                                         'DDA0108','ADDA108',
+			                                         'ADDA114')           AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA OPERACIONAL'
+			           WHEN M.CODTIPOMENSAGEMDDA IN ('DDA0118','ADDA118') AND TM.BOLEXIGEMENSAGEMRETORNO = 1 THEN 'BAIXA EFETIVA'
+			           ELSE 'OUTROS'
+			       END TIPODOC,
+			       M.IDMENSAGEMDDA AS IDENTIFICADOR,
+			       MERC.CODTIPOERROCIP,
+			       TEC.DESCTIPOERROCIP,
+			       MRET.IDMENSAGEMDDA AS IDERROMENSAGEMRETORNOCIP,
+			       SIT.DESCSITUACAOMENSAGEMDDA,
+			       M.DATAHORAMENSAGEM
+			FROM DDA.MENSAGEMDDA M
+			JOIN DDA.MENSAGEMDDA MRET            ON MRET.IDMENSAGEMDDAORIGEM   = M.IDMENSAGEMDDA
+			JOIN DDA.ERROMENSAGEMRETORNOCIP MERC ON MERC.IDMENSAGEMDDA         = MRET.IDMENSAGEMDDA
+			JOIN DDA.TIPOERROCIP TEC             ON TEC.CODTIPOERROCIP         = MERC.CODTIPOERROCIP
+			JOIN DDA.SITUACAOMENSAGEMDDA SIT     ON SIT.CODSITUACAOMENSAGEMDDA = M.CODSITUACAOMENSAGEMDDA
+			JOIN DDA.TIPOMENSAGEMDDA TM          ON TM.CODTIPOMENSAGEMDDA      = M.CODTIPOMENSAGEMDDA
+			WHERE TM.CODCATEGORIAMENSAGEMDDA IN ('E','A')
+			AND M.BOLMENSAGEMPENDENTE = 1
+			AND M.CODSITUACAOMENSAGEMDDA = 4
+			AND MERC.CODTIPOTRATAMENTOERROCIP IS NULL
+			AND EXISTS (SELECT NULL
+			            FROM DDA.ERROMENSAGEMRETORNOCIP MER2
+			            WHERE MER2.IDMENSAGEMDDA  = MERC.IDMENSAGEMDDA
+			            AND MER2.CODTIPOERROCIP = <bancoob:valor valor="${codTipoErroCIP}" tipo="String"/>)
+			<j:if test="${maxResult != 0}">
+			   FETCH FIRST ${maxResult} ROWS ONLY
+			</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_TRATAMENTO_MENSAGEM_ARQUIVO">
+		<use-case name="Obter lista de mensagens que serão tratadas por arquivo"></use-case>
+	    <description>Obter lista de mensagens que serão tratadas por arquivo.</description>
+	    <command>
+			<![CDATA[
+				SELECT A.DATAMOVIMENTO,
+				       A.CODTIPOERROCIP,
+				       TEC.DESCTIPOERROCIP,
+				       A.CODTIPOMENSAGEM,
+				       A.DESCNOMEARQUIVORECEBIDO,
+				       A.IDLOGRECEBIMENTOOARQUIVODDA
+				FROM DDA.LOGRECEBIMENTOOARQUIVODDA A LEFT JOIN DDA.TIPOERROCIP TEC
+				                                     ON TEC.CODTIPOERROCIP = A.CODTIPOERROCIP
+				WHERE 1 = 1
+				AND A.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}"/>
+				AND A.CODSITUACAOPROCESSAMENTOARQUIVO = 6
+				AND A.CODTIPOERROCIP IS NOT NULL
+			  	<j:if test="${maxResult != 0}">
+					FETCH FIRST ${maxResult} ROWS ONLY
+			  	</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_TRATAMENTO_MENSAGEM_CONTINGENCIA_BATCH">
+		<use-case name="Obter lista de mensagens que serão tratadas por contingencia"></use-case>
+	    <description>Obter lista de mensagens que serão tratadas por contingencia.</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					v.id
+				FROM ViewContingencia v
+				WHERE v.dataMovimento =  <bancoob:valorOql valor="${dataMovimento}"/>
+					AND v.codTipoMensagemDDA = <bancoob:valorOql valor="${codTipoMensagem}"/>
+					AND v.id BETWEEN <bancoob:valorOql valor="${idMensagemInicial}"/> AND <bancoob:valorOql valor="${idMensagemFinal}"/>
+			]]>
+	    </command>
+	</query>
+		<query name="PESQUISAR_MENSAGEM_ERRO_CONTINGENCIA">
+		<use-case name="PESQUISAR MENSAGEM ERRO CONTINGENCIA"></use-case>
+	    <description>PESQUISAR MENSAGEM ERRO CONTINGENCIA</description>
+	    <command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.MensagemErroDto (
+					vw.dataMovimento,
+					vw.id,
+					vw.codTipoMensagemDDA,
+					vw.descErroProtocolo,
+					vw.dataHoraCadastro
+					)
+				FROM ViewContingencia vw
+				WHERE vw.codTipoMensagemDDA = <bancoob:valorOql valor="${criterios.filtro.codTipoMensagemDDA}"/>
+				  AND vw.dataMovimento      = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_QTD_MENSAGEM_ERRO_CONTINGENCIA">
+		<use-case name="OBTER QTD MENSAGEM ERRO CONTINGENCIA"></use-case>
+	    <description>OBTER QTD MENSAGEM ERRO CONTINGENCIA</description>
+	    <command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM ViewContingencia vw
+				WHERE vw.codTipoMensagemDDA = <bancoob:valorOql valor="${criterios.filtro.codTipoMensagemDDA}"/>
+				  AND vw.dataMovimento      = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+			]]>
+	    </command>
+	</query>
+	<query name="LISTA_TIPO_TRATAMENTO_ERRO_CIP">
+		<use-case name="Obter lista de tratamentos"></use-case>
+	    <description>Obter lista de tratamentos.</description>
+	    <command>
+			<![CDATA[
+				SELECT situacao.listaTipoTratamentoErroCip
+				FROM SituacaoMensagemDDA situacao
+				WHERE situacao.codSituacaoMensagemDDA = ${codSituacaoMensagemDDA}
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEM_ERRO">
+		<use-case name="Obter detalhe mensagem com erro"></use-case>
+	    <description>Obter detalhe mensagem com erro.</description>
+	    <command>
+			<![CDATA[
+				SELECT new MensagemDDA(
+					msg.id,
+			        msg.xmlMensagem,
+			        msg.descErroProtocolo,
+			        msg.tipoMensagemDDA.codTipoMensagem
+					)
+				FROM MensagemDDA msg
+				WHERE 1 = 1
+				<j:if test="${idMensagemDDA != null}"> 
+					AND msg.id = <bancoob:valorOql valor="${idMensagemDDA}"/>
+				</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEM_ERRO_LOCK_REGISTRO">
+		<use-case name="Obter detalhe mensagem com lock"></use-case>
+	    <description>Obter detalhe mensagem com lock.</description>
+	    <command>
+			<![CDATA[
+				SELECT M.IDMENSAGEMDDA,
+		        	   M.XMLMENSAGEM
+				FROM DDA.MENSAGEMDDA M
+				WHERE 1 = 1
+				<j:if test="${listaIdMensagem != null}"> 
+					AND M.IDMENSAGEMDDA IN (<bancoob:valor valor="${listaIdMensagem}"/>)
+				</j:if>
+				FOR UPDATE WITH RS
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_DATA_MOVIMENTO_MENSAGEM">
+		<use-case name="Atualizar a data movimento das mensagens"></use-case>
+	    <description>Atualizar a data movimento das mensagens.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M
+				  	SET M.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>
+				WHERE M.BOLMENSAGEMPENDENTE = 1
+				AND M.CODSITUACAOMENSAGEMDDA = 1
+				<j:if test="${listaId != null}">
+					AND M.IDMENSAGEMDDA IN (<bancoob:valor valor="${listaId}"/>)
+				</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_REENVIAR_SSPB">
+		<use-case name="Atualizar mensagem para reenvio para o SSPB"></use-case>
+	    <description>Atualizar mensagem para reenvio para o SSPB.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M
+					SET M.DATAMOVIMENTO      = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>,
+					    M.DATAHORAMENSAGEM   = NULL,
+					    M.DATAHORAPROTOCOLO  = NULL,
+					    M.NUMOPERACAO        = NULL,
+					    M.DESCERROPROTOCOLO  = NULL
+					WHERE M.BOLMENSAGEMPENDENTE = 1
+					AND M.CODSITUACAOMENSAGEMDDA = 2
+					AND M.IDMENSAGEMDDA  IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_REENVIAR_CIP">
+		<use-case name="Atualizar mensagem para reenvio para a CIP"></use-case>
+	    <description>Atualizar mensagem para reenvio para a CIP.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M
+					SET M.DATAMOVIMENTO      = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>,
+					    M.DATAHORAMENSAGEM   = NULL,
+					    M.DATAHORAPROTOCOLO  = NULL,
+					    M.NUMOPERACAO        = NULL,
+					    M.DESCERROPROTOCOLO  = NULL
+					WHERE M.BOLMENSAGEMPENDENTE = 1
+					AND M.CODSITUACAOMENSAGEMDDA = 3
+					AND M.IDMENSAGEMDDA  IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_REENVIAR_FINALIZADA_SSPB">
+		<use-case name="Atualizar mensagem finalizada para reenvio para o SSPB"></use-case>
+	    <description>Atualizar mensagem finalizada para reenvio para o SSPB.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M
+					SET M.DATAMOVIMENTO      = <bancoob:valor valor="${dataMovimento}" tipo="Date"/>,
+					    M.DATAHORAMENSAGEM   = NULL,
+					    M.DATAHORAPROTOCOLO  = NULL,
+					    M.NUMOPERACAO        = NULL,
+					    M.DESCERROPROTOCOLO  = NULL
+					WHERE M.IDMENSAGEMDDA  IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_FINALIZAR_MENSAGEM">
+		<use-case name="Finalizar mensagem"></use-case>
+	    <description>Finalizar mensagem.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.ERROMENSAGEMRETORNOCIP E
+				SET E.CODTIPOTRATAMENTOERROCIP    = 4
+				WHERE E.CODTIPOTRATAMENTOERROCIP IS NULL
+				AND E.IDMENSAGEMDDA IN (SELECT MO.IDMENSAGEMDDA FROM dda.MENSAGEMDDA M
+											INNER JOIN dda.MENSAGEMDDA MO ON MO.IDMENSAGEMDDAORIGEM = M.IDMENSAGEMDDA
+											WHERE  M.IDMENSAGEMDDA in (<bancoob:valor valor="${listaId}"/>))
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_REPROCESSAR_ARQUIVO">
+		<use-case name="Reprocessar arquivo"></use-case>
+	    <description>Reprocessar arquivo.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA    
+				SET BOLPROCESSADO = 0,
+				    DESCERRO      = NULL
+				WHERE BOLPROCESSADO = 1
+					AND DESCERRO IS NOT NULL
+					AND IDLOGDETRECEBIMENTOOARQUIVODDA IN (<bancoob:valor valor="${listaId}"/>)
+
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_PREPARAR_REEVIO_ARQUIVO">
+		<use-case name="Preparar reenvio de arquivo"></use-case>
+	    <description>Preparar reenvio de arquivo.</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA A
+				SET DATAHORAMENSAGEM  = NULL,
+					DATAHORAPROTOCOLO = NULL,
+					NUMOPERACAO       = NULL,
+					DESCERROPROTOCOLO = NULL,
+					XMLMENSAGEM       = NULL
+				WHERE A.BOLMENSAGEMPENDENTE = 1
+				AND A.CODSITUACAOMENSAGEMDDA = 3
+				  AND EXISTS (SELECT NULL
+				              FROM DDA.LOGDETALHEENVIOARQUIVODDA C,
+				                   DDA.LOGRECEBIMENTOOARQUIVODDA D
+				              WHERE C.IDMENSAGEMDDA               = A.IDMENSAGEMDDA
+				                AND C.IDLOGENVIOARQUIVODDA        = D.IDLOGENVIOARQUIVODDA
+				                AND D.CODTIPOERROCIP              IS NOT NULL
+				                AND D.IDLOGRECEBIMENTOOARQUIVODDA IN (<bancoob:valor valor="${listaId}"/>))
+
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_LISTA_TRATAMENTO_AUTOMATIZADO">
+		<use-case name="Obter lista tratamento automatizado"></use-case>
+	    <description>Obter lista tratamento automatizado.</description>
+	    <command>
+			<![CDATA[
+		        SELECT M.IDMENSAGEMDDAORIGEM AS IDMENSAGEMDDA, 
+		               EMC.IDERROMENSAGEMRETORNOCIP, 
+		               TEC.CODTIPOTRATAMENTOAUTOMATIZADO
+		        FROM DDA.ERROMENSAGEMRETORNOCIP EMC 
+		            INNER JOIN DDA.TIPOERROCIP TEC ON TEC.CODTIPOERROCIP = EMC.CODTIPOERROCIP
+		            INNER JOIN DDA.MENSAGEMDDA M ON M.IDMENSAGEMDDA = EMC.IDMENSAGEMDDA
+		        WHERE TEC.CODTIPOTRATAMENTOAUTOMATIZADO IS NOT NULL
+		          AND EMC.CODTIPOTRATAMENTOERROCIP IS NULL
+		          AND NOT EXISTS (SELECT COUNT(*)
+		                          FROM DDA.ERROMENSAGEMRETORNOCIP EMC2
+		                          WHERE EMC2.IDMENSAGEMDDA = EMC.IDMENSAGEMDDA
+		                          HAVING COUNT(*) > 1)
+
+			]]>
+	    </command>
+	</query>
+	<query name="EXCLUIR_MENSAGEMDDA">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem.</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDA M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BENEFICIARIO_REPRESENTANTE">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Beneficiario Representante</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABENEFICIARIOREPRESENTANTE M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BENEFICIARIO_CONVENIO">
+		<use-case name="Excluir mensagem "></use-case>
+	    <description>Excluir mensagem Beneficiario Convenio</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABENEFICIARIOCONVENIO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BENEFICIARIO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Beneficiario</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABENEFICIARIO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_PAGADOR_AGREGADO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Pagador Agregado</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDAPAGADORAGREGADO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_PAGADOR_CONTA">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Pagador Conta</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDAPAGADORCONTA M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_PAGADOR">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Pagador</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDAPAGADOR M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BOLETO_GRUPO_CALCULO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Boleto Grupo Calculo</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABOLETOGRUPOCALCULO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BOLETO_NOTA_FISCAL">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Boleto Nota Fiscal</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABOLETONOTAFISCAL M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BOLETO_TEXTO_INFO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Boleto Texto Info</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABOLETOTEXTOINFO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	
+	<query name="EXCLUIR_MENSAGEM_BOLETO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Boleto</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABOLETO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BAIXA_EFETIVA">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Baixa Efetiva</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABAIXAEFETIVA M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_BAIXA_OPERACIONAL">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Baixa Operacional</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDABAIXAOPERACIONAL M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_ACEITE">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Aceite</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDAACEITE M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_MENSAGEM_TERCEIRO_AUTORIZADO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Terceiro Autorizado</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDATERCEIROAUT M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	
+	<query name="EXCLUIR_MENSAGEM_CONSULTA_BOLETO">
+		<use-case name="Excluir mensagem"></use-case>
+	    <description>Excluir mensagem Consulta Boleto</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.MENSAGEMDDACONSULTABOLETO M WHERE M.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+	
+	
+	<query name="EXCLUIR_LOG_DETALHE_ENVIO_ARQUIVO">
+		<use-case name="Excluir log Detalhe Envio Arquivo"></use-case>
+	    <description>Excluir Log Detalhe Envio Arquivo</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.LOGDETALHEENVIOARQUIVODDA L WHERE L.IDMENSAGEMDDA = <bancoob:valor valor="${id}"/>
+			]]>
+	    </command>
+	</query>
+
+	<query name="ALTERAR_PRIORIDADE_MENSAGEM">
+		<use-case name="Alterar prioridade mensagem"></use-case>
+	    <description>Alterar prioridade mensagem</description>
+	    <command>
+			<![CDATA[
+				UPDATE DDA.MENSAGEMDDA M
+				SET M.NUMPRIORIDADEENVIO = <bancoob:valor valor="${numPrioridade}"/>
+				WHERE M.IDMENSAGEMDDA IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_LOGDETALHEENVIOARQUIVODDA_MENSAGEM_REENVIADA">
+		<use-case name="EXCLUIR_LOGDETALHEENVIOARQUIVODDA_MENSAGEM_REENVIADA"></use-case>
+	    <description>EXCLUIR_LOGDETALHEENVIOARQUIVODDA_MENSAGEM_REENVIADA</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.LOGDETALHEENVIOARQUIVODDA L
+				WHERE L.IDMENSAGEMDDA IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	
+	<query name="EXCLUIR_ERROMENSAGEMRETORNOCIP_MENSAGEM_REENVIADA">
+		<use-case name="EXCLUIR_ERROMENSAGEMRETORNOCIP_MENSAGEM_REENVIADA"></use-case>
+	    <description>EXCLUIR_ERROMENSAGEMRETORNOCIP_MENSAGEM_REENVIADA</description>
+	    <command>
+			<![CDATA[
+				DELETE FROM DDA.ERROMENSAGEMRETORNOCIP ERR
+				WHERE ERR.IDMENSAGEMDDA IN (SELECT MO.IDMENSAGEMDDA FROM dda.MENSAGEMDDA M
+											INNER JOIN dda.MENSAGEMDDA MO ON MO.IDMENSAGEMDDAORIGEM = M.IDMENSAGEMDDA
+											WHERE  M.IDMENSAGEMDDA in (<bancoob:valor valor="${listaId}"/>))
+			]]>
+	    </command>
+	</query>
+
+	<query name="EXCLUIR_MENSAGEM_REENVIADA">
+		<use-case name="EXCLUIR_MENSAGEM_REENVIADA"></use-case>
+	    <description>EXCLUIR_MENSAGEM_REENVIADA</description>
+	    <command>
+			<![CDATA[
+			DELETE FROM DDA.MENSAGEMDDA MSGRET
+			WHERE MSGRET.IDMENSAGEMDDAORIGEM IN (<bancoob:valor valor="${listaId}"/>)
+			]]>
+	    </command>
+	</query>
+	<!--tests-->
+</queries>

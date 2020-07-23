@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:HBoxBancoob xmlns:mx="http://www.adobe.com/2006/mxml" 
+				xmlns:containers="br.com.bancoob.componentes.containers.*"
+				verticalAlign="middle"
+				verticalScrollPolicy="off" horizontalScrollPolicy="auto"
+				creationComplete="ajustarFullscreen()">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.UIComponent;
+			
+			import br.com.bancoob.componentes.containers.VBoxBancoob;
+			
+			[Bindable]
+			private var _dataProvider:ArrayCollection = new ArrayCollection();
+			
+			[Bindable]
+			private var _isFullscreen:Boolean = false;
+			
+			[Bindable]
+			private var _updateFunction:Function;
+			
+			[Bindable]
+			public function get dataProvider():ArrayCollection {
+				return _dataProvider;
+			}
+			
+			public function set dataProvider(value:ArrayCollection):void {
+				_dataProvider = value;
+			}
+			
+			[Bindable]
+			public function get isFullscreen():Boolean {
+				return _isFullscreen;
+			}
+			
+			public function set isFullscreen(value:Boolean):void {
+				_isFullscreen = value;
+			}
+			
+			[Bindable]
+			public function get updateFunction():Function {
+				return _updateFunction;
+			}
+			
+			public function set updateFunction(value:Function):void {
+				_updateFunction = value;
+			}
+			
+			public function update():void {
+				updateFunction();
+			}
+			
+			public function ajustarFullscreen():void {
+				this.percentHeight = 100;
+				this.percentWidth = 100;
+				this.setStyle("paddingLeft", 10);
+				this.setStyle("paddingRight", 10);
+				this.setStyle("paddingTop", 10);
+				this.setStyle("paddingBottom", 10);
+				
+				var vbox:VBoxBancoob = new VBoxBancoob();
+				vbox.percentHeight = 100;
+				vbox.percentWidth = 100;
+				
+				if (isFullscreen) {
+					for each (var comp:UIComponent in this.getChildren()) {
+						vbox.addChild(comp);
+					}
+					this.addChild(vbox);
+				}
+			}
+
+		]]>
+	</mx:Script>
+</containers:HBoxBancoob>

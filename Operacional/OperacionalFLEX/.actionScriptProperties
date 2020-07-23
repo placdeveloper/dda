@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="TesteCadastro.mxml" projectUUID="5fdc35bc-7c60-4dfb-abdc-2ec65e4064aa" version="11">
+  <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="false" copyDependentFiles="true" flex3CompatMode="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="DOCUMENTS/SisbrPortalFlexAir/bin-debug/SicoobDDA/Operacional" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" useFlashSDK="false" verifyDigests="true" warn="true">
+    <compilerSourcePath/>
+    <libraryPath defaultLinkType="1">
+      <libraryPathEntry kind="4" path=""/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/AplicativosSISBR/AplicativosSISBR.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/BancoobFlex/BancoobFlex.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/Componentes/ComponentesFlex.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/ConstantesSISBRFlex/ConstantesSISBRFlex.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/SisbrAssets/SisbrAssets.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/sdda-comum-flex/bin-debug/sdda-comum-flex.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/base/prt-base-sisbr-flex.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/capes/swc/capes-comum-flex.swc" sourcepath="/capes-comum-flex/src" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/capes/swc/capes-corporativo-flex.swc" sourcepath="/capes-corporativo-flex/src" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/capes/swc/capes-comum-flex.swc" sourcepath="/capes-comum-flex/src" useDefaultLinkType="false"/>
+      <sourceAttachmentPathEntry kind="3" linkType="1" path="C:/SisbrIDE-4.5/apps/JBoss/server/default/deploy/sisbr.war/sisbr/capes/swc/capes-corporativo-flex.swc" sourcepath="/capes-corporativo-flex/src" useDefaultLinkType="false"/>
+    </sourceAttachmentPath>
+  </compiler>
+  <applications>
+    <application path="OperacionalFLEX/bin-debug/TesteCadastro.swf"/>
+    <application path="TesteCadastro.mxml"/>
+  </applications>
+  <modules>
+    <module application="src/TesteCadastro.mxml" destPath="PainelTratamentoPendenciaErro.swf" optimize="false" sourcePath="src/PainelTratamentoPendenciaErro.as"/>
+    <module application="src/TesteCadastro.mxml" destPath="ArquivoRecebido.swf" optimize="true" sourcePath="src/ArquivoRecebido.as"/>
+    <module application="src/TesteCadastro.mxml" destPath="AbrirArquivo.swf" optimize="true" sourcePath="src/AbrirArquivo.as"/>
+  </modules>
+  <workers/>
+  <buildCSSFiles>
+    <buildCSSFileEntry destPath="bin-debug" sourcePath="src/br/com/sicoob/sisbr/sicoobdda/operacional/css/style.css"/>
+  </buildCSSFiles>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
+</actionScriptProperties>

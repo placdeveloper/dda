@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="420" height="135"
+					xmlns:bancoob="br.com.bancoob.componentes.*"
+					xmlns:input="br.com.bancoob.componentes.input.*"
+					xmlns:componentes="br.com.bancoob.componentes.*"
+					xmlns:titulo="br.com.bancoob.componentes.titulo.*" >
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum;
+			import br.com.sicoob.sisbr.sicoobdda.operacional.util.Constantes;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Dados do Servidor" left="0" right="0" top="0"/>
+	
+	<componentes:Rotulo x="0" y="35" width="50" text="Servidor:" textAlign="right" />
+	<componentes:Rotulo x="57" y="35" id="txtServidor" width="160" fontWeight="bold"/>
+	
+	<componentes:Rotulo x="0" y="65" width="50" text="Perfil:" textAlign="right" />
+	<input:Combo x="57" y="63" id="cbPerfil" width="160" labelField="label" inserirItemOpcional="true" dataProvider="{Constantes.PERFIL_SERVIDORDDA}" editable="false"/>
+	
+	<componentes:Rotulo x="220" y="35" width="80" text="Data Cadastro:" textAlign="right" />
+	<componentes:Rotulo x="305" y="35" id="txtDataCadastro" width="105" fontWeight="bold"/>
+	
+	<componentes:Rotulo x="220" y="65" width="80" text="Status:" textAlign="right" />
+	<input:Combo x="305" y="63" id="cbStatus" width="105" labelField="label" dataProvider="{ConstantesComum.ARRAY_SITUACAO}" editable="false"/>
+	
+	
+	<titulo:LinhaView y="95"/>
+	<mx:HBox bottom="5" right="5">
+		<componentes:Botao id="btnSalvar" label="OK" />
+		<componentes:Botao id="btnLimpar" label="CANCELAR" />
+		<componentes:Botao id="btnFechar" label="FECHAR" />
+	</mx:HBox>
+</bancoob:BaseModulo>

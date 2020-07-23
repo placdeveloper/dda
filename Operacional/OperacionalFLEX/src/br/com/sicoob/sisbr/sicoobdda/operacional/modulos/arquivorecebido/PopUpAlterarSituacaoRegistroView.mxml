@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="375" height="100"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  idModulo="teste">
+	<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<containers:VBoxBancoob width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<containers:VBoxBancoob width="100%">
+			<titulo:SubtituloView texto="Situação" left="0" width="100%" top="0"/>
+			<containers:HBoxBancoob width="100%" verticalAlign="middle">
+				<input:Combo id="cmbSituacaoRegistro" labelField="label" width="250" editable="false" dropdownWidth="250"/>
+			</containers:HBoxBancoob>
+		</containers:VBoxBancoob>		
+		<titulo:LinhaView width="100%"/>
+		<containers:HBoxBancoob width="100%" horizontalAlign="right">
+			<containers:HBoxBancoob >
+				<bancoob:Botao label="Ok" id="btnConfirmar"/>
+				<bancoob:Botao label="Cancelar" id="btnCancelar"/>
+				<bancoob:Botao label="Fechar" id="btnFechar"/>
+			</containers:HBoxBancoob>			
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView >

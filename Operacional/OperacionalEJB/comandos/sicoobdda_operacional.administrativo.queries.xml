@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+
+<queries>
+	<query name="ATUALIZAR_SITUACAO_BOLETO_ADM">
+		<use-case name="ATUALIZAR_SITUACAO_BOLETO_ADM"></use-case>
+		<description>Atualiza situacao do boleto pelo sws Administrativo</description>
+		<command>
+			<![CDATA[
+				MERGE INTO DDA.BOLETODDA BOL
+				USING (SELECT VB.IDBOLETODDA,
+				              VB.CODSITUACAOBOLETO
+				       FROM DDA.VIW_BOLETODDASITUACAO VB INNER JOIN DDA.BOLETODDA B
+				                                           ON B.IDBOLETODDA = VB.IDBOLETODDA
+				       WHERE COALESCE(B.CODSITUACAOBOLETO,-1) != VB.CODSITUACAOBOLETO
+				       FETCH FIRST 1000 ROWS ONLY) DIF
+				ON BOL.IDBOLETODDA = DIF.IDBOLETODDA
+				WHEN MATCHED THEN UPDATE SET BOL.CODSITUACAOBOLETO = DIF.CODSITUACAOBOLETO 
+			]]>
+		</command>
+	</query>
+	
+</queries>

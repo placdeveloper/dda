@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="900" height="600"
+					xmlns:bancoob="br.com.bancoob.componentes.*"
+					xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+					xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+					xmlns:canvas="br.com.sicoob.sisbr.sicoobdda.comumflex.canvas.*"
+					xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+					xmlns:grid="br.com.bancoob.componentes.grid.*">
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.ConstantesComum;
+			
+			/**
+			 * Método responsável por ordenar as datas.
+			 */
+			private static function dateSort(objeto1:Object, objeto2:Object):int {
+				var valor1:Date = objeto1.dataMovimento == null ? new Date(0) : objeto1.dataMovimento.data; 
+				var valor2:Date = objeto2.dataMovimento == null ? new Date(0) : objeto2.dataMovimento.data;
+				
+				return valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:Canvas id="canvasIndicadores" width="100%" height="100"/>
+		
+		<titulo:SubtituloView texto="Detalhamento" width="100%"/>
+		<grid:Grid id="gridDetalhamento" width="100%" height="100%" sortableColumns="true" selectable="false">
+			<grid:columns>
+				<grid:ColunaGrid dataField="dataMovimento" headerText="Data Movimento" textAlign="center" width="100" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" sortable="true" sortCompareFunction="{dateSort}"/>
+				<grid:ColunaGrid dataField="codTipoMensagem" headerText="Tipo Mensagem" textAlign="center" sortable="true" />
+				<grid:ColunaGrid dataField="qtdEnviar" headerText="A Enviar" textAlign="center" sortable="true"/>
+				<grid:ColunaGrid id="colQtdSemProtocolo" dataField="qtdSemProtocolo" textAlign="center" sortable="true"/>
+				<grid:ColunaGrid id="colQtdSemRetorno" dataField="qtdSemRetorno" textAlign="center" sortable="true"/>
+				<grid:ColunaGrid id="colQtdComErro" dataField="qtdComErro" textAlign="center" sortable="true"/>
+			</grid:columns>
+		</grid:Grid>
+		
+		<titulo:SubtituloView texto="Lista de Erros" width="100%"/>
+		<grid:Grid id="gridErros" width="100%" height="100%" sortableColumns="true" selectable="false">
+			<grid:columns>
+				<grid:ColunaGrid dataField="codTipoErro" headerText="Cod. Erro" textAlign="center" sortable="true" width="70" />
+				<grid:ColunaGrid dataField="descTipoErro" headerText="Descrição do Erro" textAlign="center" sortable="true" />
+				<grid:ColunaGrid dataField="qtdErros" headerText="Qtd. de Erros" textAlign="center" width="70" sortable="true"/>
+			</grid:columns>
+		</grid:Grid>
+		
+		<mx:HBox width="100%">
+			<mx:Canvas width="100%"/>
+			<bancoob:Botao id="btnAtualizar" label="ATUALIZAR"/>
+			<bancoob:Botao id="btnFechar" label="FECHAR" icon="{ConstantesComum.icoFechar}"/>
+		</mx:HBox>
+	</mx:VBox>
+</bancoob:BaseModulo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+		   xmlns:grid="br.com.bancoob.componentes.grid.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.bancoob.util.reflexao.ReflectionUtils;
+			
+			private static function dataHoraArquivoSort(objeto1:Object, objeto2:Object):int {
+				var valor1:Date = objeto1.dataHoraArquivo == null ? new Date(0) : objeto1.dataHoraArquivo.data; 
+				var valor2:Date = objeto2.dataHoraArquivo == null ? new Date(0) : objeto2.dataHoraArquivo.data;
+				
+				return valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+			
+			private static function dataMovimentoSort(objeto1:Object, objeto2:Object):int {
+				var valor1:Date = objeto1.dataMovimento == null ? new Date(0) : objeto1.dataMovimento.data; 
+				var valor2:Date = objeto2.dataMovimento == null ? new Date(0) : objeto2.dataMovimento.data;
+				
+				return valor1 > valor2 ? 1 : valor1 < valor2 ? -1 : 0;
+			}
+			
+			private static function tipoMensagemLabel(o:Object, coluna:DataGridColumn):String {
+				var valor:Object = ReflectionUtils.recuperarPropriedade(o, TabelaPaginadaUtils.recuperarNomePropriedade(coluna));
+				return valor != null ? valor.codTipoMensagem : "";
+			}
+			
+			private static function tipoArquivoLabel(o:Object, coluna:DataGridColumn):String {
+				var valor:Object = ReflectionUtils.recuperarPropriedade(o, TabelaPaginadaUtils.recuperarNomePropriedade(coluna));
+				return valor != null ? valor.codTipoArquivo : "";
+			}
+		]]>
+	</mx:Script>
+	
+	<grid:Grid id="gridDetalhamento" width="100%" height="100%" sortableColumns="true" selectable="false">
+		<grid:columns>
+			<grid:ColunaGrid id="colId" dataField="id" headerText="ID" textAlign="center" sortable="true" width="70" />
+			<grid:ColunaGrid dataField="dataHoraArquivo" headerText="Data Hora" textAlign="center" width="100" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" sortable="true" sortCompareFunction="{dataHoraArquivoSort}"/>
+			<grid:ColunaGrid id="colDataMovimento" dataField="dataMovimento" headerText="Data Movimento" textAlign="center" width="60" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" sortable="true" sortCompareFunction="{dataMovimentoSort}"/>
+			<grid:ColunaGrid dataField="descNomeArquivoRecebido" headerText="Nome" textAlign="center" width="130" sortable="true"/>
+			<grid:ColunaGrid id="colTipoMensagem" dataField="tipoMensagemDDA" headerText="Tipo Mensagem" textAlign="center" labelFunction="{tipoMensagemLabel}" sortable="true" width="100"/>
+			<grid:ColunaGrid id="colTipoArquivo" dataField="tipoArquivo" headerText="Tipo Arquivo" textAlign="center" labelFunction="{tipoArquivoLabel}" sortable="true" width="100"/>
+		</grid:columns>
+	</grid:Grid>
+</mx:Canvas>

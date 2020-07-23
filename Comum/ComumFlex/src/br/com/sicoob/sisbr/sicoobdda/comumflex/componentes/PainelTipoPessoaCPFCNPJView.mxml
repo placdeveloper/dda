@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:CanvasBancoob
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*"
+	xmlns:componentes="br.com.bancoob.componentes.*"
+	xmlns:input="br.com.bancoob.componentes.input.*">
+	
+	<componentes:Rotulo text="Tipo Pessoa: " width="147" textAlign="right" y="5"/>
+	<input:Combo id="cbTipoPessoa" x="157" y="2" width="150" labelField="label" somenteMaiusculas="true" inserirItemOpcional="true"/>
+	<componentes:Rotulo text="CNPJ ou CPF: " width="150" textAlign="right" y="5" x="400"/>
+	<input:InputCPF id="txtCpf" width="150" enabled="false" visible="false" y="2" x="560" validarObrigatorio="true"/>
+	<input:InputCNPJ id="txtCnpj" width="150" enabled="false" visible="false" y="2" x="560" validarObrigatorio="true"/>
+	
+</containers:CanvasBancoob>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:titulo="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.titulo.*"
+		   xmlns:canvas="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.canvas.*"
+		   xmlns:grafico="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.plataforma.monitoracao.mensagens.dda0110.grafico.*">
+	
+	<mx:Canvas id="cvTitulo" width="100%" top="0" left="5" height="19"/>
+	
+	<mx:HBox width="100%" height="100%" top="20" horizontalGap="1">
+		<mx:VBox width="30%" height="100%" verticalGap="2">
+			<mx:HBox width="100%" height="100%" horizontalGap="2">
+				<canvas:CanvasIndicador id="cvTotalSucesso" labelRotulo="DENTRO SLA ACUMULADO" width="100%" height="100%"/>
+				<canvas:CanvasIndicador id="cvTotalRejeitado" labelRotulo="FORA SLA ACUMULADO" width="100%" height="100%"/>
+			</mx:HBox>
+			
+			<mx:HBox width="100%" height="100%" horizontalGap="2">
+				<canvas:CanvasIndicador id="cvSucesso" labelRotulo="DENTRO SLA ÚLTIMA ATUALIZAÇÃO" width="100%" height="100%"/>
+				<canvas:CanvasIndicador id="cvRejeitado" labelRotulo="FORA SLA ÚLTIMA ATUALIZAÇÃO" width="100%" height="100%"/>
+			</mx:HBox>
+		</mx:VBox>
+		<mx:Canvas width="70%" height="100%">
+			<grafico:GraficoDDA0110 id="graficoDDA0110" focusEnabled="false" width="100%" height="100%"/>
+			<mx:Canvas id="cvConsulta" width="100%" verticalCenter="0" backgroundColor="0xFFCC00" visible="false" includeInLayout="false" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+				<bancoob:Rotulo id="txtConsulta" width="100%" fontSize="40" text="" horizontalCenter="0"
+								fontWeight="bold" color="#FFFFFF" textAlign="center" height="100%" paddingTop="2"/>		
+			</mx:Canvas>
+		</mx:Canvas>
+	</mx:HBox>
+</mx:Canvas>

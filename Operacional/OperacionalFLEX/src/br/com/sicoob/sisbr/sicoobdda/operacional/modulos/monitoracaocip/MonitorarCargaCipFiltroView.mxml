@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<cadastro:FormularioCadastroView 
+	xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" autoLayout="true" standAlone="true" 
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	clipContent="false" verticalScrollPolicy="off" paddingLeft="1" paddingRight="1"
+	width="100%" height="50">
+	
+	<titulo:SubtituloView id="tituloFiltro" texto="Filtros" x="0" y="0"/>
+	
+	<Rotulo x="0" y="30" text="Beneficiário:" width="70" textAlign="right"/>
+	<input:Combo x="75" y="28" id="cmbTipoPessoa" labelField="label" width="70" editable="false" inserirItemOpcional="false"/>
+	<input:InputCNPJ x="150" y="28" id="inputCnpj" width="110" validarMensagem="Cnpj obrigatório."/>
+	<input:InputCPF x="150" y="28" id="inputCPF" width="80" validarMensagem="CPF obrigatório."/>
+	
+	<Rotulo text="Data Início:" x="280" y="30"  width="70" textAlign="right" />
+	<input:Data id="dataInicial" x="355" y="28" width="80" dataDefault="{null}" validarObrigatorio="true"/>
+	
+	<Rotulo text="Data Fim:" x="460" y="30"  width="50" textAlign="right" />
+	<input:Data id="dataFinal" x="515" y="28" width="80" dataDefault="{null}" validarObrigatorio="true"/>
+	
+	<mx:HBox x="750" y="28">
+		<painellista:BotaoProcurarView id="btnProcurar"  acionarComEnter="true" />
+		<componentes:Botao id="btnLimpar" acionarComEnter="true" label="Limpar" />
+	</mx:HBox>
+	
+</cadastro:FormularioCadastroView> 

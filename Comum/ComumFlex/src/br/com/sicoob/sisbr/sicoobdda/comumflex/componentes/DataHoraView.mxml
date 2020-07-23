@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:HBoxBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*"
+						  xmlns:campo="br.com.bancoob.componentes.campos.*" >
+	<campo:CampoData id="campoData" width="100" dataDefault="{null}"/>
+	<campo:CampoHora id="campoHora" width="100"/>
+</containers:HBoxBancoob>

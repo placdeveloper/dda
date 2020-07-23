@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*"
+								 xmlns:input="br.com.bancoob.componentes.input.*"
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:componentes="br.com.bancoob.componentes.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 width="750" height="520" paddingLeft="1" paddingRight="1"
+								 verticalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+		.textSituacaoAtual {
+			fontSize: 13;
+			color: red;
+			font-weight: bold;
+			fontFamily: ArialEmbedded;
+		}
+	</mx:Style>
+	
+	<containers:VBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" horizontalAlign="left" horizontalScrollPolicy="off">
+			<Rotulo paddingRight="5" text="Contingência: " textAlign="right"/>
+			<input:RadioGrupoBancoob id="rdTipoContingencia" />
+			<input:Radio id="optCIP" label="CIP" groupName="rdTipoContingencia"/>
+			<input:Radio id="optBANCOOB" label="BANCOOB" groupName="rdTipoContingencia" width="100%"/>
+			
+			<Rotulo paddingRight="5" text="Status: " textAlign="right"/>
+			<input:Combo id="cmbStatusContingencia" width="250" dropdownWidth="250" editable="false"
+						 inserirItemOpcional="true" labelField="label"/>
+			
+			<componentes:Botao id="btnConfirmar" left="15" label="CONFIRMAR" acionarComEnter="true"/>
+		</containers:HBoxBancoob>
+		
+		<titulo:SubtituloView width="100%" texto="HISTÓRICO DO PROCESSO"/>
+		
+		<containers:CanvasBancoob id="cvGridContingencia" width="100%">
+			<containers:HBoxBancoob width="100%" height="420" verticalAlign="bottom">
+				<grid:Grid id="gridContingencia" width="745" height="100%" doubleClickEnabled="true"
+						   sortableColumns="false" variableRowHeight="true">
+					<grid:columns>
+						<grid:ColunaGrid width="100" dataField="descTipoContingencia"
+										 editable="false" headerText="Origem da Contingência"
+										 headerWordWrap="true" textAlign="center" wordWrap="true"/>
+						<grid:ColunaGrid width="100" dataField="situacaoContingencia"
+										 editable="false" headerText="Situação"
+										 headerWordWrap="true" textAlign="center" wordWrap="true"/>
+						<grid:ColunaGrid width="100" dataField="dataHoraSituacaoInicial" editable="false"
+										 headerText="Início da Contingência" headerWordWrap="true"
+										 labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"
+										 textAlign="center" wordWrap="true"/>
+						<grid:ColunaGrid width="100" dataField="idUsuarioHabilitacao" editable="false"
+										 headerText="Usuário que habilitou a Contingência" headerWordWrap="true" textAlign="center"
+										 wordWrap="true"/>
+						<grid:ColunaGrid width="100" dataField="dataHoraSituacaoFinal" editable="false"
+										 headerText="Fim da Contingência" headerWordWrap="true"
+										 labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"
+										 textAlign="center" wordWrap="true"/>
+						<grid:ColunaGrid width="100" dataField="idUsuarioDesabilitacao" editable="false"
+										 headerText="Usuário que desabilitou a Contingência" headerWordWrap="true" textAlign="center"
+										 wordWrap="true"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:HBoxBancoob>
+		</containers:CanvasBancoob>
+		
+		<containers:HBoxBancoob width="100%" horizontalAlign="right" horizontalScrollPolicy="off"
+								verticalAlign="bottom" verticalScrollPolicy="off">
+			<Rotulo id="rotulo" textAlign="left" width="100%" styleName="textSituacaoAtual"/>
+			<bancoob:Botao id="btnImprimirRelatorio" label="IMPRIMIR RELATÓRIO"/>
+			<bancoob:Botao id="btnFechar" label="FECHAR"/>
+		</containers:HBoxBancoob>
+		
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView>

@@ -1,0 +1,1114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+<queries>
+	<query name="PROCESSAR_ATUALIZACAO_BOLETO_ADDA102RR2">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RR2"></use-case>
+	    <description>Processamento da atualização do XML da ADDA102RR2.</description>
+	    <command>
+			<![CDATA[
+            /*Comando With para atualizar as tabelas restantes
+              BOLETODDABAIXAEFET, BOLETODDABAIXAOPER, BOLETODDAGRUPOCALCULO, MENSAGEMDDA, MENSAGEMDDACONSULTABOLETO e LOGDETRECEBIMENTOOARQUIVODDA
+              do processamento ADDA102RR2*/
+            WITH 
+            /*Cursor WITH que acessa a tabela LOGDETRECEBIMENTOOARQUIVODDA dos registros que serão processados*/
+            LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                  BOL.DATAVENCIMENTO,
+                                  BOL.DATALIMITEPAGAMENTO,
+                                  BOL.VALORBOLETO,
+                                  BOL.NUMCODIGOBARRA,
+                                  CASE
+                                  /*Caso o Num. Sequência existente no arquivo XML for menor que o da BOLETODDA marca como concorrente para gravar erro 106
+                                    Lembrando que abaixo foi colocado o valor HTML para o simbolo de menor para evitar erro na conversão do XML*/
+                                  WHEN Y.NUMSEQATUALCADBOLETO &lt; BOL.NUMSEQATUALCADBOLETO THEN
+                                   'CONCORRENTE106'
+                                  /*Caso o Num. Sequência existente no arquivo XML for igual ao da BOLETODDA marca como concorrente e não faz nada com esse registro*/
+                                  WHEN Y.NUMSEQATUALCADBOLETO = BOL.NUMSEQATUALCADBOLETO THEN
+                                   'CONCORRENTE'
+                                  /*Caso o Num. Sequência existente no arquivo XML for maior ao da BOLETODDA o campo MSG_CONCORRENTE ficará Nulo*/
+                                  END MSG_CONCORRENTE,
+                                  Y.INDRMANUTINSTCPGTOTIT,
+                                  Y.GRPINSTRUCAOPAGAMENTOTITULO,
+                                  Y.GRPCALCULO,
+                                  --Y.INDRMANUTHISTNOTAFIS,
+                                  --Y.GRPNOTAFISCAL,
+                                  --Y.INDRMANUTHISTTXTINF,
+                                  --Y.GRPTEXTOINFOBENEFICIARIO,
+                                  Y.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                                  /*Essa lógica é realizada nesse ponto para que não seja carregado o XML desnecessáriamente na memoria*/
+                                  CASE WHEN ( BOL.IDBOLETODDA IS NULL OR Y.NUMSEQATUALCADBOLETO &lt; BOL.NUMSEQATUALCADBOLETO ) THEN
+                                     XMLSERIALIZE(Y.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                  ELSE
+                                     NULL
+                                  END AS DESCXMLMENSAGEMRECEBIDA
+                           FROM (
+                           SELECT NUMIDENTIFICADORBOLETOCIP,
+                                  NUMREFATUALCADBOLETO,
+                                  NUMSEQATUALCADBOLETO,
+                                  INDRMANUTINSTCPGTOTIT,
+                                  GRPINSTRUCAOPAGAMENTOTITULO,
+                                  GRPCALCULO,
+                                  --INDRMANUTHISTNOTAFIS,
+                                  --GRPNOTAFISCAL,
+                                  --INDRMANUTHISTTXTINF,
+                                  --GRPTEXTOINFOBENEFICIARIO,
+                                  L.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                                  L.DESCXMLMENSAGEMRECEBIDA
+                           FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L,
+                                XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA102RR2_Tit' passing DESCXMLMENSAGEMRECEBIDA as "a" 
+                                          COLUMNS 
+                                              NUMIDENTIFICADORBOLETOCIP                                   BIGINT                 PATH   'NumIdentcTit',
+                                              NUMREFATUALCADBOLETO                                        BIGINT                 PATH   'NumRefAtlCadTit',
+                                              NUMSEQATUALCADBOLETO                                        BIGINT                 PATH   'NumSeqAtlzCadTit',
+                                              /*Indicadores (A-Atualizar, M-Manter) e seus respectivos grupos retornados como tipo XML conforme manual da CIP*/
+                                              INDRMANUTINSTCPGTOTIT                                       CHAR(1)                PATH   'IndrManutInstcPgtoTit',
+                                              GRPINSTRUCAOPAGAMENTOTITULO                                 XML                    PATH   'Grupo_ADDA102RR2_InstcPgtoTit',
+                                              GRPCALCULO                                                  XML                    PATH   'Grupo_ADDA102RR2_Calc'
+                                              --INDRMANUTHISTNOTAFIS                                        CHAR(1)                PATH   'IndrManutHistNotaFis',
+                                              --GRPNOTAFISCAL                                               XML                    PATH   'Grupo_ADDA102RR2_NotaFis',
+                                              --INDRMANUTHISTTXTINF                                         CHAR(1)                PATH   'IndrManutHistTxtInf',
+                                              --GRPTEXTOINFOBENEFICIARIO                                    XML                    PATH   'TxtInfBenfcrio',
+                                              /*  Fim dos Indicadores e grupos */
+                                         ) AS X
+                            WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                            AND   L.BOLPROCESSADO = 0
+                            AND   L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                           ) Y
+                           /*LEFT OUTER JOIN necessário para que todos os registros sejam retornados, viabilizando a gravação da tabela MENSAGEMDDA caso não seja encontrada a tupla na BOLETODDA*/
+                           LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP ),
+            /*Cursor WITH que recupera um universo menor do cursor montado no primeiro WITH entitulado LOGDETREC
+              LOGREC_INSTPAG: Esse cursor recupera somente os registros que terão que realizar a exclusão das tabelas de baixas operacional e efetiva*/
+            LOGREC_INSTPAG AS (SELECT REC.IDBOLETODDA
+                               FROM LOGDETREC REC,
+                                    XMLTABLE ('$a/.' PASSING REC.GRPINSTRUCAOPAGAMENTOTITULO as "a"
+                                    COLUMNS 
+                                       DATAVENCIMENTO         DATE           PATH  'DtVencTit',
+                                       VALORBOLETO            DECIMAL(18,2)  PATH  'VlrTit',
+                                       DATALIMITEPAGAMENTO    DATE           PATH  'DtLimPgtoTit'
+                                    ) AS B
+                               WHERE REC.IDBOLETODDA IS NOT NULL
+                               AND   REC.MSG_CONCORRENTE IS NULL
+                               /*Somente retornar se no XML o indicador de Manutenção Instrução Pagamento Título for igual a A*/
+                               AND   REC.INDRMANUTINSTCPGTOTIT = 'A'
+                               /*Somente incluirá no cursor os registros que os campos DATAVENCIMENTO ou VALORBOLETO ou DATALIMITEPAGAMENTO 
+                                 forem diferentes do XML forem diferentes do que está no boleto*/
+                               AND   (CASE
+                                        WHEN ( REC.DATAVENCIMENTO IS NULL     AND B.DATAVENCIMENTO IS NOT NULL ) OR
+                                             ( REC.DATAVENCIMENTO IS NOT NULL AND B.DATAVENCIMENTO IS NULL ) OR
+                                             ( REC.DATAVENCIMENTO != B.DATAVENCIMENTO ) THEN
+                                           'EXCLUIR'
+                                        WHEN ( REC.VALORBOLETO IS NULL     AND B.VALORBOLETO IS NOT NULL ) OR 
+                                             ( REC.VALORBOLETO IS NOT NULL AND B.VALORBOLETO IS NULL ) OR
+                                             ( REC.VALORBOLETO != B.VALORBOLETO ) THEN
+                                           'EXCLUIR'
+                                        WHEN ( REC.DATALIMITEPAGAMENTO IS NULL     AND B.DATALIMITEPAGAMENTO IS NOT NULL ) OR 
+                                             ( REC.DATALIMITEPAGAMENTO IS NOT NULL AND B.DATALIMITEPAGAMENTO IS NULL ) OR
+                                             ( REC.DATALIMITEPAGAMENTO != B.DATALIMITEPAGAMENTO ) THEN
+                                           'EXCLUIR'
+                                        ELSE 'NAO EXCLUIR'
+                                      END ) = 'EXCLUIR'),
+            /*Comando de DELETE utlizando o recurso FROM OLD TABLE do DB2 que recupera um cursor das tuplas que foram excluídas da tabela
+              Os DELETEs abaixo retornarão somente a quantidade de registros que foram excluídos nos campos QTD_DELBAIXAEFT e QTD_DELBAIXAOPE
+              As exclusões DELBAIXAEFT e DELBAIXAOPE serão realizadas somente para as tuplas encontradas na seleção LOGREC_INSTPAG
+              Ou seja serão excluídas as baixas operacionais e efetivas dos registros que tiverem alterações nos campos 
+              DATAVENCIMENTO ou VALORBOLETO ou DATALIMITEPAGAMENTO*/
+            DELBAIXAEFT AS (SELECT COUNT(*) QTD_DELBAIXAEFT
+                            FROM OLD TABLE ( DELETE FROM DDA.BOLETODDABAIXAEFET BAIXE
+                                             WHERE BAIXE.IDBOLETODDA IN (SELECT REC.IDBOLETODDA FROM LOGREC_INSTPAG REC))),
+            DELBAIXAOPE AS (SELECT COUNT(*) QTD_DELBAIXAOPE
+                            FROM OLD TABLE ( DELETE FROM DDA.BOLETODDABAIXAOPER BAIXO
+                                             WHERE BAIXO.IDBOLETODDA IN (SELECT REC.IDBOLETODDA FROM LOGREC_INSTPAG REC))),
+            /*Os DELETES abaixo (DELNOTA e DELTXT) serão realizados se for identificado indicativo 
+              de alteração para o grupo pesquisado em cada DELETE para que sejam posteriormente inseridos nos INSERTs
+              que vem logo a seguir (INSBOLCALC, INSBOLNOTA e INSBOLTXT)
+             */
+            DELCALC AS (SELECT COUNT(*) QTD_DELCALC
+                        FROM OLD TABLE ( DELETE FROM DDA.BOLETODDAGRUPOCALCULO CALC
+                                         WHERE CALC.IDBOLETODDA IN (SELECT REC2.IDBOLETODDA
+                                                                    FROM LOGDETREC REC2
+                                                                    WHERE REC2.IDBOLETODDA IS NOT NULL
+                                                                    AND   REC2.MSG_CONCORRENTE IS NULL
+                                                                    AND   REC2.GRPCALCULO IS NOT NULL))),
+            /* COMENTADO A PEDIDO DO RAFAEL
+            DELNOTA AS (SELECT COUNT(*) QTD_DELNOTA
+                          FROM OLD TABLE ( DELETE FROM DDA.BOLETODDANOTAFISCAL NOTA
+                                           WHERE NOTA.IDBOLETODDA IN (SELECT REC2.IDBOLETODDA
+                                                                      FROM LOGDETREC REC2
+                                                                      WHERE REC2.IDBOLETODDA IS NOT NULL
+                                                                      AND   REC2.MSG_CONCORRENTE IS NULL
+                                                                      AND   REC2.INDRMANUTHISTNOTAFIS = 'A'
+                                                                      AND   REC2.GRPNOTAFISCAL IS NOT NULL))),
+            */
+            /* COMENTADO A PEDIDO DO RAFAEL
+            DELTXT AS (SELECT COUNT(*) QTD_DELTXT
+                          FROM OLD TABLE ( DELETE FROM DDA.BOLETODDATEXTOINFO TXT
+                                           WHERE TXT.IDBOLETODDA IN (SELECT REC2.IDBOLETODDA
+                                                                     FROM LOGDETREC REC2
+                                                                     WHERE REC2.IDBOLETODDA IS NOT NULL
+                                                                     AND   REC2.MSG_CONCORRENTE IS NULL
+                                                                     AND   REC2.INDRMANUTHISTTXTINF = 'A'
+                                                                     AND   REC2.GRPTEXTOINFOBENEFICIARIO IS NOT NULL))),
+            */
+            INSBOLCALC AS (SELECT COUNT(*) QTD_BOLETOCALC
+                           FROM FINAL TABLE (INSERT
+                                             INTO DDA.BOLETODDAGRUPOCALCULO
+                                             (IDBOLETODDA,
+                                              VALORCALCULADOJUROS,
+                                              VALORCALCULADOMULTA,
+                                              VALORCALCULADODESCONTO,
+                                              VALORTOTALCOBRADO,
+                                              DATAVALIDADECALCULO)
+                                             SELECT REC1.IDBOLETODDA,
+                                                    B.VALORCALCULADOJUROS,
+                                                    B.VALORCALCULADOMULTA,
+                                                    B.VALORCALCULADODESCONTO,
+                                                    B.VALORTOTALCOBRADO,
+                                                    B.DATAVALIDADECALCULO
+                                             FROM LOGDETREC REC1,
+                                                  XMLTABLE ('$a/.' PASSING REC1.GRPCALCULO as "a"
+                                                    COLUMNS 
+                                                      VALORCALCULADOJUROS        DECIMAL(18,2)     PATH  'VlrCalcdJuros',
+                                                      VALORCALCULADOMULTA        DECIMAL(18,2)     PATH  'VlrCalcdMulta',
+                                                      VALORCALCULADODESCONTO     DECIMAL(18,2)     PATH  'VlrCalcdDesct',
+                                                      VALORTOTALCOBRADO          DECIMAL(18,2)     PATH  'VlrTotCobrar',
+                                                      DATAVALIDADECALCULO        DATE              PATH  'DtValiddCalc') AS B
+                                             WHERE REC1.IDBOLETODDA IS NOT NULL
+                                             AND   REC1.MSG_CONCORRENTE IS NULL
+                                             AND   REC1.GRPCALCULO IS NOT NULL)),
+            /* COMENTADO A PEDIDO DO RAFAEL
+            INSBOLNOTA AS (SELECT COUNT(*) QTD_BOLETONOTA
+                           FROM FINAL TABLE (INSERT
+                                             INTO DDA.BOLETODDANOTAFISCAL
+                                             (IDBOLETODDA,
+                                              NUMNOTAFISCAL,
+                                              DATAEMISSAONOTAFISCAL,
+                                              VALORNOTAFISCAL)
+                                             SELECT REC1.IDBOLETODDA,
+                                                    B.NUMNOTAFISCAL,
+                                                    B.DATAEMISSAONOTAFISCAL,
+                                                    B.VALORNOTAFISCAL
+                                             FROM LOGDETREC REC1,
+                                                  XMLTABLE ('$a/.' PASSING REC1.GRPNOTAFISCAL as "a"
+                                                    COLUMNS 
+                                                       NUMNOTAFISCAL           VARCHAR(15)     PATH  'NumNotaFis',
+                                                       DATAEMISSAONOTAFISCAL   DATE            PATH  'DtEmsNotaFis',
+                                                       VALORNOTAFISCAL         DECIMAL(18,2)   PATH  'VlrNotaFis') AS B
+                                             WHERE REC1.IDBOLETODDA IS NOT NULL
+                                             AND   REC1.MSG_CONCORRENTE IS NULL
+                                             AND   REC1.INDRMANUTHISTNOTAFIS = 'A'
+                                             AND   REC1.GRPNOTAFISCAL IS NOT NULL)),
+            */
+            /* COMENTADO A PEDIDO DO RAFAEL
+            INSBOLTXT AS (SELECT COUNT(*) QTD_BOLETOTXT
+                           FROM FINAL TABLE (INSERT
+                                             INTO DDA.BOLETODDATEXTOINFO
+                                             (IDBOLETODDA,
+                                              DESCTEXTOINFORMATIVO)
+                                             SELECT REC1.IDBOLETODDA,
+                                                    B.DESCTEXTOINFORMATIVO
+                                             FROM LOGDETREC REC1,
+                                                  XMLTABLE ('$a/.' PASSING REC1.GRPTEXTOINFOBENEFICIARIO as "a"
+                                                    COLUMNS 
+                                                       DESCTEXTOINFORMATIVO    VARCHAR(200)  PATH  '.') AS B
+                                             WHERE REC1.IDBOLETODDA IS NOT NULL
+                                             AND   REC1.MSG_CONCORRENTE IS NULL
+                                             AND   REC1.INDRMANUTHISTTXTINF = 'A'
+                                             AND   REC1.GRPTEXTOINFOBENEFICIARIO IS NOT NULL)),
+            */
+            /*O INSERT abaixo é responsável pela insersão da contingência na tabela MENSAGEMDDA para os registros que
+              não foram encontrados na BOLETODDA (ERRO001) ou no BOLETODDA estão com o sequencial maior que o que 
+              chegou no arquivo ADDA102RR2 (DDA0106)
+              Nesse comando FROM FINAL TABLE optamos por retornar todos os dados inseridos para que os mesmos pudessem ser utilizados
+              na gravação da tabela MENSAGEMDDACONSULTABOLETO
+              Foi retornado também um count utilizando partition by default para que o DB2 retorne o numero de linhas total em todas as tuplas retornadas*/
+            MSGDDA AS (SELECT
+                       /*COUNT(*) OVER () QTD_MSGDDA,*/
+                       IDMENSAGEMDDA, CODTIPOMENSAGEMDDA, XMLMENSAGEM
+                       FROM FINAL TABLE ( INSERT 
+                                          INTO DDA.MENSAGEMDDA (
+                                            IDMENSAGEMDDAORIGEM,
+                                            CODTIPOMENSAGEMDDA,
+                                            DATAMOVIMENTO,
+                                            DATAHORAMENSAGEM,
+                                            QTDTOTREG,
+                                            DATAHORAPROTOCOLO,
+                                            NUMOPERACAO,
+                                            DESCERROPROTOCOLO,
+                                            XMLMENSAGEM,
+                                            BOLORIGEMSICOOB,
+                                            DATAHORACADASTRO,
+                                            NUMPRIORIDADEENVIO,
+                                            NUMCONTROLEDDA,
+                                            IDUSUARIOSOLICITANTE,
+                                            IDINSTITUICAOSOLICITANTE,
+                                            IDCANAL )
+                                          SELECT NULL AS IDMENSAGEMDDAORIGEM,
+                                                 CASE
+                                                    WHEN REC.MSG_CONCORRENTE = 'CONCORRENTE106' THEN
+                                                       'DDA0106'
+                                                    ELSE
+                                                       'ERRO001'
+                                                 END AS CODTIPOMENSAGEMDDA,
+                                                 CURRENT DATE AS DATAMOVIMENTO,
+                                                 NULL AS DATAHORAMENSAGEM,
+                                                 NULL AS QTDTOTREG,
+                                                 NULL AS DATAHORAPROTOCOLO,
+                                                 NULL AS NUMOPERACAO,
+                                                 NULL AS DESCERROPROTOCOLO,
+                                                 REC.DESCXMLMENSAGEMRECEBIDA AS XMLMENSAGEM,
+                                                 1 AS BOLORIGEMSICOOB,
+                                                 CURRENT TIMESTAMP AS DATAHORACADASTRO,
+                                                 10 AS NUMPRIORIDADEENVIO,
+                                                 NULL AS NUMCONTROLEDDA,
+                                                 'DDA-CIP' AS IDUSUARIOSOLICITANTE,
+                                                 '1' AS IDINSTITUICAOSOLICITANTE,
+                                                 1 AS IDCANAL
+                                          FROM LOGDETREC REC
+                                          WHERE ( REC.IDBOLETODDA IS NULL OR REC.MSG_CONCORRENTE = 'CONCORRENTE106' ) ) ),
+            /*Abaixo será realizado o insert da tabela MENSAGEMDDACONSULTABOLETO que é filha da tabela MENSAGEMDDA e somente é gravada 
+              para os casos de mensagem DDA0106, que ocorre quando o sequencial da BOLETODDA é maior que a do arquivo.
+              Então o insert é realizado baseado no retorno do FROM FINAL TABLE realizado no comando WITH MSGDDA*/
+            MSGCONSULTADDA AS (SELECT COUNT(*) QTD_MSGCONSDDA
+                               FROM FINAL TABLE ( INSERT INTO DDA.MENSAGEMDDACONSULTABOLETO
+                                                  (IDMENSAGEMDDA,NUMCODIGOBARRA,NUMCPFCNPJPAGADOR,CODSITUACAOBOLETO,NUMIDENTIFICADORBOLETOCIPINICIAL,NUMIDENTIFICADORBOLETOCIPFINAL,CODTIPOBOLETOCONSULTADO)
+                                                  SELECT MS.IDMENSAGEMDDA,
+                                                         NULL,
+                                                         NULL,
+                                                         NULL,
+                                                         X.NUMIDENTIFICADORBOLETOCIP,
+                                                         X.NUMIDENTIFICADORBOLETOCIP,
+                                                         'T' AS CODTIPOBOLETOCONSULTADO
+                                                  FROM MSGDDA MS,
+                                                       XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA102RR2_Tit' passing XMLPARSE( DOCUMENT XMLMENSAGEM ) as "a" 
+                                                       COLUMNS 
+                                                       NUMIDENTIFICADORBOLETOCIP    BIGINT   PATH    'NumIdentcTit' ) AS X
+                                                  WHERE MS.CODTIPOMENSAGEMDDA = 'DDA0106' ) )
+            /*
+            Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            SELECT A1.QTD_DELBAIXAEFT, A2.QTD_DELBAIXAOPE, A4.QTD_DELCALC, A6.QTD_BOLETOCALC,A7.QTD_MSGDDA, A8.QTD_MSGCONSDDA
+                   ,A10.QTD_DELNOTA, A11.QTD_DELTXT,A12.QTD_BOLETONOTA, A13.QTD_BOLETOTXT
+            FROM DELBAIXAEFT A1, DELBAIXAOPE A2, DELDESCON A3, DELCALC A4, INSBOLDESC A5, INSBOLCALC A6,
+                 (SELECT COALESCE(AA.QTD_MSGDDA,0) QTD_MSGDDA FROM SYSIBM.SYSDUMMY1 LEFT OUTER JOIN MSGDDA AA ON AA.QTD_MSGDDA IS NOT NULL FETCH FIRST 1 ROW ONLY) A7,
+                 MSGCONSULTADDA A8
+                 ,DELNOTA A10, DELTXT A11, INSBOLNOTA A12, INSBOLTXT A13
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			
+			]]>
+		</command>
+	</query>
+	
+	<query name="GRAVAR_CAMPOS_BOLETO_ADDA102RR2">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RR2"></use-case>
+	    <description>Processamento da atualização dos campos da BoletoDDA a partir do XML da ADDA102RR2.</description>
+	    <command>
+			<![CDATA[
+            /*Comando MERGE para realizar UPDATE baseadas nos resultados dos grupos
+              Beneficiário Original, Beneficiario Final, Pagador, Avalista, Documento Título, Instrução Pagamento e Instrução Valor Recebimento
+              e que  sequencial do XML seja maior que o do boleto
+              ATENCAO, esse UPDATE tem que ser o ultimo a ser executado pois o NUMSEQATUALCADBOLETO será alterado nessa query e as demais queries verificam esse campo.*/
+            MERGE INTO DDA.BOLETODDA BUP
+            USING (
+            SELECT XML1.NUMIDENTIFICADORBOLETOCIP,
+                   XML1.NUMREFATUALCADBOLETO,
+                   XML1.NUMSEQATUALCADBOLETO,
+                   XML1.CODISPBPARTDESTINATARIO,
+                   /*Campos dos Grupos*/
+                   XML1.INDRMANUTBENFCRIOOR,
+                   --XML1.GRPBENEFICIARIOORIGINAL,
+                   XML1.INDRMANUTBENFCRIOFINL,
+                   --XML1.GRPBENEFICIARIOFINAL,
+                   XML1.INDRMANUTPAGDRTIT,
+                   --XML1.GRPPAGADOR,
+                   XML1.INDRMANUTSACDRAVALST,
+                   --XML1.GRPSACADORAVALISTA,
+                   XML1.INDRMANUTDOCTIT,
+                   --XML1.GRPDOCUMENTOTITULO,
+                   XML1.INDRMANUTINSTCPGTOTIT,
+                   --XML1.GRPINSTRUCAOPAGAMENTOTITULO,
+                   XML1.INDRMANUTINSTCVLRRECBT,
+                   --XML1.GRPINSTRUCAOVALORRECEBIMENTO,
+                   /* Fim dos campos de grupo*/
+                   XML1.QTDPAGAMENTOPARCIALREG,
+                   XML1.VALORSALDOPAGAMENTO,
+                   XML1.CODSITUACAOBOLETOPAGAMENTO,
+                   XML1.DATAHORASITUACAOBOLETO,
+                   L.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                   --L.DESCXMLMENSAGEMRECEBIDA,
+                   /*Campos Beneficiário Original*/
+                   BENO.NOMEFANTASIABENEFICIARIO,
+                   BENO.DESCLOGRADOUROBENEFICIARIO,
+                   BENO.DESCCIDADEBENEFICIARIO,
+                   BENO.SIGLAUFBENEFICIARIO,
+                   BENO.NUMCEPBENEFICIARIO,
+                   /*Campos Beneficiario Final*/
+                   BENF.CODTIPOPESSOABENEFICIARIOFINAL,
+                   BENF.NUMCPFCNPJBENEFICIARIOFINAL,
+                   BENF.NOMEBENEFICIARIOFINAL,
+                   BENF.NOMEFANTASIABENEFICIARIOFINAL,
+                   /*Campos Pagador*/
+                   PAG.NOMEPAGADOR,
+                   PAG.NOMEFANTASIAPAGADOR,
+                   PAG.DESCLOGRADOUROPAGADOR,
+                   PAG.DESCCIDADEPAGADOR,
+                   PAG.SIGLAUFPAGADOR,
+                   PAG.NUMCEPPAGADOR,
+                   /*Campos Avalista*/
+                   AVAL.CODTIPOPESSOADDAAVALISTA,
+                   AVAL.NUMCPFCNPJAVALISTA,
+                   AVAL.NOMEAVALISTA,
+                   /*Campos Documento Título*/
+                   DOCT.IDCARTEIRA,
+                   DOCT.NUMDOCUMENTO,
+                   DOCT.IDESPECIEDOCUMENTO,
+                   DOCT.CODTIPOPAGAMENTO,
+                   DOCT.NUMPARCELA,
+                   DOCT.QTDTOTALPARCELA,
+                   DOCT.BOLTITULONEGOCIADO,
+                   /*Campos Instrução Pagamento*/
+                   INSPG.DATAVENCIMENTO,
+                   INSPG.VALORBOLETO,
+                   INSPG.NUMDIASPROTESTO,
+                   INSPG.DATALIMITEPAGAMENTO,
+                   INSPG.BOLBLOQUEIOPAGAMENTO,
+                   INSPG.VALORABATIMENTO,
+                   INSPG.QTDPAGAMENTOPARCIAL,
+                   INSPG.CODTIPOMODELOCALCULO,
+                   /*Campos Instrução Valor Recebimento*/
+                   INSVR.CODAUTORIZACAOVALORDIVERGENTE,
+                   INSVR.CODINDICADORVALORMINIMO,
+                   INSVR.VALORMINIMO,
+                   INSVR.CODINDICADORVALORMAXIMO,
+                   INSVR.VALORMAXIMO,
+                   XML1.INDRMANUTJUROSTIT,
+                   JUROS.DATAJUROS,
+                   JUROS.CODTIPOJUROS,
+                   JUROS.VALORPERCENTUALJUROS,
+                   XML1.INDRMANUTMULTATIT,
+                   MULTA.DATAMULTA,
+                   MULTA.CODTIPOMULTA,
+                   MULTA.VALORPERCENTUALMULTA,
+                   XML1.INDRMANUTDESCTTIT,
+                   DESC1.DATADESCONTO1,
+                   DESC1.CODTIPODESCONTO1,
+                   DESC1.VALORPERCENTUALDESCONTO1,
+                   DESC2.DATADESCONTO2,
+                   DESC2.CODTIPODESCONTO2,
+                   DESC2.VALORPERCENTUALDESCONTO2,
+                   DESC3.DATADESCONTO3,
+                   DESC3.CODTIPODESCONTO3,
+                   DESC3.VALORPERCENTUALDESCONTO3
+            FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L
+            JOIN XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA102RR2_Tit' passing DESCXMLMENSAGEMRECEBIDA as "a" 
+                           COLUMNS 
+                               NUMIDENTIFICADORBOLETOCIP                                   BIGINT                 PATH   'NumIdentcTit',
+                               NUMREFATUALCADBOLETO                                        BIGINT                 PATH   'NumRefAtlCadTit',
+                               NUMSEQATUALCADBOLETO                                        BIGINT                 PATH   'NumSeqAtlzCadTit',
+                               CODISPBPARTDESTINATARIO                                     VARCHAR(8)             PATH   'ISPBPartDestinatario',
+                               /*Indicadores (A-Atualizar, M-Manter) e seus respectivos grupos retornados como tipo XML conforme manual da CIP*/
+                               INDRMANUTBENFCRIOOR                                         CHAR(1)                PATH   'IndrManutBenfcrioOr',
+                               GRPBENEFICIARIOORIGINAL                                     XML                    PATH   'Grupo_ADDA102RR2_BenfcrioOr',
+                               INDRMANUTBENFCRIOFINL                                       CHAR(1)                PATH   'IndrManutBenfcrioFinl',
+                               GRPBENEFICIARIOFINAL                                        XML                    PATH   'Grupo_ADDA102RR2_BenfcrioFinl',
+                               INDRMANUTPAGDRTIT                                           CHAR(1)                PATH   'IndrManutPagdrTit',
+                               GRPPAGADOR                                                  XML                    PATH   'Grupo_ADDA102RR2_Pagdr',
+                               INDRMANUTSACDRAVALST                                        CHAR(1)                PATH   'IndrManutSacdrAvalst',
+                               GRPSACADORAVALISTA                                          XML                    PATH   'Grupo_ADDA102RR2_SacdrAvalst',
+                               INDRMANUTDOCTIT                                             CHAR(1)                PATH   'IndrManutDocTit',
+                               GRPDOCUMENTOTITULO                                          XML                    PATH   'Grupo_ADDA102RR2_DocTit',
+                               INDRMANUTINSTCPGTOTIT                                       CHAR(1)                PATH   'IndrManutInstcPgtoTit',
+                               GRPINSTRUCAOPAGAMENTOTITULO                                 XML                    PATH   'Grupo_ADDA102RR2_InstcPgtoTit',
+                               INDRMANUTINSTCVLRRECBT                                      CHAR(1)                PATH   'IndrManutInstcVlrRecbt',
+                               GRPINSTRUCAOVALORRECEBIMENTO                                XML                    PATH   'Grupo_ADDA102RR2_InstcVlrRecbt',
+                               INDRMANUTJUROSTIT                                           CHAR(1)                PATH   'IndrManutJurosTit',
+                               GRPINSTRUCAOJUROS                                           XML                    PATH   'Grupo_ADDA102RR2_JurosTit',
+                               INDRMANUTMULTATIT                                           CHAR(1)                PATH   'IndrManutMultaTit',
+                               GRPINSTRUCAOMULTA                                           XML                    PATH   'Grupo_ADDA102RR2_MultaTit',
+                               INDRMANUTDESCTTIT                                           CHAR(1)                PATH   'IndrManutDesctTit',
+                               GRPINSTRUCAODESCONTO1                                       XML                    PATH   'Grupo_ADDA102RR2_DesctTit[1]',
+                               GRPINSTRUCAODESCONTO2                                       XML                    PATH   'Grupo_ADDA102RR2_DesctTit[2]',
+                               GRPINSTRUCAODESCONTO3                                       XML                    PATH   'Grupo_ADDA102RR2_DesctTit[3]',
+                               /*  Fim dos Indicadores e grupos */
+                               QTDPAGAMENTOPARCIALREG                                      INTEGER                PATH   'QtdPgtoParclRegtd',
+                               VALORSALDOPAGAMENTO                                         DECIMAL(18,2)          PATH   'VlrSldTotAtlPgtoTit',
+                               CODSITUACAOBOLETOPAGAMENTO                                  CHAR(2)                PATH   'SitTitPgto',
+                               DATAHORASITUACAOBOLETO                                      TIMESTAMP              PATH   'DtHrSitTit'
+                          ) AS XML1 ON XML1.NUMIDENTIFICADORBOLETOCIP IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPBENEFICIARIOORIGINAL as "a" 
+                               COLUMNS 
+                                   NOMEFANTASIABENEFICIARIO          VARCHAR(160)   PATH   'NomFantsBenfcrioOr',
+                                   DESCLOGRADOUROBENEFICIARIO        VARCHAR(80)    PATH   'LogradBenfcrioOr',
+                                   DESCCIDADEBENEFICIARIO            VARCHAR(100)   PATH   'CidBenfcrioOr',
+                                   SIGLAUFBENEFICIARIO               VARCHAR(2)     PATH   'UFBenfcrioOr',
+                                   NUMCEPBENEFICIARIO                VARCHAR(8)     PATH   'CEPBenfcrioOr'
+                            ) AS BENO ON XML1.INDRMANUTBENFCRIOOR = 'A' AND
+                                         XML1.GRPBENEFICIARIOORIGINAL IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPBENEFICIARIOFINAL as "a" 
+                               COLUMNS 
+                                  CODTIPOPESSOABENEFICIARIOFINAL   CHAR(1)       PATH  'TpPessoaBenfcrioFinl',
+                                  NUMCPFCNPJBENEFICIARIOFINAL      VARCHAR(14)   PATH  'CNPJ_CPFBenfcrioFinl',
+                                  NOMEBENEFICIARIOFINAL            VARCHAR(100)  PATH  'Nom_RzSocBenfcrioFinl',
+                                  NOMEFANTASIABENEFICIARIOFINAL    VARCHAR(160)  PATH  'NomFantsBenfcrioFinl'
+                            ) AS BENF ON XML1.INDRMANUTBENFCRIOFINL = 'A' AND
+                                         XML1.GRPBENEFICIARIOFINAL IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPPAGADOR as "a" 
+                               COLUMNS 
+                                  NOMEPAGADOR           VARCHAR(100) PATH  'Nom_RzSocPagdr',
+                                  NOMEFANTASIAPAGADOR   VARCHAR(160) PATH  'NomFantsPagdr',
+                                  DESCLOGRADOUROPAGADOR VARCHAR(80)  PATH  'LogradPagdr',
+                                  DESCCIDADEPAGADOR     VARCHAR(100) PATH  'CidPagdr',
+                                  SIGLAUFPAGADOR        VARCHAR(2)   PATH  'UFPagdr',
+                                  NUMCEPPAGADOR         VARCHAR(8)   PATH  'CEPPagdr'
+                            ) AS PAG ON XML1.INDRMANUTPAGDRTIT = 'A' AND
+                                        XML1.GRPPAGADOR IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPSACADORAVALISTA as "a"
+                               COLUMNS 
+                                  CODTIPOPESSOADDAAVALISTA INTEGER      PATH  'TpIdentcSacdrAvalst',
+                                  NUMCPFCNPJAVALISTA       VARCHAR(15)  PATH  'IdentcSacdrAvalst',
+                                  NOMEAVALISTA             VARCHAR(100) PATH  'Nom_RzSocSacdrAvalst'
+                               ) AS AVAL ON XML1.INDRMANUTSACDRAVALST = 'A' AND
+                                            XML1.GRPSACADORAVALISTA IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPDOCUMENTOTITULO as "a"
+                               COLUMNS 
+                                  IDCARTEIRA         SMALLINT     PATH  'CodCartTit',
+                                  IDESPECIEDOCUMENTO SMALLINT     PATH  'CodEspTit',
+                                  NUMDOCUMENTO       VARCHAR(15)  PATH  'NumDocTit',
+                                  CODTIPOPAGAMENTO   SMALLINT     PATH  'TpPgtoTit',
+                                  NUMPARCELA         INTEGER      PATH  'NumParcl',
+                                  QTDTOTALPARCELA    INTEGER      PATH  'QtdTotParcl',
+                                  BOLTITULONEGOCIADO CHAR(1)      PATH  'IndrTitNegcd'
+                               ) AS DOCT ON XML1.INDRMANUTDOCTIT = 'A' AND
+                                            XML1.GRPDOCUMENTOTITULO IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAOPAGAMENTOTITULO as "a"
+                               COLUMNS 
+                                  DATAVENCIMENTO         DATE           PATH  'DtVencTit',
+                                  VALORBOLETO            DECIMAL(18,2)  PATH  'VlrTit',
+                                  NUMDIASPROTESTO        SMALLINT       PATH  'QtdDiaPrott',
+                                  DATALIMITEPAGAMENTO    DATE           PATH  'DtLimPgtoTit',
+                                  BOLBLOQUEIOPAGAMENTO   CHAR(1)        PATH  'IndrBloqPgto',
+                                  VALORABATIMENTO        DECIMAL(18,2)  PATH  'VlrAbattTit',
+                                  QTDPAGAMENTOPARCIAL    INTEGER        PATH  'QtdPgtoParcl',
+                                  CODTIPOMODELOCALCULO   CHAR(2)        PATH  'TpModlCalc'
+                               ) AS INSPG ON XML1.INDRMANUTINSTCPGTOTIT = 'A' AND
+                                             XML1.GRPINSTRUCAOPAGAMENTOTITULO IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAOVALORRECEBIMENTO as "a"
+                               COLUMNS 
+                                  CODAUTORIZACAOVALORDIVERGENTE  CHAR(1)         PATH  'TpAutcRecbtVlrDivgte',
+                                  CODINDICADORVALORMINIMO        CHAR(1)         PATH  'TpVlr_PercMinTit',
+                                  VALORMINIMO                    DECIMAL(18,2)   PATH  'Vlr_PercMinTit',
+                                  CODINDICADORVALORMAXIMO        CHAR(1)         PATH  'TpVlr_PercMaxTit',
+                                  VALORMAXIMO                    DECIMAL(18,2)   PATH  'Vlr_PercMaxTit'
+                               ) AS INSVR ON XML1.INDRMANUTINSTCVLRRECBT = 'A' AND
+                                             XML1.GRPINSTRUCAOVALORRECEBIMENTO IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAOJUROS as "a"
+                               COLUMNS 
+                                  DATAJUROS                          DATE             PATH     'DtJurosTit',
+                                  CODTIPOJUROS                       SMALLINT         PATH     'CodJurosTit',
+                                  VALORPERCENTUALJUROS               DECIMAL(17,5)    PATH     'Vlr_PercJurosTit'
+                               ) AS JUROS ON XML1.INDRMANUTJUROSTIT = 'A' AND
+                                             XML1.GRPINSTRUCAOJUROS IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAOMULTA as "a"
+                               COLUMNS 
+                                  DATAMULTA                          DATE             PATH     'DtMultaTit',
+                                  CODTIPOMULTA                       SMALLINT         PATH     'CodMultaTit',
+                                  VALORPERCENTUALMULTA               DECIMAL(17,5)    PATH     'Vlr_PercMultaTit'
+                               ) AS MULTA ON XML1.INDRMANUTMULTATIT = 'A' AND
+                                             XML1.GRPINSTRUCAOMULTA IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAODESCONTO1 as "a"
+                               COLUMNS 
+                                  DATADESCONTO1                      DATE             PATH     'DtDesctTit',
+                                  CODTIPODESCONTO1                   CHAR(1)          PATH     'CodDesctTit',
+                                  VALORPERCENTUALDESCONTO1           DECIMAL(17,5)    PATH     'Vlr_PercDesctTit'
+                               ) AS DESC1 ON XML1.INDRMANUTDESCTTIT = 'A' AND
+                                             XML1.GRPINSTRUCAODESCONTO1 IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAODESCONTO2 as "a"
+                               COLUMNS 
+                                  DATADESCONTO2                      DATE             PATH     'DtDesctTit',
+                                  CODTIPODESCONTO2                   CHAR(1)          PATH     'CodDesctTit',
+                                  VALORPERCENTUALDESCONTO2           DECIMAL(17,5)    PATH     'Vlr_PercDesctTit'
+                               ) AS DESC2 ON XML1.INDRMANUTDESCTTIT = 'A' AND
+                                             XML1.GRPINSTRUCAODESCONTO2 IS NOT NULL
+            LEFT OUTER JOIN XMLTABLE ('$a/.' PASSING XML1.GRPINSTRUCAODESCONTO3 as "a"
+                               COLUMNS 
+                                  DATADESCONTO3                      DATE             PATH     'DtDesctTit',
+                                  CODTIPODESCONTO3                   CHAR(1)          PATH     'CodDesctTit',
+                                  VALORPERCENTUALDESCONTO3           DECIMAL(17,5)    PATH     'Vlr_PercDesctTit'
+                               ) AS DESC3 ON XML1.INDRMANUTDESCTTIT = 'A' AND
+                                             XML1.GRPINSTRUCAODESCONTO3 IS NOT NULL
+            WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+            AND   L.BOLPROCESSADO = 0
+            AND   L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+            ) AS REC ON (BUP.NUMIDENTIFICADORBOLETOCIP = REC.NUMIDENTIFICADORBOLETOCIP AND
+                         BUP.NUMSEQATUALCADBOLETO &lt; REC.NUMSEQATUALCADBOLETO)
+            WHEN MATCHED THEN
+            UPDATE
+            SET BUP.NUMREFATUALCADBOLETO       = REC.NUMREFATUALCADBOLETO,
+            /*Os campos abaixo do primeiro SET são de atualização obrigatória para os registros encontrados*/
+                BUP.NUMSEQATUALCADBOLETO       = REC.NUMSEQATUALCADBOLETO,
+                BUP.CODISPBPARTDESTINATARIO    = REC.CODISPBPARTDESTINATARIO,
+                BUP.QTDPAGAMENTOPARCIALREG     = COALESCE(REC.QTDPAGAMENTOPARCIALREG,     BUP.QTDPAGAMENTOPARCIALREG),
+                BUP.VALORSALDOPAGAMENTO        = COALESCE(REC.VALORSALDOPAGAMENTO,        BUP.VALORSALDOPAGAMENTO),
+                BUP.DATAHORASITUACAOBOLETO     = COALESCE(REC.DATAHORASITUACAOBOLETO,     CURRENT TIMESTAMP),
+                BUP.CODSITUACAOBOLETOPAGAMENTO = COALESCE(REC.CODSITUACAOBOLETOPAGAMENTO, BUP.CODSITUACAOBOLETOPAGAMENTO),
+                BUP.DATAHORAULTIMAATUALIZACAO = CURRENT TIMESTAMP,
+                 /*Campos Beneficiário Original*/
+                BUP.NOMEFANTASIABENEFICIARIO   = DECODE(REC.INDRMANUTBENFCRIOOR, 'M', BUP.NOMEFANTASIABENEFICIARIO,   REC.NOMEFANTASIABENEFICIARIO),
+                BUP.DESCLOGRADOUROBENEFICIARIO = DECODE(REC.INDRMANUTBENFCRIOOR, 'M', BUP.DESCLOGRADOUROBENEFICIARIO, REC.DESCLOGRADOUROBENEFICIARIO),
+                BUP.DESCCIDADEBENEFICIARIO     = DECODE(REC.INDRMANUTBENFCRIOOR, 'M', BUP.DESCCIDADEBENEFICIARIO,     REC.DESCCIDADEBENEFICIARIO),
+                BUP.SIGLAUFBENEFICIARIO        = DECODE(REC.INDRMANUTBENFCRIOOR, 'M', BUP.SIGLAUFBENEFICIARIO,        REC.SIGLAUFBENEFICIARIO),
+                BUP.NUMCEPBENEFICIARIO         = DECODE(REC.INDRMANUTBENFCRIOOR, 'M', BUP.NUMCEPBENEFICIARIO,         DECODE(REC.NUMCEPBENEFICIARIO,0,NULL,REC.NUMCEPBENEFICIARIO)),
+                /*Campos Beneficiario Final*/
+                BUP.CODTIPOPESSOABENEFICIARIOFINAL = DECODE(REC.INDRMANUTBENFCRIOFINL, 'M', BUP.CODTIPOPESSOABENEFICIARIOFINAL, REC.CODTIPOPESSOABENEFICIARIOFINAL),
+                BUP.NUMCPFCNPJBENEFICIARIOFINAL    = DECODE(REC.INDRMANUTBENFCRIOFINL, 'M', BUP.NUMCPFCNPJBENEFICIARIOFINAL,    DECODE(REC.CODTIPOPESSOABENEFICIARIOFINAL,'F',
+                                                                                                                                        LPAD(REC.NUMCPFCNPJBENEFICIARIOFINAL, 11, 0),
+                                                                                                                                        LPAD(REC.NUMCPFCNPJBENEFICIARIOFINAL, 14, 0))),
+                BUP.NOMEBENEFICIARIOFINAL          = DECODE(REC.INDRMANUTBENFCRIOFINL, 'M', BUP.NOMEBENEFICIARIOFINAL,          REC.NOMEBENEFICIARIOFINAL),
+                BUP.NOMEFANTASIABENEFICIARIOFINAL  = DECODE(REC.INDRMANUTBENFCRIOFINL, 'M', BUP.NOMEFANTASIABENEFICIARIOFINAL,  REC.NOMEFANTASIABENEFICIARIOFINAL),
+                /*Campos Pagador*/
+                BUP.NOMEPAGADOR           = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.NOMEPAGADOR,           REC.NOMEPAGADOR),
+                BUP.NOMEFANTASIAPAGADOR   = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.NOMEFANTASIAPAGADOR,   REC.NOMEFANTASIAPAGADOR),
+                BUP.DESCLOGRADOUROPAGADOR = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.DESCLOGRADOUROPAGADOR, REC.DESCLOGRADOUROPAGADOR),
+                BUP.DESCCIDADEPAGADOR     = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.DESCCIDADEPAGADOR,     REC.DESCCIDADEPAGADOR),
+                BUP.SIGLAUFPAGADOR        = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.SIGLAUFPAGADOR,        REC.SIGLAUFPAGADOR),
+                BUP.NUMCEPPAGADOR         = DECODE(REC.INDRMANUTPAGDRTIT, 'M', BUP.NUMCEPPAGADOR,         DECODE(REC.NUMCEPPAGADOR,0,NULL,REC.NUMCEPPAGADOR)),
+                /*Campos Avalista*/
+                BUP.CODTIPOPESSOADDAAVALISTA = DECODE(REC.INDRMANUTSACDRAVALST, 'M', BUP.CODTIPOPESSOADDAAVALISTA,  REC.CODTIPOPESSOADDAAVALISTA),
+                BUP.NUMCPFCNPJAVALISTA       = DECODE(REC.INDRMANUTSACDRAVALST, 'M', BUP.NUMCPFCNPJAVALISTA,        DECODE(REC.CODTIPOPESSOADDAAVALISTA,
+                                                                                                                          1,LPAD(REC.NUMCPFCNPJAVALISTA, 11, 0),
+                                                                                                                          2,LPAD(REC.NUMCPFCNPJAVALISTA, 14, 0),
+                                                                                                                          REC.NUMCPFCNPJAVALISTA)),
+                BUP.NOMEAVALISTA             = DECODE(REC.INDRMANUTSACDRAVALST, 'M', BUP.NOMEAVALISTA,              REC.NOMEAVALISTA),
+                /*Campos Documento Título*/
+                BUP.IDCARTEIRA         = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.IDCARTEIRA,           REC.IDCARTEIRA),
+                BUP.NUMDOCUMENTO       = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.NUMDOCUMENTO,         REC.NUMDOCUMENTO),
+                BUP.IDESPECIEDOCUMENTO = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.IDESPECIEDOCUMENTO,   REC.IDESPECIEDOCUMENTO),
+                BUP.CODTIPOPAGAMENTO   = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.CODTIPOPAGAMENTO,     REC.CODTIPOPAGAMENTO),
+                BUP.NUMPARCELA         = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.NUMPARCELA,           DECODE(REC.NUMPARCELA,0,NULL,REC.NUMPARCELA)),
+                BUP.QTDTOTALPARCELA    = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.QTDTOTALPARCELA,      DECODE(REC.QTDTOTALPARCELA,0,NULL,REC.QTDTOTALPARCELA)),
+                BUP.BOLTITULONEGOCIADO = DECODE(REC.INDRMANUTDOCTIT, 'M', BUP.BOLTITULONEGOCIADO,   DECODE(REC.BOLTITULONEGOCIADO,'S',1,0)),
+                /*Campos Instrução Pagamento*/
+                BUP.DATAVENCIMENTO       = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.DATAVENCIMENTO,              REC.DATAVENCIMENTO),
+                BUP.VALORBOLETO          = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.VALORBOLETO,                 REC.VALORBOLETO),
+                BUP.NUMDIASPROTESTO      = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.NUMDIASPROTESTO,             REC.NUMDIASPROTESTO),
+                BUP.DATALIMITEPAGAMENTO  = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.DATALIMITEPAGAMENTO,         REC.DATALIMITEPAGAMENTO),
+                BUP.BOLBLOQUEIOPAGAMENTO = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.BOLBLOQUEIOPAGAMENTO,        DECODE(REC.BOLBLOQUEIOPAGAMENTO,'S',1,0)),
+                BUP.VALORABATIMENTO      = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.VALORABATIMENTO,             REC.VALORABATIMENTO),
+                BUP.QTDPAGAMENTOPARCIAL  = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.QTDPAGAMENTOPARCIAL,         REC.QTDPAGAMENTOPARCIAL),
+                BUP.CODTIPOMODELOCALCULO = DECODE(REC.INDRMANUTINSTCPGTOTIT, 'M', BUP.CODTIPOMODELOCALCULO,        REC.CODTIPOMODELOCALCULO),
+                /*Campos Instrução Valor Recebimento*/
+                BUP.CODAUTORIZACAOVALORDIVERGENTE = DECODE(REC.INDRMANUTINSTCVLRRECBT, 'M', BUP.CODAUTORIZACAOVALORDIVERGENTE,  REC.CODAUTORIZACAOVALORDIVERGENTE),
+                BUP.CODINDICADORVALORMINIMO       = DECODE(REC.INDRMANUTINSTCVLRRECBT, 'M', BUP.CODINDICADORVALORMINIMO,        REC.CODINDICADORVALORMINIMO),
+                BUP.VALORMINIMO                   = DECODE(REC.INDRMANUTINSTCVLRRECBT, 'M', BUP.VALORMINIMO,                    REC.VALORMINIMO),
+                BUP.CODINDICADORVALORMAXIMO       = DECODE(REC.INDRMANUTINSTCVLRRECBT, 'M', BUP.CODINDICADORVALORMAXIMO,        REC.CODINDICADORVALORMAXIMO),
+                BUP.VALORMAXIMO                   = DECODE(REC.INDRMANUTINSTCVLRRECBT, 'M', BUP.VALORMAXIMO,                    REC.VALORMAXIMO),
+                BUP.DATAJUROS                     = DECODE(REC.INDRMANUTJUROSTIT, 'M', BUP.DATAJUROS,                    REC.DATAJUROS),
+                BUP.CODTIPOJUROS                  = DECODE(REC.INDRMANUTJUROSTIT, 'M', BUP.CODTIPOJUROS,                 COALESCE(REC.CODTIPOJUROS,5)),
+                BUP.VALORPERCENTUALJUROS          = DECODE(REC.INDRMANUTJUROSTIT, 'M', BUP.VALORPERCENTUALJUROS,         COALESCE(REC.VALORPERCENTUALJUROS,0)),
+                BUP.DATAMULTA                     = DECODE(REC.INDRMANUTMULTATIT, 'M', BUP.DATAMULTA,                    REC.DATAMULTA),
+                BUP.CODTIPOMULTA                  = DECODE(REC.INDRMANUTMULTATIT, 'M', BUP.CODTIPOMULTA,                 COALESCE(REC.CODTIPOMULTA,3)),
+                BUP.VALORPERCENTUALMULTA          = DECODE(REC.INDRMANUTMULTATIT, 'M', BUP.VALORPERCENTUALMULTA,         COALESCE(REC.VALORPERCENTUALMULTA,0)),
+                BUP.DATADESCONTO1                 = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.DATADESCONTO1,                REC.DATADESCONTO1),
+                BUP.CODTIPODESCONTO1              = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.CODTIPODESCONTO1,             COALESCE(REC.CODTIPODESCONTO1,'0')),
+                BUP.VALORPERCENTUALDESCONTO1      = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.VALORPERCENTUALDESCONTO1,     COALESCE(REC.VALORPERCENTUALDESCONTO1,0)),
+                BUP.DATADESCONTO2                 = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.DATADESCONTO2,                REC.DATADESCONTO2),
+                BUP.CODTIPODESCONTO2              = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.CODTIPODESCONTO2,             REC.CODTIPODESCONTO2),
+                BUP.VALORPERCENTUALDESCONTO2      = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.VALORPERCENTUALDESCONTO2,     REC.VALORPERCENTUALDESCONTO2),
+                BUP.DATADESCONTO3                 = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.DATADESCONTO3,                REC.DATADESCONTO3),
+                BUP.CODTIPODESCONTO3              = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.CODTIPODESCONTO3,             REC.CODTIPODESCONTO3),
+                BUP.VALORPERCENTUALDESCONTO3      = DECODE(REC.INDRMANUTDESCTTIT, 'M', BUP.VALORPERCENTUALDESCONTO3,     REC.VALORPERCENTUALDESCONTO3)
+			]]>
+		</command>
+	</query>
+	<query name="ALTERAR_BOLPROCESSADO_ADDA102RR2">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RR2"></use-case>
+	    <description>Processamento da atualização da tabela de Juros a partir do XML da ADDA102RR2.</description>
+	    <command>
+			<![CDATA[
+            /*Esse UPDATE realiza alteração de todos os registros lidos para processados (BOLPROCESSADO = 1)
+              Foi realizada a separacao desse UPDATE do WITH pois o MERGE do BOLETO precisa ser realizado apos o WITH devido a verificacao do sequencial nas queries,
+              portanto e necessario que a atualizacao do BOLPROCESSADO seja realizada em comando separado dos demais comandos por ultimo
+            */
+            UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+            SET LOGU.BOLPROCESSADO = 1,
+			    LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+            WHERE LOGU.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+            AND   LOGU.BOLPROCESSADO = 0
+            AND   LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+			]]>
+		</command>
+	</query>
+
+
+	<query name="PROCESSAR_ATUALIZACAO_BOLETO_ADDA102RET">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RET"></use-case>
+	    <description>Processamento da atualização do XML da ADDA102RET</description>
+	    <command>
+			<![CDATA[
+            WITH
+            /*Cursor WITH que acessa a tabela LOGDETRECEBIMENTOOARQUIVODDA dos registros que serão processados*/
+            SEL_LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                      BOL.DATAVENCIMENTO,
+                                      BOL.DATALIMITEPAGAMENTO,
+                                      BOL.VALORBOLETO,
+                                      Y.CODMSG, 
+                                      Y.NUMCTRLDDAPART,
+                                      Y.NUMCTRLDDA,
+                                      
+                                      CASE
+                                      /*Caso o Num. Sequência existente no arquivo XML for menor que o da BOLETODDA marca como concorrente para gravar erro 106
+                                        Lembrando que abaixo foi colocado o valor HTML para o simbolo de menor para evitar erro na conversão do XML*/
+                                      WHEN Y.NUMSEQATUALCADBOLETO &lt; BOL.NUMSEQATUALCADBOLETO THEN
+                                       'CONCORRENTE106'
+                                      /*Caso o Num. Sequência existente no arquivo XML for igual ao da BOLETODDA marca como concorrente e não faz nada com esse registro*/
+                                      WHEN Y.NUMSEQATUALCADBOLETO = BOL.NUMSEQATUALCADBOLETO THEN
+                                       'CONCORRENTE'
+                                      /*Caso o Num. Sequência existente no arquivo XML for maior ao da BOLETODDA o campo MSG_CONCORRENTE ficará Nulo*/
+                                      END MSG_CONCORRENTE,
+                                      
+                                      Y.NUMSEQATUALCADBOLETO,
+                                      Y.NUMREFATUALCADBOLETO,
+                                      Y.DESCNOMEARQUIVORECEBIDO,
+                                      /*Essa lógica é realizada nesse ponto para que não seja carregado o XML desnecessáriamente na memoria*/
+                                      CASE WHEN ( BOL.IDBOLETODDA IS NULL OR Y.NUMSEQATUALCADBOLETO &lt; BOL.NUMSEQATUALCADBOLETO OR Y.CODMSG = 'ADDA102ERR' ) THEN
+                                         XMLSERIALIZE(Y.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                      ELSE
+                                         NULL
+                                      END AS DESCXMLMENSAGEMRECEBIDA,
+                                      Y.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM (
+                               SELECT XML1.CODMSG, 
+                                      XML1.NUMCTRLDDAPART,
+                                      /*Quando o grupo for Recusado o campo abaixo estará nulo e consequentemente não recuperará nenhum boleto*/
+                                      XML1.NUMIDENTIFICADORBOLETOCIP, 
+                                      XML1.NUMCTRLDDA,
+                                      XML1.NUMSEQATUALCADBOLETO,
+                                      XML1.NUMREFATUALCADBOLETO,
+                                      REC.DESCNOMEARQUIVORECEBIDO,
+                                      DET.DESCXMLMENSAGEMRECEBIDA,
+                                      DET.IDLOGDETRECEBIMENTOOARQUIVODDA
+                               FROM DDA.LOGRECEBIMENTOOARQUIVODDA REC
+                               JOIN DDA.LOGDETRECEBIMENTOOARQUIVODDA DET ON DET.IDLOGRECEBIMENTOOARQUIVODDA = REC.IDLOGRECEBIMENTOOARQUIVODDA
+                               CROSS JOIN XMLTABLE ('$a/ArqRecebimento/.' passing DET.DESCXMLMENSAGEMRECEBIDA as "a" 
+                                       COLUMNS
+                                          CODMSG                                 VARCHAR(10)   PATH   'CodMsg',
+                                          NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH   '*/NumIdentcTit',
+                                          NUMCTRLDDAPART                         VARCHAR(50)   PATH   '*/NumCtrlReqPart', -- Será recuperado o do aceito se for aceito e do recusado se for recusado
+                                          NUMCTRLDDA                             VARCHAR(50)   PATH   'Grupo_ADDA102RET_TitActo/NumCtrlDDA',
+                                          NUMREFATUALCADBOLETO                   BIGINT        PATH   'Grupo_ADDA102RET_TitActo/NumRefAtlCadTit',
+                                          NUMSEQATUALCADBOLETO                   BIGINT        PATH   'Grupo_ADDA102RET_TitActo/NumSeqAtlzCadTit'
+                                       ) AS XML1
+                               WHERE REC.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                               AND DET.BOLPROCESSADO = 0
+                               AND DET.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                               ) Y
+                               /*LEFT OUTER JOIN necessário para que todos os registros sejam retornados, viabilizando a gravação da tabela MENSAGEMDDA com ERRO001 caso seja encontrada a tupla na BOLETODDA*/
+                               LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP ),
+            /*Cursor WITH que recupera um universo menor do cursor montado no primeiro WITH entitulado LOGDETREC
+              LOGREC_INSTPAG: Esse cursor recupera somente os registros que terão que realizar a exclusão das tabelas de baixas operacional e efetiva*/
+            LOGREC_INSTPAG AS (SELECT REC.IDBOLETODDA
+                               FROM SEL_LOGDETREC REC
+                               JOIN DDA.MENSAGEMDDABOLETO MSGBOL ON MSGBOL.IDMENSAGEMDDA = REC.NUMCTRLDDAPART
+                               WHERE REC.IDBOLETODDA IS NOT NULL
+                               AND REC.MSG_CONCORRENTE IS NULL
+							   AND REC.CODMSG = 'ADDA102RET'
+                               /*Somente incluirá no cursor os registros que os campos DATAVENCIMENTO ou VALORBOLETO ou DATALIMITEPAGAMENTO 
+                                 forem diferentes do XML forem diferentes do que está no boleto*/
+                               AND   (CASE
+                                        WHEN ( REC.DATAVENCIMENTO IS NULL     AND MSGBOL.DATAVENCIMENTO IS NOT NULL ) OR
+                                             ( REC.DATAVENCIMENTO IS NOT NULL AND MSGBOL.DATAVENCIMENTO IS NULL ) OR
+                                             ( REC.DATAVENCIMENTO != MSGBOL.DATAVENCIMENTO ) THEN
+                                           'EXCLUIR'
+                                        WHEN ( REC.VALORBOLETO IS NULL     AND MSGBOL.VALORBOLETO IS NOT NULL ) OR 
+                                             ( REC.VALORBOLETO IS NOT NULL AND MSGBOL.VALORBOLETO IS NULL ) OR
+                                             ( REC.VALORBOLETO != MSGBOL.VALORBOLETO ) THEN
+                                           'EXCLUIR'
+                                        WHEN ( REC.DATALIMITEPAGAMENTO IS NULL     AND MSGBOL.DATALIMITEPAGAMENTO IS NOT NULL ) OR 
+                                             ( REC.DATALIMITEPAGAMENTO IS NOT NULL AND MSGBOL.DATALIMITEPAGAMENTO IS NULL ) OR
+                                             ( REC.DATALIMITEPAGAMENTO != MSGBOL.DATALIMITEPAGAMENTO ) THEN
+                                           'EXCLUIR'
+                                        ELSE 'NAO EXCLUIR'
+                                      END ) = 'EXCLUIR'),
+            /*Comando de DELETE utlizando o recurso FROM OLD TABLE do DB2 que recupera um cursor das tuplas que foram excluídas da tabela
+              Os DELETEs abaixo retornarão somente a quantidade de registros que foram excluídos nos campos QTD_DELBAIXAEFT e QTD_DELBAIXAOPE
+              As exclusões DELBAIXAEFT e DELBAIXAOPE serão realizadas somente para as tuplas encontradas na seleção LOGREC_INSTPAG
+              Ou seja serão excluídas as baixas operacionais e efetivas dos registros que tiverem alterações nos campos 
+              DATAVENCIMENTO ou VALORBOLETO ou DATALIMITEPAGAMENTO*/
+            DELBAIXAEFT AS (SELECT COUNT(*) QTD_DELBAIXAEFT
+                            FROM OLD TABLE ( DELETE FROM DDA.BOLETODDABAIXAEFET BAIXE
+                                             WHERE BAIXE.IDBOLETODDA IN (SELECT REC.IDBOLETODDA FROM LOGREC_INSTPAG REC))),
+            DELBAIXAOPE AS (SELECT COUNT(*) QTD_DELBAIXAOPE
+                            FROM OLD TABLE ( DELETE FROM DDA.BOLETODDABAIXAOPER BAIXO
+                                             WHERE BAIXO.IDBOLETODDA IN (SELECT REC.IDBOLETODDA FROM LOGREC_INSTPAG REC))),
+
+            /*O INSERT abaixo é responsável pela insersão das mensagens na tabela MENSAGEMDDA. Que será divida em 3 tipos conforme descrito abaixo:
+              ERRO001 - Para os registros que foram encontrados na BOLETODDA
+              ADDA102RET - Para os títulos que estão no grupo de títulos aceitos
+              ADDA102ERR - Para os títulos que estão no grupo de títulos regeitados ou Recusados
+              Nesse comando FROM FINAL TABLE optamos por retornar alguns dados inseridos para que os mesmos possam ser utilizados
+              nos comandos WITH: INSERT_MSG_ERRO.
+              Foi retornado também um count utilizando partition by default para que o DB2 retorne o numero de linhas total em todas as tuplas retornadas*/
+            INSERT_MSG_DDA AS (SELECT
+                               --COUNT(*) OVER () QTD_MSG_DDA,
+                               IDMENSAGEMDDA, IDMENSAGEMDDAORIGEM, CODTIPOMENSAGEMDDA, XMLMENSAGEM
+                               FROM FINAL TABLE ( INSERT 
+                                                  INTO DDA.MENSAGEMDDA (
+                                                    IDMENSAGEMDDAORIGEM,
+                                                    CODTIPOMENSAGEMDDA,
+                                                    DATAMOVIMENTO,
+                                                    DATAHORAMENSAGEM,
+                                                    QTDTOTREG,
+                                                    DATAHORAPROTOCOLO,
+                                                    NUMOPERACAO,
+                                                    DESCERROPROTOCOLO,
+                                                    XMLMENSAGEM,
+                                                    BOLORIGEMSICOOB,
+                                                    DATAHORACADASTRO,
+                                                    NUMPRIORIDADEENVIO,
+                                                    NUMCONTROLEDDA,
+                                                    IDUSUARIOSOLICITANTE,
+                                                    IDINSTITUICAOSOLICITANTE,
+                                                    IDCANAL )
+                                                  SELECT 
+                                                         CASE
+                                                            WHEN REC.IDBOLETODDA IS NOT NULL THEN
+                                                               REC.NUMCTRLDDAPART
+                                                            ELSE
+                                                               NULL
+                                                            END                                                                       AS IDMENSAGEMDDAORIGEM,
+                                                         CASE
+                                                            WHEN REC.IDBOLETODDA IS NOT NULL THEN
+                                                               CODMSG
+                                                            ELSE
+                                                               'ERRO001'
+                                                         END                                                                          AS CODTIPOMENSAGEMDDA,
+                                                         CURRENT DATE                                                                 AS DATAMOVIMENTO,
+                                                         CASE
+                                                            WHEN REC.IDBOLETODDA IS NOT NULL THEN
+                                                               CURRENT TIMESTAMP
+                                                            ELSE
+                                                               NULL
+                                                         END                                                                          AS DATAHORAMENSAGEM,
+                                                         1                                                                            AS QTDTOTREG,
+                                                         NULL                                                                         AS DATAHORAPROTOCOLO,
+                                                         CASE
+                                                            WHEN REC.IDBOLETODDA IS NOT NULL THEN
+                                                               REC.DESCNOMEARQUIVORECEBIDO
+                                                            ELSE
+                                                               NULL
+                                                         END                                                                          AS NUMOPERACAO,
+                                                         NULL                                                                         AS DESCERROPROTOCOLO,
+                                                         REC.DESCXMLMENSAGEMRECEBIDA                                                  AS XMLMENSAGEM,
+                                                         1                                                                            AS BOLORIGEMSICOOB,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORACADASTRO,
+                                                         100                                                                          AS NUMPRIORIDADEENVIO,
+                                                         CASE
+                                                            WHEN REC.IDBOLETODDA IS NOT NULL THEN
+                                                               NULL
+                                                            ELSE
+                                                               REC.NUMCTRLDDA
+                                                            END                                                                       AS NUMCONTROLEDDA,
+                                                         'DDA-CIP'                                                                    AS IDUSUARIOSOLICITANTE,
+                                                         1                                                                            AS IDINSTITUICAOSOLICITANTE, 
+                                                         1                                                                            AS IDCANAL
+                                                  FROM SEL_LOGDETREC REC ) XX ),
+            /*Abaixo será realizado o insert da tabela ERROMENSAGEMRETORNOCIP que é filha da tabela MENSAGEMDDA e somente é gravada 
+              para os casos de mensagem ADDA102ERR, que ocorre para os títulos Recusados.
+              Então o insert é realizado baseado no retorno do FROM FINAL TABLE realizado no comando WITH INSERT_MSG_DDA para podermos 
+              recuperar o IDMENSAGEMDDA e o XMLMENSAGEM que veio no arquivo e que foi gravado na mensagem*/
+            INSERT_MSG_ERRO AS ( SELECT
+                                 COUNT(*) QTD_MSG_ERRO
+                                 FROM FINAL TABLE ( INSERT INTO DDA.ERROMENSAGEMRETORNOCIP
+                                                     (IDMENSAGEMDDA, 
+                                                      CODTIPOERROCIP, 
+                                                      DATAHORAATUALIZACAO,
+                                                      CODTIPOTRATAMENTOERROCIP)
+                                                     SELECT MS.IDMENSAGEMDDA,
+                                                            CODERRO,
+                                                            CURRENT TIMESTAMP, 
+                                                            NULL
+                                                     FROM INSERT_MSG_DDA MS,
+                                                          XMLTABLE ('$d/ArqRecebimento/Grupo_ADDA102RET_TitRecsd/*/@CodErro' passing XMLPARSE( DOCUMENT MS.XMLMENSAGEM ) as "d" 
+                                                             COLUMNS 
+                                                             CODERRO  VARCHAR(10)   PATH  '.'
+                                                          ) AS X
+                                                     WHERE MS.CODTIPOMENSAGEMDDA = 'ADDA102ERR' ) ),
+            INSERT_MSG106 AS ( SELECT
+                               --COUNT(*) OVER () QTD_MSG106,
+                               IDMENSAGEMDDA, IDMENSAGEMDDAORIGEM, CODTIPOMENSAGEMDDA, XMLMENSAGEM
+                               FROM FINAL TABLE ( INSERT 
+                                                  INTO DDA.MENSAGEMDDA (
+                                                    IDMENSAGEMDDAORIGEM,
+                                                    CODTIPOMENSAGEMDDA,
+                                                    DATAMOVIMENTO,
+                                                    DATAHORAMENSAGEM,
+                                                    QTDTOTREG,
+                                                    DATAHORAPROTOCOLO,
+                                                    NUMOPERACAO,
+                                                    DESCERROPROTOCOLO,
+                                                    XMLMENSAGEM,
+                                                    BOLORIGEMSICOOB,
+                                                    DATAHORACADASTRO,
+                                                    NUMPRIORIDADEENVIO,
+                                                    NUMCONTROLEDDA,
+                                                    IDUSUARIOSOLICITANTE,
+                                                    IDINSTITUICAOSOLICITANTE,
+                                                    IDCANAL )
+                                                  SELECT 
+                                                         NULL                                                                         AS IDMENSAGEMDDAORIGEM,
+                                                         'DDA0106'                                                                    AS CODTIPOMENSAGEMDDA,
+                                                         CURRENT DATE                                                                 AS DATAMOVIMENTO,
+                                                         NULL                                                                         AS DATAHORAMENSAGEM,
+                                                         1                                                                            AS QTDTOTREG,
+                                                         NULL                                                                         AS DATAHORAPROTOCOLO,
+                                                         NULL                                                                         AS NUMOPERACAO,
+                                                         NULL                                                                         AS DESCERROPROTOCOLO,
+                                                         REC.DESCXMLMENSAGEMRECEBIDA                                                  AS XMLMENSAGEM,
+                                                         1                                                                            AS BOLORIGEMSICOOB,
+                                                         CURRENT TIMESTAMP                                                            AS DATAHORACADASTRO,
+                                                         100                                                                          AS NUMPRIORIDADEENVIO,
+                                                         NULL                                                                         AS NUMCONTROLEDDA,
+                                                         'DDA-CIP'                                                                    AS IDUSUARIOSOLICITANTE,
+                                                         1                                                                            AS IDINSTITUICAOSOLICITANTE, 
+                                                         1                                                                            AS IDCANAL
+                                                  FROM SEL_LOGDETREC REC
+                                                  WHERE REC.IDBOLETODDA IS NOT NULL
+                                                  AND REC.MSG_CONCORRENTE = 'CONCORRENTE106') XX ),
+            /*Abaixo será realizado o insert da tabela MENSAGEMDDACONSULTABOLETO que é filha da tabela MENSAGEMDDA e somente é gravada 
+              para os casos de mensagem DDA0106, que ocorre quando o sequencial da BOLETODDA é maior que a do arquivo.
+              Então o insert é realizado baseado no retorno do FROM FINAL TABLE realizado no comando WITH MSGDDA*/
+            MSGCONSULTADDA AS (SELECT COUNT(*) QTD_MSGCONSDDA
+                               FROM FINAL TABLE ( INSERT INTO DDA.MENSAGEMDDACONSULTABOLETO
+                                                  (IDMENSAGEMDDA,NUMCODIGOBARRA,NUMCPFCNPJPAGADOR,CODSITUACAOBOLETO,NUMIDENTIFICADORBOLETOCIPINICIAL,NUMIDENTIFICADORBOLETOCIPFINAL,CODTIPOBOLETOCONSULTADO)
+                                                  SELECT MS.IDMENSAGEMDDA,
+                                                         NULL,
+                                                         NULL,
+                                                         NULL,
+                                                         X.NUMIDENTIFICADORBOLETOCIP,
+                                                         X.NUMIDENTIFICADORBOLETOCIP,
+                                                         'T' AS CODTIPOBOLETOCONSULTADO
+                                                  FROM INSERT_MSG106 MS,
+                                                       XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA102RET_TitActo' passing XMLPARSE( DOCUMENT XMLMENSAGEM ) as "a" 
+                                                       COLUMNS 
+                                                       NUMIDENTIFICADORBOLETOCIP    BIGINT   PATH    'NumIdentcTit' ) AS X
+                                                  WHERE MS.CODTIPOMENSAGEMDDA = 'DDA0106' ) )
+            /*
+            Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            --SELECT * FROM INSERT_MSG_DDA
+            SELECT A1.QTD_MSG_DDA, A2.QTD_MSG_ERRO, A3.QTD_MSG106, D1.QTD_DELBAIXAEFT, D2.QTD_DELBAIXAOPE
+            FROM 
+            (SELECT COALESCE(AA.QTD_MSG_DDA,0) QTD_MSG_DDA FROM SYSIBM.SYSDUMMY1 LEFT OUTER JOIN INSERT_MSG_DDA AA ON AA.QTD_MSG_DDA IS NOT NULL FETCH FIRST 1 ROW ONLY) A1,
+            INSERT_MSG_ERRO A2,
+            (SELECT COALESCE(AA.QTD_MSG106,0) QTD_MSG106 FROM SYSIBM.SYSDUMMY1 LEFT OUTER JOIN INSERT_MSG106 AA ON AA.QTD_MSG106 IS NOT NULL FETCH FIRST 1 ROW ONLY) A3,
+            QTD_MSGCONSDDA A4, DELBAIXAEFT D1, DELBAIXAOPE D2
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			]]>
+		</command>
+	</query>
+
+
+	<query name="GRAVAR_CAMPOS_BOLETO_ADDA102RET">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RET"></use-case>
+	    <description>Processamento da atualização do XML da ADDA102RET.</description>
+	    <command>
+			<![CDATA[
+            MERGE INTO DDA.BOLETODDA BUP
+            USING (SELECT XML1.NUMCTRLDDAPART,
+                          XML1.NUMIDENTIFICADORBOLETOCIP, 
+                          XML1.NUMSEQATUALCADBOLETO,
+                          XML1.NUMREFATUALCADBOLETO,
+                          XML1.CODISPBPARTDESTINATARIO,
+                          MBOL.NOMEFANTASIABENEFICIARIO,
+                          MBOL.DESCLOGRADOUROBENEFICIARIO,
+                          MBOL.DESCCIDADEBENEFICIARIO,
+                          MBOL.SIGLAUFBENEFICIARIO,
+                          MBOL.NUMCEPBENEFICIARIO,
+                          MBOL.CODTIPOPESSOABENEFICIARIOFINAL,
+                          MBOL.NUMCPFCNPJBENEFICIARIOFINAL,
+                          MBOL.NOMEBENEFICIARIOFINAL,
+                          MBOL.NOMEFANTASIABENEFICIARIOFINAL,
+                          MBOL.NOMEPAGADOR,
+                          MBOL.NOMEFANTASIAPAGADOR,
+                          MBOL.DESCLOGRADOUROPAGADOR,
+                          MBOL.DESCCIDADEPAGADOR,
+                          MBOL.SIGLAUFPAGADOR,
+                          MBOL.NUMCEPPAGADOR,
+                          MBOL.CODTIPOPESSOADDAAVALISTA,
+                          MBOL.NUMCPFCNPJAVALISTA,
+                          MBOL.NOMEAVALISTA,
+                          MBOL.IDCARTEIRA,
+                          MBOL.NUMDOCUMENTO,
+                          MBOL.IDESPECIEDOCUMENTO,
+                          MBOL.CODTIPOPAGAMENTO,
+                          MBOL.NUMPARCELA,
+                          MBOL.QTDTOTALPARCELA,
+                          MBOL.BOLTITULONEGOCIADO,
+                          MBOL.DATAVENCIMENTO,
+                          MBOL.VALORBOLETO,
+                          MBOL.NUMDIASPROTESTO,
+                          MBOL.DATALIMITEPAGAMENTO,
+                          MBOL.BOLBLOQUEIOPAGAMENTO,
+                          MBOL.VALORABATIMENTO,
+                          MBOL.QTDPAGAMENTOPARCIAL,
+                          MBOL.CODTIPOMODELOCALCULO,
+                          MBOL.CODAUTORIZACAOVALORDIVERGENTE,
+                          MBOL.CODINDICADORVALORMINIMO,
+                          MBOL.VALORMINIMO,
+                          MBOL.CODINDICADORVALORMAXIMO,
+                          MBOL.VALORMAXIMO,
+                          MBOL.DATAJUROS,
+                          MBOL.CODTIPOJUROS,
+                          MBOL.VALORPERCENTUALJUROS,
+                          MBOL.DATAMULTA,
+                          MBOL.CODTIPOMULTA,
+                          MBOL.VALORPERCENTUALMULTA,
+                          MBOL.DATADESCONTO1,
+                          MBOL.CODTIPODESCONTO1,
+                          MBOL.VALORPERCENTUALDESCONTO1,
+                          MBOL.DATADESCONTO2,
+                          MBOL.CODTIPODESCONTO2,
+                          MBOL.VALORPERCENTUALDESCONTO2,
+                          MBOL.DATADESCONTO3,
+                          MBOL.CODTIPODESCONTO3,
+                          MBOL.VALORPERCENTUALDESCONTO3
+                   FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA DET
+                   CROSS JOIN XMLTABLE ('$a/ArqRecebimento/Grupo_ADDA102RET_TitActo' passing DET.DESCXMLMENSAGEMRECEBIDA as "a" 
+                              COLUMNS
+                                  NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH   'NumIdentcTit',
+                                  NUMCTRLDDAPART                         BIGINT        PATH   'NumCtrlReqPart',
+                                  NUMSEQATUALCADBOLETO                   BIGINT        PATH   'NumSeqAtlzCadTit',
+                                  NUMREFATUALCADBOLETO                   BIGINT        PATH   'NumRefAtlCadTit',
+                                  CODISPBPARTDESTINATARIO                VARCHAR(8)    PATH   'ISPBPartDestinatarioPrincipal'
+                              ) AS XML1
+                   JOIN DDA.MENSAGEMDDABOLETO MBOL ON MBOL.IDMENSAGEMDDA = XML1.NUMCTRLDDAPART
+                   WHERE DET.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                   AND DET.BOLPROCESSADO = 0
+                   AND DET.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                  ) AS REC
+            ON (BUP.NUMIDENTIFICADORBOLETOCIP = REC.NUMIDENTIFICADORBOLETOCIP AND
+                BUP.NUMSEQATUALCADBOLETO &lt; REC.NUMSEQATUALCADBOLETO)
+            WHEN MATCHED THEN
+               UPDATE SET BUP.NUMREFATUALCADBOLETO       = REC.NUMREFATUALCADBOLETO,
+                          /*Os campos abaixo do primeiro SET são de atualização obrigatória para os registros encontrados*/
+                          BUP.NUMSEQATUALCADBOLETO       = REC.NUMSEQATUALCADBOLETO,
+                          BUP.CODISPBPARTDESTINATARIO    = REC.CODISPBPARTDESTINATARIO,
+                          BUP.DATAHORASITUACAOBOLETO     = CURRENT TIMESTAMP,
+                          BUP.DATAHORAULTIMAATUALIZACAO  = CURRENT TIMESTAMP,
+                           /*Campos Beneficiário Original*/
+                          BUP.NOMEFANTASIABENEFICIARIO   = REC.NOMEFANTASIABENEFICIARIO,
+                          BUP.DESCLOGRADOUROBENEFICIARIO = REC.DESCLOGRADOUROBENEFICIARIO,
+                          BUP.DESCCIDADEBENEFICIARIO     = REC.DESCCIDADEBENEFICIARIO,
+                          BUP.SIGLAUFBENEFICIARIO        = REC.SIGLAUFBENEFICIARIO,
+                          BUP.NUMCEPBENEFICIARIO         = DECODE(REC.NUMCEPBENEFICIARIO,0,NULL,REC.NUMCEPBENEFICIARIO),
+                          /*Campos Beneficiario Final*/
+                          BUP.CODTIPOPESSOABENEFICIARIOFINAL = REC.CODTIPOPESSOABENEFICIARIOFINAL,
+                          BUP.NUMCPFCNPJBENEFICIARIOFINAL    = DECODE(REC.CODTIPOPESSOABENEFICIARIOFINAL,'F',
+                                                                             LPAD(REC.NUMCPFCNPJBENEFICIARIOFINAL, 11, 0),
+                                                                             LPAD(REC.NUMCPFCNPJBENEFICIARIOFINAL, 14, 0)),
+                          BUP.NOMEBENEFICIARIOFINAL          = REC.NOMEBENEFICIARIOFINAL,
+                          BUP.NOMEFANTASIABENEFICIARIOFINAL  = REC.NOMEFANTASIABENEFICIARIOFINAL,
+                          /*Campos Pagador*/
+                          BUP.NOMEPAGADOR           = REC.NOMEPAGADOR,
+                          BUP.NOMEFANTASIAPAGADOR   = REC.NOMEFANTASIAPAGADOR,
+                          BUP.DESCLOGRADOUROPAGADOR = REC.DESCLOGRADOUROPAGADOR,
+                          BUP.DESCCIDADEPAGADOR     = REC.DESCCIDADEPAGADOR,
+                          BUP.SIGLAUFPAGADOR        = REC.SIGLAUFPAGADOR,
+                          BUP.NUMCEPPAGADOR         = DECODE(REC.NUMCEPPAGADOR,0,NULL,REC.NUMCEPPAGADOR),
+                          /*Campos Avalista*/
+                          BUP.CODTIPOPESSOADDAAVALISTA = REC.CODTIPOPESSOADDAAVALISTA,
+                          BUP.NUMCPFCNPJAVALISTA       = DECODE(REC.CODTIPOPESSOADDAAVALISTA,
+                                                                         1,LPAD(REC.NUMCPFCNPJAVALISTA, 11, 0),
+                                                                         2,LPAD(REC.NUMCPFCNPJAVALISTA, 14, 0),
+                                                                         REC.NUMCPFCNPJAVALISTA),
+                          BUP.NOMEAVALISTA             = REC.NOMEAVALISTA,
+                          /*Campos Documento Título*/
+                          BUP.IDCARTEIRA         = REC.IDCARTEIRA,
+                          BUP.NUMDOCUMENTO       = REC.NUMDOCUMENTO,
+                          BUP.IDESPECIEDOCUMENTO = REC.IDESPECIEDOCUMENTO,
+                          BUP.CODTIPOPAGAMENTO   = REC.CODTIPOPAGAMENTO,
+                          BUP.NUMPARCELA         = DECODE(REC.NUMPARCELA,0,NULL,REC.NUMPARCELA),
+                          BUP.QTDTOTALPARCELA    = DECODE(REC.QTDTOTALPARCELA,0,NULL,REC.QTDTOTALPARCELA),
+                          BUP.BOLTITULONEGOCIADO = REC.BOLTITULONEGOCIADO,
+                          /*Campos Instrução Pagamento*/
+                          BUP.DATAVENCIMENTO       = REC.DATAVENCIMENTO,
+                          BUP.VALORBOLETO          = REC.VALORBOLETO,
+                          BUP.NUMDIASPROTESTO      = REC.NUMDIASPROTESTO,
+                          BUP.DATALIMITEPAGAMENTO  = REC.DATALIMITEPAGAMENTO,
+                          BUP.BOLBLOQUEIOPAGAMENTO = REC.BOLBLOQUEIOPAGAMENTO,
+                          BUP.VALORABATIMENTO      = REC.VALORABATIMENTO,
+                          BUP.QTDPAGAMENTOPARCIAL  = REC.QTDPAGAMENTOPARCIAL,
+                          BUP.CODTIPOMODELOCALCULO = REC.CODTIPOMODELOCALCULO,
+                          /*Campos Instrução Valor Recebimento*/
+                          BUP.CODAUTORIZACAOVALORDIVERGENTE = REC.CODAUTORIZACAOVALORDIVERGENTE,
+                          BUP.CODINDICADORVALORMINIMO       = REC.CODINDICADORVALORMINIMO,
+                          BUP.VALORMINIMO                   = REC.VALORMINIMO,
+                          BUP.CODINDICADORVALORMAXIMO       = REC.CODINDICADORVALORMAXIMO,
+                          BUP.VALORMAXIMO                   = REC.VALORMAXIMO,
+                          BUP.DATAJUROS                     = REC.DATAJUROS,
+                          BUP.CODTIPOJUROS                  = COALESCE(REC.CODTIPOJUROS,5),
+                          BUP.VALORPERCENTUALJUROS          = COALESCE(REC.VALORPERCENTUALJUROS,0),
+                          BUP.DATAMULTA                     = REC.DATAMULTA,
+                          BUP.CODTIPOMULTA                  = COALESCE(REC.CODTIPOMULTA,3),
+                          BUP.VALORPERCENTUALMULTA          = COALESCE(REC.VALORPERCENTUALMULTA,0),
+                          BUP.DATADESCONTO1                 = REC.DATADESCONTO1,
+                          BUP.CODTIPODESCONTO1              = COALESCE(REC.CODTIPODESCONTO1,'0'),
+                          BUP.VALORPERCENTUALDESCONTO1      = COALESCE(REC.VALORPERCENTUALDESCONTO1,0),
+                          BUP.DATADESCONTO2                 = REC.DATADESCONTO2,
+                          BUP.CODTIPODESCONTO2              = REC.CODTIPODESCONTO2,
+                          BUP.VALORPERCENTUALDESCONTO2      = REC.VALORPERCENTUALDESCONTO2,
+                          BUP.DATADESCONTO3                 = REC.DATADESCONTO3,
+                          BUP.CODTIPODESCONTO3              = REC.CODTIPODESCONTO3,
+                          BUP.VALORPERCENTUALDESCONTO3      = REC.VALORPERCENTUALDESCONTO3
+			]]>
+		</command>
+	</query>
+	<query name="ALTERAR_BOLPROCESSADO_ADDA102RET">
+		<use-case name="Motor de Recebimento de Arquivos ADDA102RET"></use-case>
+	    <description>Processamento da atualização da tabela de Juros a partir do XML da ADDA102RET.</description>
+	    <command>
+			<![CDATA[
+            /*Esse UPDATE realiza alteração de todos os registros lidos para processados (BOLPROCESSADO = 1)
+              Foi realizada a separacao desse UPDATE do WITH pois o MERGE do BOLETO precisa ser realizado apos o WITH devido a verificacao do sequencial nas queries,
+              portanto e necessario que a atualizacao do BOLPROCESSADO seja realizada em comando separado dos demais comandos por ultimo
+            */
+            UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+            SET LOGU.BOLPROCESSADO = 1,
+			    LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+            WHERE LOGU.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+            AND   LOGU.BOLPROCESSADO = 0
+            AND   LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+			]]>
+		</command>
+	</query>
+</queries>

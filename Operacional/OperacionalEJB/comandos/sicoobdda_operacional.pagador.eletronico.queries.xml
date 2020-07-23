@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="OBTER_PAGADOR_DDA_CONTA">
+		<use-case name="Obter Pagador DDA conta"></use-case>
+		<description>Obter Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT pagadorConta
+						FROM PagadorDDAConta pagadorConta
+						JOIN pagadorConta.pagadorDDA pagador
+					WHERE pagador.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+				]]>
+		</command>
+	</query>
+	<query name="OBTER_PAGADOR_AGREGADO">
+		<use-case name="Obter Pagador Agregado"></use-case>
+		<description>Obter Pagador Agregado.</description>
+		<command>
+				<![CDATA[
+					SELECT DISTINCT 
+					       PE.NUMCPFCNPJ,
+					       PE.NOMEPESSOA
+					FROM DDA.PAGADORDDA P 
+					INNER JOIN DDA.PAGADORDDAAGREGADO PA
+	                      ON PA.IDPAGADORDDA = P.IDPAGADORDDA
+                    INNER JOIN CLI.VIW_PESSOA PE
+	                      ON PE.NUMCPFCNPJ = PA.NUMCPFCNPJAGREGADO
+					WHERE P.NUMCPFCNPJ = <bancoob:valor valor="${numCpfCnpj}"/>
+				]]>
+		</command>
+	</query>
+	<query name="OBTER_MENSAGEM_PENDENTE_PAGADOR">
+		<use-case name="Obter Mensagens pendentes do pagador"></use-case>
+		<description>Obter Mensagens pendentes do pagador.</description>
+		<command>
+				<![CDATA[
+					SELECT MSG.DATAHORACADASTRO,
+					       TM.DESCTIPOMENSAGEMDDA,
+					       SIT.DESCSITUACAOMENSAGEMDDA,
+					       COALESCE(MSGAGREG.NUMCPFCNPJAGREGADO, MSGPAG.NUMCPFCNPJPAGADOR) NUMCPFCNPJ
+					FROM DDA.MENSAGEMDDAPAGADOR MSGPAG
+					LEFT JOIN DDA.MENSAGEMDDAPAGADORAGREGADO MSGAGREG ON MSGAGREG.IDMENSAGEMDDA = MSGPAG.IDMENSAGEMDDA
+					JOIN DDA.MENSAGEMDDA MSG ON MSG.IDMENSAGEMDDA = MSGPAG.IDMENSAGEMDDA AND MSG.BOLMENSAGEMPENDENTE = 1
+					JOIN DDA.TIPOMENSAGEMDDA TM ON TM.CODTIPOMENSAGEMDDA = MSG.CODTIPOMENSAGEMDDA
+                    JOIN DDA.SITUACAOMENSAGEMDDA SIT ON SIT.CODSITUACAOMENSAGEMDDA = MSG.CODSITUACAOMENSAGEMDDA
+					WHERE MSGPAG.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpj}"/>
+					ORDER BY MSG.DATAHORACADASTRO DESC
+				]]>
+		</command>
+	</query>
+	<query name="EXISTE_SOLICITACAO_ADESAO">
+		<use-case name="Existe solicitação pagador"></use-case>
+		<description>Verifica se existe alguma solicitação para o pagador.</description>
+		<command>
+				<![CDATA[
+						SELECT MSGPAG.NUMCPFCNPJPAGADOR
+						FROM DDA.MENSAGEMDDAPAGADOR MSGPAG
+						JOIN DDA.MENSAGEMDDA MSG ON MSG.IDMENSAGEMDDA = MSGPAG.IDMENSAGEMDDA
+						WHERE MSG.BOLMENSAGEMPENDENTE = 1
+						AND MSG.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+						AND MSGPAG.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpj}"/>
+				]]>
+		</command>
+	</query>
+	<query name="EXISTE_SOLICITACAO_AGREGADO">
+		<use-case name="Existe solicitação agregado."></use-case>
+		<description>Verifica se existe alguma solicitação para o agregado.</description>
+		<command>
+				<![CDATA[
+					    SELECT MSGPAG.NUMCPFCNPJPAGADOR
+						FROM DDA.MENSAGEMDDA MSG
+						JOIN DDA.MENSAGEMDDAPAGADOR MSGPAG ON MSGPAG.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+						JOIN DDA.MENSAGEMDDAPAGADORAGREGADO MSGAGREG ON MSGAGREG.IDMENSAGEMDDA = MSGPAG.IDMENSAGEMDDA
+						WHERE MSG.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${codTipoMensagemDDA}"/>
+						  AND MSGPAG.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpj}"/>
+						  AND MSGAGREG.NUMCPFCNPJAGREGADO = <bancoob:valor valor="${numCpfCnpjAgregado}"/>
+						  AND MSG.BOLMENSAGEMPENDENTE = 1
+				]]>
+		</command>
+	</query>
+	<query name="EXISTE_PAGADOR_AGREGADO">
+		<use-case name="Existe Pagador DDA conta"></use-case>
+		<description>Existe Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT pagadorAgregado
+						FROM PagadorDDAAgregado pagadorAgregado
+						JOIN pagadorAgregado.pagadorDDA pagador
+					WHERE pagador.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+						AND pagadorAgregado.numCpfCnpjAgregado = <bancoob:valorOql valor="${numCpfCnpjAgregado}"/>
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_PAGADORDDA_AGREGADO">
+		<use-case name="Listar Pagador DDA Agregado"></use-case>
+		<description>Listar Pagador DDA Agregado</description>
+		<command>
+				<![CDATA[
+					SELECT pagadorAgregado
+						FROM PagadorDDAAgregado pagadorAgregado
+						JOIN pagadorAgregado.pagadorDDA pagador
+					WHERE pagador.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}"/>
+				]]>
+		</command>
+	</query>
+	
+	
+	
+	<query name="OBTER_TERMO_PAGADOR_ELETRONICO_DDA">
+		<use-case name="Existe Pagador DDA conta"></use-case>
+		<description>Existe Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT 
+				        a.IDTERMOPAGADOR,
+				        b.CODTIPOTERMOPAGADOR,
+				        a.DATAINICIOVIGENCIA,
+				        a.DATAFIMVIGENCIA,
+				        a.BOLFORMATOHTML,
+				        a.DESCCONTEUDOTERMOPAGADOR,
+				        b.DESCTIPOTERMOPAGADOR,
+				        CONCAT(V.NOMEOUVIDORIA, CONCAT(' - ',V.NUMTELOUVIDORIA)) AS DESCOUVIDORIA
+					FROM DDA.TERMOPAGADOR A
+					INNER JOIN DDA.TIPOTERMOPAGADOR B ON B.CODTIPOTERMOPAGADOR = A.CODTIPOTERMOPAGADOR,
+					     SCI.VIW_INSTITUICAO V
+					WHERE 
+					  <j:if test="${numCooperativa != 1}">
+					 	V.NUMCOOPERATIVA = <bancoob:valor valor="${numCooperativa}"/>
+					  </j:if> 
+					  <j:if test="${numCooperativa == 1}">
+					  	V.IDINSTITUICAO = 1
+					  </j:if>
+					  AND V.NUMPAC = 0
+					  AND A.DATAINICIOVIGENCIA   &lt;= <bancoob:valor valor="${dataInicioVigencia}"/>
+					  AND (  A.DATAFIMVIGENCIA     &gt;= <bancoob:valor valor="${dataFimVigencia}"/> 
+					  OR A.DATAFIMVIGENCIA IS NULL )
+					  AND A.CODTIPOTERMOPAGADOR = <bancoob:valor valor="${codTipoTermoPagador}"/> 
+					  AND A.BOLFORMATOHTML      = <bancoob:valor valor="${bolFormatoHtml}"/> 
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTA_TERMO_PAGADOR_ELETRONICO_DDA">
+		<use-case name="Existe Pagador DDA conta"></use-case>
+		<description>Existe Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT B.CODTIPOTERMOPAGADOR,
+					       B.DESCTIPOTERMOPAGADOR,
+					       A.DATAHORATERMODDA,
+					       A.IDCANAL,
+					       A.NUMCPFCNPJPAGADOR,
+					       (SELECT PP.NOMEPESSOA
+					        FROM CLI.VIW_PESSOA PP
+					        WHERE PP.NUMCPFCNPJ = A.NUMCPFCNPJPAGADOR
+					        FETCH FIRST 1 ROWS ONLY) NOMEPESSOAPAGADOR,      
+					       A.NUMCPFCNPJAGREGADO,
+					       (SELECT PA.NOMEPESSOA
+					        FROM CLI.VIW_PESSOA PA
+					        WHERE PA.NUMCPFCNPJ = A.NUMCPFCNPJAGREGADO
+					        FETCH FIRST 1 ROWS ONLY) NOMEPESSOAAGREGADO       
+					FROM DDA.HISTORICOTERMOPAGADOR A INNER JOIN DDA.TIPOTERMOPAGADOR B
+					                                 ON B.CODTIPOTERMOPAGADOR = A.CODTIPOTERMOPAGADOR
+					WHERE A.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpjPagador}"/>
+					ORDER BY A.DATAHORATERMODDA DESC 
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_HIST_TERMO_PAGADOR_ELETRONICO_DDA_CPF_CNPJ">
+		<use-case name="Existe Pagador DDA conta"></use-case>
+		<description>Existe Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT TTP.CODTIPOTERMOPAGADOR,
+					       TTP.DESCTIPOTERMOPAGADOR,
+					       HTP.DATAHORATERMODDA,
+					       HTP.IDCANAL,
+					       HTP.NUMCPFCNPJPAGADOR,
+					       HTP.NUMCPFCNPJAGREGADO
+				FROM DDA.HISTORICOTERMOPAGADOR HTP
+					 INNER JOIN DDA.TIPOTERMOPAGADOR TTP ON TTP.CODTIPOTERMOPAGADOR = HTP.CODTIPOTERMOPAGADOR
+				WHERE HTP.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpjPagador}"/>
+				AND HTP.IDHISTORICOTERMOPAGADOR = <bancoob:valor valor="${idHistoricoTermoPagador}"/>
+				ORDER BY HTP.DATAHORATERMODDA desc
+				FETCH FIRST 1 ROW ONLY
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_COMPROVANTE_ADESAO_DDA">
+		<use-case name="Listar os comprovantes de acordo com o CPF/CNPJ do cliente"></use-case>
+		<description>Existe Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+				SELECT HTP.IDHISTORICOTERMOPAGADOR, CASE WHEN HTP.CODTIPOTERMOPAGADOR=11 THEN 'ADESÃO' ELSE 'CANCELAMENTO' END as descComprovante, HTP.DATAHORATERMODDA 
+				FROM 
+					  DDA.HISTORICOTERMOPAGADOR HTP
+				WHERE 
+					HTP.NUMCPFCNPJPAGADOR = <bancoob:valor valor="${numCpfCnpjPagador}"/>
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_PAGADOR_ELETRONICO">
+		<use-case name="Pesquisa Pagador Eletronico Paginado"></use-case>
+		<description>Pesquisa Pagador Eletronico Paginado.</description>
+		<command>
+				<![CDATA[
+					SELECT DISTINCT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.PagadorDto(
+						   pag.id,
+						   pag.numCpfCnpj,
+						   
+						   (SELECT vp.nomePessoa FROM ViewPessoa vp 
+						   			WHERE vp.numCpfCnpj = pag.numCpfCnpj
+						   				and vp.idInstituicao = (SELECT CASE WHEN MIN(vi.id) IS NULL  AND pagcont.numAgencia =1 THEN 1 ELSE MIN(vi.id) END FROM ViewInstituicao vi 
+				   														WHERE vi.numCooperativa = pagcont.numAgencia)),
+						   pag.qtdAdesaoDDA,
+						   pag.bolSacadoEletronico,
+						   (SELECT CASE WHEN count(pagConta.id) = 0 THEN false ELSE true END from PagadorDDAConta pagConta where pagConta.pagadorDDA.id = pag.id ),
+					       (SELECT count(pagAgre2.pagadorDDA.id) from PagadorDDAAgregado pagAgre2 where pagAgre2.pagadorDDA.id = pag.id ),
+						   pagcont.dataHoraAdesao					   
+					) FROM PagadorDDA pag
+					LEFT JOIN pag.listaPagadorDDAConta pagcont
+					WHERE 1=1
+				 	AND pag.numCpfCnpj = <bancoob:valorOql valor="${numCpfCnpj}" />
+				 	
+				]]>
+		</command>
+	</query>
+	
+
+	<query name="LISTAR_AGREGADOS_POR_PAGADOR">
+		<use-case name="Obter Pagador Agregado"></use-case>
+		<description>Obter Pagador Agregado.</description>
+		<command>
+				<![CDATA[
+					SELECT DISTINCT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.PagadorAgregadoDto(
+					pa.numCpfCnpjAgregado, 
+					pa.codTipoPessoaAgregado,
+					(SELECT vp.nomePessoa FROM ViewPessoa vp 
+									WHERE vp.numCpfCnpj = pa.numCpfCnpjAgregado
+						   					and vp.idInstituicao = (SELECT MIN(vi.id) FROM ViewInstituicao vi 
+					   												WHERE vi.numCooperativa = pagcont.numAgencia))
+					)FROM PagadorDDAAgregado pa
+					JOIN pa.pagadorDDA p
+					LEFT JOIN p.listaPagadorDDAConta pagcont
+					WHERE pa.pagadorDDA.id = <bancoob:valorOql valor="${idPagadorDDA}"/> 
+				]]>
+		</command>
+	</query>
+
+	<query name="PESQUISAR_AGREGADO">
+		<use-case name="Obter Pagador Agregado"></use-case>
+		<description>Obter Pagador Agregado.</description>
+		<command>
+				<![CDATA[
+					SELECT DISTINCT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.PagadorAgregadoDto(
+						p.id,
+						pa.numCpfCnpjAgregado, 
+						pa.codTipoPessoaAgregado,
+							(SELECT vp.nomePessoa FROM ViewPessoa vp 
+									WHERE vp.numCpfCnpj = pa.numCpfCnpjAgregado
+						   					and vp.idInstituicao = (SELECT MIN(vi.id) FROM ViewInstituicao vi 
+					   												WHERE vi.numCooperativa = pagcont.numAgencia)),
+						p.numCpfCnpj,
+							(SELECT vp.nomePessoa FROM ViewPessoa vp 
+						   			WHERE vp.numCpfCnpj = p.numCpfCnpj
+						   				and vp.idInstituicao = (SELECT MIN(vi.id) FROM ViewInstituicao vi 
+				   														WHERE vi.numCooperativa = pagcont.numAgencia)),
+						p.qtdAdesaoDDA
+						)
+					FROM PagadorDDAAgregado pa, ViewInstituicao inst
+						JOIN pa.pagadorDDA p
+						LEFT JOIN p.listaPagadorDDAConta pagcont
+						WHERE
+						1=1
+						
+					<j:if test="${criterios.filtro.numCpfCnpj != null}">
+						AND pa.numCpfCnpjAgregado = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpj}" />
+					</j:if>
+					<j:if test="${criterios.filtro.numCooperativaSingular != null}">
+						AND pagcont.numAgencia = <bancoob:valorOql valor="${criterios.filtro.numCooperativaSingular}" />
+					</j:if>
+					
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_PESQUISAR_AGREGADO">
+		<use-case name="Obter Pagador Agregado"></use-case>
+		<description>Obter Pagador Agregado.</description>
+		<command>
+				<![CDATA[
+					SELECT count(DISTINCT pa.id)	FROM PagadorDDAAgregado pa
+						JOIN pa.pagadorDDA p
+						LEFT JOIN p.listaPagadorDDAConta pagcont
+						WHERE
+						1=1
+					<j:if test="${criterios.filtro.numCpfCnpj != null}">
+						AND pa.numCpfCnpjAgregado = <bancoob:valorOql valor="${criterios.filtro.numCpfCnpj}" />
+					</j:if>
+					
+					<j:if test="${criterios.filtro.numCooperativaSingular != null}">
+						AND pagcont.numAgencia = <bancoob:valorOql valor="${criterios.filtro.numCooperativaSingular}" />
+					</j:if>
+				]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_PAGADOR_ELETRONICO">
+		<use-case name="Pesquisa Pagador Eletronico Paginado"></use-case>
+		<description>Pesquisa Pagador Eletronico Paginado.</description>
+		<command>
+				<![CDATA[
+
+					SELECT
+                        X.IDPAGADORDDA,
+                        X.NUMAGENCIA,
+                        X.NUMCPFCNPJ,
+                        X.NOMEPESSOAPAGADOR,
+                        MAX(CASE WHEN X.CODTIPOTELEFONE = 0 THEN X.NUMDDD ELSE '' END) NUMDDDRESIDENCIAL,
+                        MAX(CASE WHEN X.CODTIPOTELEFONE = 0 THEN X.NUMTELEFONE ELSE '' END) NUMTELEFONERESIDENCIAL,
+                        MAX(CASE WHEN X.CODTIPOTELEFONE = 6 THEN X.NUMDDD ELSE '' END) NUMDDDCELULAR,
+                        MAX(CASE WHEN X.CODTIPOTELEFONE = 6 THEN X.NUMTELEFONE ELSE '' END) NUMTELEFONECELULAR,
+                        X.DESCLOGRADOURO,
+                        X.DESCCOMPLEMENTO,
+                        X.DESCNUMERO,
+                        X.NOMEBAIRRO,
+                        X.NOMELOCALIDADE,
+                        X.SIGLAUF,
+                        X.CODCEP,
+                        X.QTDADESAODDA,
+                        X.BOLSACADOELETRONICO,
+                        X.BOLPAGADORSICCOB,
+                        COUNT(DISTINCT X.IDPAGADORDDAAGREGADO) AS QTDAGREGADOS,
+                        X.DATAHORAADESAO
+                    FROM (SELECT
+                              PAG.IDPAGADORDDA,
+                              CONTA.NUMAGENCIA,
+                              PAG.NUMCPFCNPJ,
+                              PESSP.NOMEPESSOA AS NOMEPESSOAPAGADOR,
+                              TEL.CODTIPOTELEFONE,
+                              TEL.NUMDDD,
+                              TEL.NUMTELEFONE,  
+                              ENDER.DESCLOGRADOURO,
+                              ENDER.DESCCOMPLEMENTO,
+                              ENDER.DESCNUMERO,
+                              ENDER.NOMEBAIRRO,
+                              LOC.NOMELOCALIDADE,
+                              LOC.SIGLAUF,
+                              ENDER.CODCEP,
+                              PAG.QTDADESAODDA,
+                              PAG.BOLSACADOELETRONICO,
+                              CASE WHEN CONTA.IDPAGADORDDACONTA IS NULL THEN 0 ELSE 1 END AS BOLPAGADORSICCOB,
+                              AGREG.IDPAGADORDDAAGREGADO,
+                              CONTA.DATAHORAADESAO
+                          FROM DDA.PAGADORDDA PAG
+                          JOIN DDA.PAGADORDDACONTA CONTA ON CONTA.IDPAGADORDDA = PAG.IDPAGADORDDA
+                          LEFT OUTER JOIN DDA.PAGADORDDAAGREGADO AGREG ON AGREG.IDPAGADORDDA = PAG.IDPAGADORDDA
+                          LEFT OUTER JOIN SCI.VIW_INSTITUICAO INST ON INST.NUMCOOPERATIVA = CONTA.NUMAGENCIA and inst.CODTIPOUNIDADE = 1
+                          LEFT OUTER JOIN TABLE (SELECT PESSP.IDPESSOA,
+                                                        PESSP.IDINSTITUICAO,
+                                                        PESSP.NOMEPESSOA
+                                                 FROM CLI.VIW_PESSOA PESSP
+                                                 WHERE PESSP.NUMCPFCNPJ = PAG.NUMCPFCNPJ AND
+                                                       PESSP.IDINSTITUICAO= ( CASE WHEN INST.NUMCOOPERATIVA IS NULL AND CONTA.NUMAGENCIA = 1 THEN 1 ELSE INST.IDINSTITUICAO END )) PESSP ON 1=1
+                          LEFT OUTER JOIN TABLE (SELECT TEL1.CODTIPOTELEFONE,
+                                                        TEL1.NUMDDD,
+                                                        TEL1.NUMTELEFONE
+                                                 FROM CLI.VIW_TELEFONE TEL1
+                                                 WHERE TEL1.IDPESSOA = PESSP.IDPESSOA
+                                                 AND TEL1.IDINSTITUICAO = PESSP.IDINSTITUICAO
+                                                 AND TEL1.CODTIPOTELEFONE IN ( 0, 6 ) ) TEL ON 1=1
+                          LEFT OUTER JOIN TABLE (SELECT ENDER1.IDLOCALIDADE,
+                                                        ENDER1.DESCLOGRADOURO,
+                                                        ENDER1.DESCCOMPLEMENTO,
+                                                        ENDER1.DESCNUMERO,
+                                                        ENDER1.NOMEBAIRRO,
+                                                        ENDER1.CODCEP
+                                                 FROM CLI.VIW_ENDERECOCORRESPONDENCIA ENDER1
+                                                 WHERE ENDER1.IDPESSOA = PESSP.IDPESSOA
+                                                 AND ENDER1.IDINSTITUICAO = PESSP.IDINSTITUICAO
+                                                 AND ENDER1.CODTIPOENDERECO = 0) ENDER ON 1=1
+                          LEFT OUTER JOIN TABLE ( SELECT LOC1.IDLOCALIDADE,
+                                                         LOC1.NOMELOCALIDADE,
+                                                         LOC1.SIGLAUF
+                                                  FROM LOC.VIW_LOCALIDADE LOC1
+                                                  WHERE LOC1.IDLOCALIDADE = ENDER.IDLOCALIDADE ) LOC ON 1=1
+						  WHERE CONTA.NUMAGENCIA = <bancoob:valor valor="${numAgencia}"/>
+                         ) X
+                    GROUP BY
+                        X.IDPAGADORDDA,
+                        X.NUMAGENCIA,
+                        X.NUMCPFCNPJ,
+                        X.NOMEPESSOAPAGADOR,
+                        X.DESCLOGRADOURO,
+                        X.DESCCOMPLEMENTO,
+                        X.DESCNUMERO,
+                        X.NOMEBAIRRO,
+                        X.NOMELOCALIDADE,
+                        X.SIGLAUF,
+                        X.CODCEP,
+                        X.QTDADESAODDA,
+                        X.BOLSACADOELETRONICO,
+                        X.BOLPAGADORSICCOB,
+                        X.DATAHORAADESAO
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_LISTA_AGENCIA_PAGADOR">
+		<use-case name="Obter Agência Pagador"></use-case>
+		<description>Pesquisa Pagador Eletronico Paginado.</description>
+		<command>
+			<![CDATA[
+				SELECT DISTINCT pc.numAgencia FROM PagadorDDAConta pc WHERE pc.pagadorDDA.id = <bancoob:valorOql valor="${idPagadorDDA}" /> 
+			]]>
+		</command>
+	</query>	
+	
+	<query name="VERIFICA_PAGADOR_ELETRONICO_SICOOB">
+		<use-case name="VERIFICA_PAGADOR_ELETRONICO_SICOOB"></use-case>
+		<description>VERIFICA_PAGADOR_ELETRONICO_SICOOB</description>
+		<command>
+			<![CDATA[
+				SELECT DISTINCT ISPAGADORELETRONICO FROM (
+			        SELECT
+			           DISTINCT 1 as ISPAGADORELETRONICO
+			        FROM DDA.PAGADORDDA AS P
+			        JOIN DDA.PAGADORDDACONTA AS PC ON PC.IDPAGADORDDA = P.IDPAGADORDDA
+			        WHERE P.CODTIPOPESSOACIP = <bancoob:valor valor="${codTipoPessoa}"/>
+			           AND P.NUMCPFCNPJ = <bancoob:valor valor="${numCpfCnpj}"/>
+			           AND P.BOLSACADOELETRONICO = 1 
+			           
+			        UNION
+			        
+			        SELECT 
+			           DISTINCT 1 as ISPAGADORELETRONICO
+			        FROM DDA.PAGADORDDAAGREGADO PA
+			        WHERE PA.CODTIPOPESSOAAGREGADO = <bancoob:valor valor="${codTipoPessoa}"/>
+			          AND PA.NUMCPFCNPJAGREGADO = <bancoob:valor valor="${numCpfCnpj}"/>
+				) 
+			]]>
+		</command>
+	</query>	
+</queries>

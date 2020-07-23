@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+<queries>
+	<query name="PESQUISAR_TIPO_MENSAGEM">
+		<use-case name="PESQUISAR_TIPO_MENSAGEM"></use-case>
+		<description>LISTAR TIPO MENSAGEM</description>
+		<command>
+			<![CDATA[
+				FROM TipoMensagemDDA tm
+				WHERE 1=1
+				<j:if test="${criterios.filtro.codCategoriaMensagemDda != null}"> 
+					AND tm.categoriaMensagemDDA.codCategoriaMensagemDda = <bancoob:valorOql valor="${criterios.filtro.codCategoriaMensagemDda}" />
+				</j:if>
+			  	<j:if test="${criterios.filtro.codTipoGradeHoraria != null}">
+			  		AND tm.tipoGradeHoraria.codTipoGradeHoraria =  <bancoob:valorOql valor="${criterios.filtro.codTipoGradeHoraria}" />
+			  	</j:if>
+			  	<j:if test="${criterios.filtro.exigeMensagemRetorno == 1}">
+			  		AND tm.bolExigeMensagemRetorno =  true
+			  	</j:if>
+			  	<j:if test="${criterios.filtro.exigeMensagemRetorno == 0}">
+			  		AND tm.bolExigeMensagemRetorno =  false
+			  	</j:if>
+			  	<j:if test="${criterios.filtro.codTipoMensagem != null}">
+			  		AND tm.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+			  	</j:if>
+			  	
+			  	ORDER BY tm.codTipoMensagem, tm.numPrioridadeEnvio ASC
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_QTD_TIPO_MENSAGEM">
+		<use-case name="OBTER_QTD_TIPO_MENSAGEM"></use-case>
+		<description>OBTER_QTD_TIPO_MENSAGEM</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+					FROM TipoMensagemDDA tm 
+					WHERE 1=1
+					<j:if test="${criterios.filtro.codCategoriaMensagemDda != null}"> 
+						AND tm.categoriaMensagemDDA.codCategoriaMensagemDda = <bancoob:valorOql valor="${criterios.filtro.codCategoriaMensagemDda}" />
+					</j:if>
+			    	<j:if test="${criterios.filtro.codTipoGradeHoraria != null}">
+			    		AND tm.tipoGradeHoraria.codTipoGradeHoraria =  <bancoob:valorOql valor="${criterios.filtro.codTipoGradeHoraria}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.exigeMensagemRetorno == 1}">
+			    		AND tm.bolExigeMensagemRetorno =  true
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.exigeMensagemRetorno == 0}">
+			    		AND tm.bolExigeMensagemRetorno =  false
+			    	</j:if>
+				    <j:if test="${criterios.filtro.codTipoMensagem != null}">
+			    		AND tm.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+			    	</j:if>
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_TIPO_MENSAGEM">
+		<use-case name="Obter tipo mensagem"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				FROM TipoMensagemDDA tm ORDER BY tm.codTipoMensagem ASC
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_TIPO_MENSAGEM_POR_CATEGORIA">
+		<use-case name="Obter tipo mensagem"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				FROM TipoMensagemDDA tm 
+				WHERE tm.categoriaMensagemDDA.codCategoriaMensagemDda = <bancoob:valorOql valor="${codTipoCategoria}" />
+				ORDER BY tm.codTipoMensagem ASC
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_CATEGORIA_MENSAGEM_DDA">
+		<use-case name="Listar Categoria mensagem DDA"></use-case>
+		<description></description>
+		<command>
+			<![CDATA[
+				FROM CategoriaMensagemDDA cm ORDER BY cm.descCategoriaMensagemDda ASC
+			]]>
+		</command>
+	</query>
+	<query name="EXISTE_TIPO_MENSAGEM">
+		<use-case name="Obter tipo mensagem"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM TipoMensagemDDA tm
+				WHERE  tm.codTipoMensagem = <bancoob:valorOql valor="${codTipoMensagem}"/>
+			]]>
+		</command>
+	</query>
+	<query name="EXISTE_VINCULO_ARQUIVO_CORRESPONDENTE">
+		<use-case name="Obter tipo mensagem"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+					FROM TipoMensagemDDA tm
+					WHERE  tm.codTipoArquivoCorrespondente = <bancoob:valorOql valor="${codTipoMensagem}"/>
+			]]>
+		</command>
+	</query>
+</queries>

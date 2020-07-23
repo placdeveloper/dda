@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioListaPagadorAgregadoSDDA" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<style name="texto" isDefault="false" vAlign="Middle" markup="none" fontName="Arial" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box leftPadding="1"/>
+	</style>
+	<style name="textoCentralizado" isDefault="false" style="texto" hAlign="Center" markup="none" pattern="">
+		<box leftPadding="0"/>
+	</style>
+	<style name="textoNegrito" isDefault="false" style="texto" isBold="true" isItalic="false"/>
+	<style name="textoNegritoCentralizado" isDefault="false" style="textoNegrito" hAlign="Center">
+		<box leftPadding="0"/>
+	</style>
+	<style name="borda" isDefault="false" fill="Solid">
+		<pen lineWidth="1.0"/>
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="linhaTabela" isDefault="false" style="texto" mode="Opaque" backcolor="#CCCCCC" pattern="">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{COLUMN_COUNT}.intValue() % 2 == 1)]]></conditionExpression>
+			<style isDefault="false" style="linhaTabela" mode="Opaque" backcolor="#FFFFFF" markup="none"/>
+		</conditionalStyle>
+	</style>
+	<style name="linhaTabelaTextoCentralizado" isDefault="false" style="linhaTabela" hAlign="Center">
+		<box leftPadding="0"/>
+	</style>
+	<style name="box" isDefault="false" style="borda" mode="Opaque" forecolor="#FFFFFF" backcolor="#999999" hAlign="Center" vAlign="Middle" markup="styled" isBlankWhenNull="true" fontName="Arial" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineColor="#000000"/>
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<pen lineColor="#000000"/>
+			<topPen lineColor="#000000"/>
+			<leftPen lineColor="#000000"/>
+			<bottomPen lineColor="#000000"/>
+			<rightPen lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="textoBoxTitulo" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" hAlign="Center" vAlign="Middle" markup="none" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="labelTituloColuna" isDefault="false" style="texto" fill="Solid" hAlign="Right" isBold="true"/>
+	<style name="cabecalhoTabela" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" backcolor="#999999" fill="Solid" hAlign="Left" vAlign="Middle">
+		<pen lineWidth="1.0" lineColor="#999999"/>
+	</style>
+	<style name="textoCabecalhoTabela" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" hAlign="Left" vAlign="Middle" markup="none" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\SisbrIDE-4.5\\workspace\\COBRANCA\\AtendimentoBackoffice\\AtendimentoBackofficeEJB\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="numCooperativa" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="loginUsuario" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["sicoob.gesin1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="aplicativoSisBR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Sicoob"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="descFiltroOpcional" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["de 02/jan a 02/fev - ano 2015"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomeRelatorio" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Relatório Gerencial"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codigoRelatorio" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["COB-300"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="consultaTarifasDto" class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.ConsultaTarifasDDAPagasDto"/>
+	<parameter name="lancamento" class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.LancamentosTarifasDDADto"/>
+	<parameter name="consultaDto" class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.ConsultaMovimentoSicoobDDADto"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="numCodBarras" class="java.lang.String"/>
+	<field name="dataVencimento" class="java.util.Date"/>
+	<field name="dataEntrada" class="java.util.Date"/>
+	<field name="cpfCnpjBeneficiario" class="java.lang.String"/>
+	<field name="valor" class="java.math.BigDecimal"/>
+	<field name="nomeBeneficiario" class="java.lang.String"/>
+	<field name="cpfCnpjBeneficiarioFormatado" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="172" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="75"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="numCooperativa">
+					<subreportParameterExpression><![CDATA[$P{numCooperativa}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nomeRelatorio">
+					<subreportParameterExpression><![CDATA[$P{nomeRelatorio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="descFiltroOpcional">
+					<subreportParameterExpression><![CDATA[$P{descFiltroOpcional}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="aplicativoSisBR">
+					<subreportParameterExpression><![CDATA[$P{aplicativoSisBR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "subDDATemplateCabecalhoHorizontal.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement style="textoNegrito" x="0" y="104" width="74" height="22"/>
+				<textElement/>
+				<text><![CDATA[Data do Evento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="textoNegrito" x="0" y="82" width="94" height="22"/>
+				<textElement/>
+				<text><![CDATA[Data da Conciliação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="textoNegrito" x="0" y="126" width="76" height="22"/>
+				<textElement/>
+				<text><![CDATA[Evento Tarifável:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="texto" x="94" y="82" width="132" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{consultaTarifasDto}.getDataConciliacao()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="texto" x="76" y="126" width="283" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{consultaTarifasDto}.getDescEventoTarifavel()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="textoNegrito" x="607" y="82" width="58" height="22"/>
+				<textElement/>
+				<text><![CDATA[Quantidade:]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="texto" x="665" y="82" width="128" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{lancamento}.getQuantidadeApurada()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="textoNegrito" x="361" y="82" width="61" height="22"/>
+				<textElement/>
+				<text><![CDATA[Cooperativa:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="texto" x="74" y="104" width="152" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{lancamento}.getDataEvento()]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement style="texto" x="422" y="82" width="112" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{consultaTarifasDto}.getNumCooperativa()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="textoNegrito" x="361" y="126" width="53" height="22"/>
+				<textElement/>
+				<text><![CDATA[Valor Total:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="textoNegrito" x="361" y="104" width="104" height="22"/>
+				<textElement/>
+				<text><![CDATA[Valor Unitário da Tarifa:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="texto" x="465" y="104" width="142" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{lancamento}.getValorUnitario()]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="texto" x="414" y="126" width="193" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{lancamento}.getValorTotal()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="textoNegrito" x="0" y="148" width="122" height="22"/>
+				<textElement/>
+				<text><![CDATA[CPF/CNPJ do Beneficiário:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement style="texto" x="122" y="148" width="237" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{consultaDto}.getCpfCnpjBeneficiarioFormatado()]]></textFieldExpression>
+			</textField>
+			<elementGroup>
+				<staticText>
+					<reportElement style="textoNegrito" x="361" y="148" width="70" height="22">
+						<printWhenExpression><![CDATA[new Boolean($P{consultaDto}.isNumCodBarras() == Boolean.FALSE)]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<text><![CDATA[Linha Digitável:]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement style="texto" x="431" y="148" width="362" height="22">
+						<printWhenExpression><![CDATA[new Boolean($P{consultaDto}.isNumCodBarras() == Boolean.FALSE)]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{consultaDto}.getNumCodBarrasLinhaDigitavelFormatado()]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+			<elementGroup>
+				<textField isBlankWhenNull="true">
+					<reportElement style="texto" x="443" y="148" width="350" height="22">
+						<printWhenExpression><![CDATA[$P{consultaDto}.isNumCodBarras()]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{consultaDto}.getNumCodBarrasLinhaDigitavelFormatado()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="textoNegrito" x="361" y="148" width="82" height="22">
+						<printWhenExpression><![CDATA[$P{consultaDto}.isNumCodBarras()]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<text><![CDATA[Código de Barras:]]></text>
+				</staticText>
+			</elementGroup>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement style="cabecalhoTabela" x="0" y="0" width="234" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Código de Barras]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cabecalhoTabela" x="234" y="0" width="278" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CPF/CNPJ Beneficiário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cabecalhoTabela" x="512" y="0" width="100" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Data de Entrada DDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cabecalhoTabela" x="712" y="0" width="90" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="cabecalhoTabela" x="612" y="0" width="100" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Data de Vencimento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="linhaTabela" x="0" y="0" width="234" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{numCodBarras}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="linhaTabela" x="234" y="0" width="278" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{cpfCnpjBeneficiario} != null
+ ? $F{cpfCnpjBeneficiarioFormatado} + " - " : "") + $F{nomeBeneficiario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="linhaTabelaTextoCentralizado" x="712" y="0" width="90" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="linhaTabelaTextoCentralizado" x="512" y="0" width="100" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dataEntrada}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="linhaTabelaTextoCentralizado" x="612" y="0" width="100" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{dataVencimento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<subreport>
+				<reportElement x="0" y="5" width="802" height="15"/>
+				<subreportParameter name="loginUsuario">
+					<subreportParameterExpression><![CDATA[$P{loginUsuario}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="numeroDaPagina">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codigoRelatorio">
+					<subreportParameterExpression><![CDATA[$P{codigoRelatorio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "subDDATemplateRodapeHorizontal.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+</jasperReport>

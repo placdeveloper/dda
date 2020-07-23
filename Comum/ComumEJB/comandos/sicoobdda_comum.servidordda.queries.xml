@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+<queries>
+	<query name="OBTER_SERVIDOR_DDA">
+		<use-case name="OBTER_SERVIDOR_DDA"></use-case>
+		<description>OBTER_SERVIDOR_DDA</description>
+		<command>
+			<![CDATA[
+				SELECT * FROM DDA.SERVIDORDDA S
+				WHERE S.CODSERVIDORDDA = <bancoob:valor valor="${codServidorDDA}" />
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_SERVIDOR">
+		<use-case name="LISTAR_SERVIDOR"></use-case>
+		<description>LISTAR_SERVIDOR</description>
+		<command>
+			<![CDATA[
+				FROM ServidorDDA S
+				WHERE 1=1
+					<j:if test="${codServidorDDA != null}"> 
+						AND S.codServidorDDA = <bancoob:valorOql valor="${codServidorDDA}" />
+				  	</j:if>
+				  	<j:if test="${descPerfil != null}"> 
+						AND S.descPerfil = <bancoob:valorOql valor="${descPerfil}" />
+				  	</j:if>
+				  	<j:if test="${bolAtivo != null}"> 
+						AND S.bolAtivo = <bancoob:valorOql valor="${bolAtivo}" />
+				  	</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="ALTERAR_SERVIDOR">
+		<use-case name="ALTERAR_SERVIDOR"></use-case>
+		<description>ALTERAR_SERVIDOR</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.SERVIDORDDA SET
+					DESCPERFIL = <bancoob:valor valor="${descPerfil}" />,
+					BOLATIVO = <bancoob:valor valor="${bolAtivo}" />
+				WHERE CODSERVIDORDDA = <bancoob:valor valor="${codServidorDDA}" />
+			]]>
+		</command>
+	</query>
+</queries>

@@ -1,0 +1,1 @@
+{"host":"localhost","porta":"1099","servidor":"JBOSS","jndi":"sicoobdda_processamento/VerificarGradeHorariaPersonalizadaJobServicoRemote","bolSequencial":true,"paramDinamico":["","","INTEIRO"],"valoresParamFluxo":[],"valoresParamJob":[]}

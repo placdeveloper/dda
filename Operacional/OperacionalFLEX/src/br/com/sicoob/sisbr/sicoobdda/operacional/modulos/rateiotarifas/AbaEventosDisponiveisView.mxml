@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:VBoxBancoob xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:input="br.com.bancoob.componentes.input.*" 
+			xmlns:containers="br.com.bancoob.componentes.containers.*"
+			xmlns:rateiotarifas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.rateiotarifas.*"
+			width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+			paddingBottom="3" paddingTop="10" paddingLeft="5" paddingRight="5">
+	
+	<containers:HBoxBancoob verticalAlign="middle">
+		<Rotulo text="Período de Movimento:" />
+		<input:Data id="txtDataInicial" width="100" validarObrigatorio="true" />
+		<Rotulo text="a" />
+		<input:Data id="txtDataFinal" width="100" validarObrigatorio="true" />
+		
+		<Rotulo text="Evento Tarifável:" />
+		<input:Combo id="cmbEventoTarifavel" labelField="descEventoTarifavelExtrato" width="410" editable="false" somenteMaiusculas="false" inserirItemOpcional="true" />
+		
+		<Botao id="btnProcurar" label="Procurar" />
+		<Botao id="btnLimpar" label="Limpar" />
+	</containers:HBoxBancoob>
+	
+	<Rotulo text="Todos os Eventos Abaixo Estão Fora do Rateio" fontStyle="italic" />
+	
+	<rateiotarifas:TabelaEventoRateio id="grid" height="330" />
+	
+</containers:VBoxBancoob>

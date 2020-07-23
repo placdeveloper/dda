@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="1050" height="625"
+						  xmlns="br.com.bancoob.componentes.*"
+						  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+						  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+						  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+						  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+						  xmlns:bancoob="br.com.bancoob.componentes.*"
+						  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  >
+	
+	<mx:Style>
+		.fonteVerticalTab {
+			fontFamily: ArialEmbedded;
+			fontSize: 10px;
+		}
+	</mx:Style>
+	
+	<navegacao:Tab id="tabBeneficiarioCip" x="0" backgroundAlpha="0" borderThickness="2" styleName="fonteVerticalTab"  paddingTop="0" width="100%" height="95%" focusEnabled="false">
+		<containers:CanvasBancoob id="abaMensagens" label="Painel de Mensagens"  focusEnabled="false" width="100%" height="100%">
+			<monitoracaocip:AbaMonitorarMensagens id="abaMensagem" width="100%" height="100%"/>
+		</containers:CanvasBancoob>
+	</navegacao:Tab>
+	
+	<containers:HBoxBancoob id="hbBotoes" width="100%" horizontalAlign="right" x="0" y="600" focusEnabled="false">	
+		<bancoob:Botao id="btnFechar" label="Fechar" />
+	</containers:HBoxBancoob>
+</cadastro:FormularioCadastroView >

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<componentes:Modulo 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:grid="br.com.bancoob.componentes.grid.*"
+	clipContent="false" verticalScrollPolicy="off" paddingLeft="1" paddingRight="1"
+	width="700" height="425">
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.PagadorAgregadoDTO;
+			
+			private static function retornaLabel(objeto1:Object, objeto2:Object = null):String {
+				var dto:PagadorAgregadoDTO = objeto1 as PagadorAgregadoDTO;
+				if(dto.codTipoPessoa == "F"){
+					return "Pessoa Física";
+				}else{
+					return "Pessao Jurídica";
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<containers:VBoxBancoob width="100%" height="100%" id="vbox1">
+		
+		<titulo:SubtituloView texto="Pagador" width="100%" />
+		<containers:HBoxBancoob width="100%" >
+			<containers:CanvasBancoob id="canvasNome" width="100%" verticalCenter="0">
+				<Rotulo text="Nome:" width="50" x="20" fontWeight="bold" />
+				<Rotulo  id="txtNomePagador" width="100%" x="55"  textAlign="left" maxWidth="300"/>
+				
+				<Rotulo text="CPF/CNPJ:" width="115" x="20" y="30" fontWeight="bold"/>
+				<Rotulo id="txtCpfCnpj" width="110" x="80" y="30" textAlign="left" />
+				
+				<Rotulo text="IF Aderente:" width="115" x="362" y="30" fontWeight="bold" />
+				<Rotulo id="txtPagadorEletronicoSicoob" width="200" x="430" y="30" />
+				
+				<Rotulo text="Data Adesão:" width="105"  fontWeight="bold" x="360"  />
+				<mx:Label id="txtDataAdesao" width="200" x="430" />
+				
+				<Rotulo text="Situação na CIP:" width="100"  fontWeight="bold" x="20" y="60"/>
+				<Rotulo id="txtSituaçãoCip" width="200" textAlign="left" x="105" y="60" />
+				
+				<Rotulo text="Qtd. IF adesão:" width="115"  fontWeight="bold" x="360" y="60"/>
+				<Rotulo id="txtQtdIfAdesao" width="200"   textAlign="left" x="440" y="60"/>
+				
+				<grid:Grid id="listaContaCorrente"  visible="true" width="120" height="75" fontWeight="bold" sortableColumns="false" verticalScrollPolicy="auto" editable="false" doubleClickEnabled="false" x="545">
+					<grid:columns>
+						<mx:DataGridColumn dataField="{data}" headerText="Agência" width="300" textAlign="center" />
+					</grid:columns>
+				</grid:Grid>
+				
+			</containers:CanvasBancoob>
+		</containers:HBoxBancoob>
+		
+		<titulo:SubtituloView id="tituloFiltro" texto="Agregados" width="100%" />
+		
+		<grid:Grid id="listaAgregados" width="100%" height="100%" fontWeight="bold" sortableColumns="false" verticalScrollPolicy="auto" editable="false" doubleClickEnabled="false">
+			<grid:columns>
+				<mx:DataGridColumn dataField="nomePessoa" headerText="Nome" width="300" textAlign="center" />
+				<mx:DataGridColumn dataField="numCpfCnpj" headerText="CPF/CNPJ"  textAlign="center" />
+				<mx:DataGridColumn dataField="codTipoPessoa" headerText="Tipo Pessoa" textAlign="center" editorDataField="selectedDate" labelFunction="retornaLabel" />
+			</grid:columns>
+		</grid:Grid>
+		<titulo:LinhaView width="100%" />
+		<containers:HBoxBancoob horizontalAlign="right" width="100%" >
+			<Botao id="btnImprimir" label="Imprimir"/>
+			<Botao id="btnFechar" label="Fechar"/>
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+</componentes:Modulo> 

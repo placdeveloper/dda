@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="580" height="170"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true" xmlns:monitoracaocip="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.monitoracaocip.*"  >
+
+	<containers:VBoxBancoob width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<titulo:SubtituloView id="tituloFiltro" left="0" width="100%" top="0"/>
+		<containers:HBoxBancoob width="100%">
+			<Rotulo text="Evento Tarifável: " width="125" textAlign="right"/>
+			<Rotulo id="descEventoTarifavel" width="350" textAlign="left" paddingLeft="5"/>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" >
+			<containers:HBoxBancoob width="100%" >
+				<Rotulo text="Valor cobrado pela CIP: " width="125" textAlign="right"/>
+				<comumflex:CampoMoedaDDAView id="vlrCobradoCIP" width="100%" permitirValoreNegativos="false" maxChars="13" casasDecimais="2"/>
+			</containers:HBoxBancoob>
+		
+			<containers:HBoxBancoob width="100%" >
+				<Rotulo text="Valor cobrado pelo Sicoob/Bancoob: " width="170" textAlign="right"/>
+				<comumflex:CampoMoedaDDAView id="vlrCobradoBancoob" width="100%" permitirValoreNegativos="false" maxChars="13" casasDecimais="2"/>
+			</containers:HBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" verticalAlign="middle" paddingBottom="10">
+			<Rotulo text="Data vigência:" width="125" textAlign="right" />
+			<input:Combo id="cmbDia" width="80" toolTip="Dia" enabled="false"/>
+			
+			<Rotulo text="/" width="10" textAlign="right"/>
+			<input:Combo id="cmbMes" labelField="label"  width="110" toolTip="Mês" dropdownWidth="110"/>
+			
+			<Rotulo text="/" width="10" textAlign="right"/>
+			<input:Texto id="txtAno" width="80" permitirValoreNegativos="false" maxChars="4" toolTip="Ano" fontWeight="bold" agruparDigitos="false" tipoEntrada="1"/>
+		</containers:HBoxBancoob>
+		
+		<titulo:LinhaView width="100%" />
+		
+		<containers:HBoxBancoob width="100%" paddingTop="5" horizontalAlign="right">
+			<bancoob:Botao label="OK" id="btnSalvar" verticalCenter="0"  />
+			<bancoob:Botao label="Cancelar" id="btnCancelar" verticalCenter="0"  />
+			<bancoob:Botao label="Fechar" id="btnFechar" verticalCenter="0"  />
+		</containers:HBoxBancoob>			
+	</containers:VBoxBancoob>
+</cadastro:FormularioCadastroView >

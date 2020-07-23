@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="1070" height="550" 
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:tarifasddapagas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tarifasddapagas.*"
+							deveLimparPesquisa="false">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.bancoob.util.FormatUtil;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.ConsultaMovimentoSicoobDDADTO;
+			
+			/**
+			 * Método responsável por formatar a coluna do número da conta corrente.
+			 */
+			private function labelDescBeneficiario(obj:Object, obj2:Object = null):String {
+				if (obj != null) {
+					if (obj is ConsultaMovimentoSicoobDDADTO) {
+						var dto:ConsultaMovimentoSicoobDDADTO = obj as ConsultaMovimentoSicoobDDADTO;
+						
+						return (dto.cpfCnpjBeneficiario ? (FormatUtil.formataCPFCNPJ(dto.cpfCnpjBeneficiario) + " - ") : "") + dto.nomeBeneficiario;
+					}
+				}
+				
+				return "---";
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaTarifas">
+			<painellista:metodoPesquisa>pesquisarMovimentacaoSicoobDDAPaginado</painellista:metodoPesquisa>
+			
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="pesquisarMovimentacaoSicoobDDAPaginado">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ConsultaTarifasDDAServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>
+			</painellista:servicoPesquisa>
+			
+			<painellista:painelFiltro>
+				<tarifasddapagas:DetalharMovimentoSicoobDDAFiltroView id="painelFiltro" width="100%" height="100%" />
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				<tabelapaginada:TabelaPaginadaBanco id="grid" width="98%" titulo="TARIFAS DDA PAGAS" height="100%" tamanhoPagina="10">
+					<tabelapaginada:MetadadosTabela id="metadados">
+						<grid:ColunaGrid dataField="numCodBarras" headerText="Código de Barras" width="288" wordWrap="true" headerWordWrap="true" sortable="false" />
+						<grid:ColunaGrid dataField="descBeneficiario" labelFunction="{labelDescBeneficiario}" headerText="CPF/CNPJ Beneficiário" width="483" wordWrap="true" headerWordWrap="true" sortable="false" />
+						<grid:ColunaGrid dataField="dataEntrada" headerText="Data de Entrada DDA" width="98" textAlign="center" headerWordWrap="true" sortable="false" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" />
+						<grid:ColunaGrid dataField="dataVencimento" headerText="Data de Vencimento" width="98" textAlign="center" headerWordWrap="true" sortable="false" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" />
+						<grid:ColunaGrid dataField="valor" headerText="Valor" width="103" headerWordWrap="true" textAlign="center" wordWrap="true" sortable="false" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>
+			</painellista:tabelaPaginada>
+			
+			<containers:VBoxBancoob x="1030" y="432" id="gridBotoes">
+				<Botao id="btnDetalhar" toolTip="Detalhar Boleto" styleName="botaoCrudProcurarPeq" enabled="false" />
+			</containers:VBoxBancoob>
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

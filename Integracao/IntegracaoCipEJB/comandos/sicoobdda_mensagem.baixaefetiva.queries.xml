@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="GRAVAR_BOLETODDA_BAIXA_EFETIVA_XML_ADDA118RR2">
+		<use-case name="Motor de Recebimento de Arquivos ADDA118RR2"></use-case>
+	    <description>Gravar BoletoDDABaixaEfet do XML ADDA118RR2.</description>
+	    <command>
+			<![CDATA[
+            WITH 
+            LOGDETREC AS ( SELECT BOL.IDBOLETODDA,
+                                  BXEF.NUMIDENTIFICADORBAIXAEFET AS NUM_IDENT_BX_EXISTENTE,
+                                  Y.NUMIDENTIFICADORBAIXAEFET,
+                                  Y.NUMSEQATUALBAIXAEFET,
+                                  Y.DATAPROCESSAMENTOBAIXAEFET,
+                                  Y.DATAHORAPROCESSAMENTOBAIXAEFET,
+                                  Y.VALORBAIXAEFET,
+                                  Y.NUMCODBARRASBAIXAEFET,
+                                  Y.CODCANALPAGAMENTO,
+                                  Y.CODMEIOPAGAMENTO,
+                                  Y.NUMIDENTIFICADORBAIXAOPERACIONAL,
+                                  Y.CODTIPOBAIXAEFETIVA,
+                                  Y.CODISPBPARTRECEBEDORBAIXAEFETIVA,
+                                  Y.CODPARTRECEBEDORBAIXAEFETIVA,
+                                  Y.NUMREFATUALCADBOLETO,
+                                  Y.QTDPAGAMENTOPARCIALREG,
+                                  Y.CODSITUACAOBOLETOPAGAMENTO,
+                                  Y.VALORSALDOPAGAMENTO,
+                                  Y.CODSITUACAOBOLETOPAGAMENTOBOL,
+                                  Y.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                                  /*Somente gravará o XML na tabela de mensagem em caso de erro*/
+                                  CASE WHEN BOL.IDBOLETODDA IS NULL THEN
+                                     XMLSERIALIZE(Y.DESCXMLMENSAGEMRECEBIDA AS VARCHAR(30000))
+                                  ELSE
+                                     NULL
+                                  END AS DESCXMLMENSAGEMRECEBIDA
+                           FROM ( SELECT X.NUMIDENTIFICADORBAIXAEFET,
+                                         X.NUMSEQATUALBAIXAEFET,
+                                         X.DATAPROCESSAMENTOBAIXAEFET,
+                                         X.DATAHORAPROCESSAMENTOBAIXAEFET,
+                                         X.VALORBAIXAEFET,
+                                         X.NUMCODBARRASBAIXAEFET,
+                                         DECODE(X.CODCANALPAGAMENTO,0,NULL,X.CODCANALPAGAMENTO ) CODCANALPAGAMENTO,
+                                         DECODE(X.CODMEIOPAGAMENTO,0,NULL,X.CODMEIOPAGAMENTO ) CODMEIOPAGAMENTO,
+                                         DECODE(TRIM(X.NUMIDENTIFICADORBAIXAOPERACIONAL),'',NULL,X.NUMIDENTIFICADORBAIXAOPERACIONAL ) NUMIDENTIFICADORBAIXAOPERACIONAL,
+                                         X.CODTIPOBAIXAEFETIVA,
+                                         DECODE(TRIM(X.CODISPBPARTRECEBEDORBAIXAEFETIVA),'',NULL,X.CODISPBPARTRECEBEDORBAIXAEFETIVA ) CODISPBPARTRECEBEDORBAIXAEFETIVA,
+                                         DECODE(TRIM(X.CODPARTRECEBEDORBAIXAEFETIVA),'',NULL,X.CODPARTRECEBEDORBAIXAEFETIVA ) CODPARTRECEBEDORBAIXAEFETIVA,
+                                         X.NUMIDENTIFICADORBOLETOCIP,
+                                         X.NUMREFATUALCADBOLETO,
+                                         COALESCE(X.QTDPAGAMENTOPARCIALREG,'0') AS QTDPAGAMENTOPARCIALREG,
+                                         X.CODSITUACAOBOLETOPAGAMENTO,
+                                         X.VALORSALDOPAGAMENTO,
+                                         X.CODSITUACAOBOLETOPAGAMENTOBOL,
+                                         L.IDLOGDETRECEBIMENTOOARQUIVODDA,
+                                         L.DESCXMLMENSAGEMRECEBIDA
+                                  FROM DDA.LOGDETRECEBIMENTOOARQUIVODDA L,
+                                       XMLTABLE ('$d/ArqRecebimento/Grupo_ADDA118RR2_Tit' passing DESCXMLMENSAGEMRECEBIDA as "d" 
+                                          COLUMNS 
+                                             NUMIDENTIFICADORBAIXAEFET              BIGINT        PATH   'NumIdentcBaixaEft',
+                                             NUMSEQATUALBAIXAEFET                   BIGINT        PATH   'NumSeqAtlzBaixaEft',
+                                             DATAPROCESSAMENTOBAIXAEFET             DATE          PATH   'DtProcBaixaEft',
+                                             DATAHORAPROCESSAMENTOBAIXAEFET         TIMESTAMP     PATH   'DtHrProcBaixaEft',
+                                             VALORBAIXAEFET                         DECIMAL(18,2) PATH   'VlrBaixaEftTit',
+                                             NUMCODBARRASBAIXAEFET                  VARCHAR(44)   PATH   'NumCodBarrasBaixaEft',
+                                             CODCANALPAGAMENTO                      SMALLINT      PATH   'CanPgto',
+                                             CODMEIOPAGAMENTO                       SMALLINT      PATH   'MeioPgto',
+                                             NUMIDENTIFICADORBAIXAOPERACIONAL       BIGINT        PATH   'NumIdentcBaixaOperac',
+                                             CODTIPOBAIXAEFETIVA                    SMALLINT      PATH   'TpBaixaEft',
+                                             CODISPBPARTRECEBEDORBAIXAEFETIVA       VARCHAR(8)    PATH   'ISPBPartRecbdrBaixaEft',
+                                             CODPARTRECEBEDORBAIXAEFETIVA           VARCHAR(3)    PATH   'CodPartRecbdrBaixaEft',
+                                             NUMIDENTIFICADORBOLETOCIP              BIGINT        PATH   'NumIdentcTit',
+                                             NUMREFATUALCADBOLETO                   BIGINT        PATH   'NumRefAtlCadTit',
+                                             QTDPAGAMENTOPARCIALREG                 INTEGER       PATH   'QtdPgtoParclRegtd',
+                                             CODSITUACAOBOLETOPAGAMENTO             CHAR(2)       PATH   'SitTitPgto',
+                                             VALORSALDOPAGAMENTO                    DECIMAL(18,2) PATH   'VlrSldTotAtlPgtoTit',
+                                             CODSITUACAOBOLETOPAGAMENTOBOL          CHAR(2)       PATH   'SitTit'
+                                       ) AS X
+                                  WHERE L.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogArquivoRecebido}"/>
+                                  AND L.BOLPROCESSADO = 0
+                                  AND L.IDLOGDETRECEBIMENTOOARQUIVODDA BETWEEN <bancoob:valor valor="${idLogDetArqInicial}"/> AND <bancoob:valor valor="${idLogDetArqFinal}"/>
+                              ) Y
+                              LEFT OUTER JOIN DDA.BOLETODDA BOL ON BOL.NUMIDENTIFICADORBOLETOCIP = Y.NUMIDENTIFICADORBOLETOCIP
+                              LEFT OUTER JOIN DDA.BOLETODDABAIXAEFET BXEF ON BXEF.IDBOLETODDA = BOL.IDBOLETODDA AND
+                                                                             BXEF.NUMIDENTIFICADORBAIXAEFET = Y.NUMIDENTIFICADORBAIXAEFET ),
+            BOLETOBAIXAEFT AS ( SELECT COUNT(*) QTD_BOLETOBAIXAEFT
+                                FROM FINAL TABLE ( INSERT
+                                                   INTO DDA.BOLETODDABAIXAEFET(IDBOLETODDA,
+                                                                               NUMIDENTIFICADORBAIXAEFET,
+                                                                               NUMREFATUALBAIXAEFET,
+                                                                               NUMSEQATUALBAIXAEFET,
+                                                                               DATAPROCESSAMENTOBAIXAEFET,
+                                                                               DATAHORAPROCESSAMENTOBAIXAEFET,
+                                                                               VALORBAIXAEFET,
+                                                                               NUMCODBARRASBAIXAEFET,
+                                                                               CODCANALPAGAMENTO,
+                                                                               CODMEIOPAGAMENTO,
+                                                                               NUMIDENTIFICADORBAIXAOPERACIONAL,
+                                                                               CODTIPOBAIXAEFETIVA,
+                                                                               CODISPBPARTRECEBEDORBAIXAEFETIVA,
+                                                                               CODPARTRECEBEDORBAIXAEFETIVA,
+                                                                               NUMCODBARRASCAMPOLIVRE)
+                                                   SELECT REC.IDBOLETODDA,
+                                                          REC.NUMIDENTIFICADORBAIXAEFET,
+                                                          NULL,
+                                                          REC.NUMSEQATUALBAIXAEFET,
+                                                          REC.DATAPROCESSAMENTOBAIXAEFET,
+                                                          REC.DATAHORAPROCESSAMENTOBAIXAEFET,
+                                                          REC.VALORBAIXAEFET,
+                                                          REC.NUMCODBARRASBAIXAEFET,
+                                                          REC.CODCANALPAGAMENTO,
+                                                          REC.CODMEIOPAGAMENTO,
+                                                          REC.NUMIDENTIFICADORBAIXAOPERACIONAL,
+                                                          REC.CODTIPOBAIXAEFETIVA,
+                                                          REC.CODISPBPARTRECEBEDORBAIXAEFETIVA,
+                                                          REC.CODPARTRECEBEDORBAIXAEFETIVA,
+                                                          SUBSTR(REC.NUMCODBARRASBAIXAEFET,20,25) AS NUMCODBARRASCAMPOLIVRE
+                                                   FROM LOGDETREC REC
+                                                   WHERE REC.IDBOLETODDA IS NOT NULL
+                                                   AND   REC.NUM_IDENT_BX_EXISTENTE IS NULL ) ),
+            BOLDDA AS ( SELECT COUNT(*) QTD_BOLETODDA
+                        FROM FINAL TABLE ( UPDATE DDA.BOLETODDA BUP
+                                           SET ( BUP.NUMREFATUALCADBOLETO,
+                                                 BUP.QTDPAGAMENTOPARCIALREG,
+                                                 BUP.CODSITUACAOBOLETOPAGAMENTO,
+                                                 BUP.VALORSALDOPAGAMENTO,
+                                                 BUP.CODSITUACAOBOLETO,
+                                                 BUP.DATAHORAULTIMAATUALIZACAO) = ( SELECT REC1.NUMREFATUALCADBOLETO,
+                                                                                           COALESCE(REC1.QTDPAGAMENTOPARCIALREG,0),
+                                                                                           REC1.CODSITUACAOBOLETOPAGAMENTO,
+                                                                                           REC1.VALORSALDOPAGAMENTO,
+                                                                                           REC1.CODSITUACAOBOLETOPAGAMENTOBOL,
+                                                                                           CURRENT TIMESTAMP
+                                                                                    FROM LOGDETREC REC1
+                                                                                    WHERE REC1.IDBOLETODDA = BUP.IDBOLETODDA
+                                                                                    AND   REC1.IDBOLETODDA IS NOT NULL
+                                                                                    AND   REC1.NUM_IDENT_BX_EXISTENTE IS NULL )
+                                           WHERE BUP.IDBOLETODDA IN ( SELECT REC2.IDBOLETODDA
+                                                                      FROM LOGDETREC REC2
+                                                                      WHERE REC2.IDBOLETODDA IS NOT NULL
+                                                                      AND   REC2.NUM_IDENT_BX_EXISTENTE IS NULL ) ) ),
+            MSGDDA AS ( SELECT COUNT(*) QTD_MSGDDA
+                        FROM FINAL TABLE ( INSERT
+                                           INTO DDA.MENSAGEMDDA ( IDMENSAGEMDDAORIGEM,
+                                                                  CODTIPOMENSAGEMDDA,
+                                                                  DATAMOVIMENTO,
+                                                                  DATAHORAMENSAGEM,
+                                                                  QTDTOTREG,
+                                                                  DATAHORAPROTOCOLO,
+                                                                  NUMOPERACAO,
+                                                                  DESCERROPROTOCOLO,
+                                                                  XMLMENSAGEM,
+                                                                  BOLORIGEMSICOOB,
+                                                                  DATAHORACADASTRO,
+                                                                  NUMPRIORIDADEENVIO,
+                                                                  NUMCONTROLEDDA,
+                                                                  IDUSUARIOSOLICITANTE,
+                                                                  IDINSTITUICAOSOLICITANTE,
+                                                                  IDCANAL )
+                                           SELECT NULL AS IDMENSAGEMDDAORIGEM,
+                                                  'ERRO001' AS CODTIPOMENSAGEMDDA,
+                                                  CURRENT DATE AS DATAMOVIMENTO,
+                                                  NULL AS DATAHORAMENSAGEM,
+                                                  NULL AS QTDTOTREG,
+                                                  NULL AS DATAHORAPROTOCOLO,
+                                                  NULL AS NUMOPERACAO,
+                                                  NULL AS DESCERROPROTOCOLO,
+                                                  REC.DESCXMLMENSAGEMRECEBIDA AS XMLMENSAGEM,
+                                                  1 AS BOLORIGEMSICOOB,
+                                                  CURRENT TIMESTAMP AS DATAHORACADASTRO,
+                                                  1 AS NUMPRIORIDADEENVIO,
+                                                  NULL AS NUMCONTROLEDDA,
+                                                  'DDA-CIP' AS IDUSUARIOSOLICITANTE,
+                                                  '1' AS IDINSTITUICAOSOLICITANTE,
+                                                  1 AS IDCANAL
+                                           FROM LOGDETREC REC
+                                           WHERE REC.IDBOLETODDA IS NULL ) ),
+            LOGDETUPD AS ( SELECT COUNT(*) QTD_LOGDETUPD
+                           FROM FINAL TABLE ( UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA LOGU
+                                              SET LOGU.BOLPROCESSADO = 1,
+                                                  LOGU.DATAHORAPROCESSAMENTO = CURRENT TIMESTAMP
+                                              WHERE LOGU.IDLOGDETRECEBIMENTOOARQUIVODDA IN ( SELECT REC2.IDLOGDETRECEBIMENTOOARQUIVODDA
+                                                                                             FROM LOGDETREC REC2 ) ) )
+            /*Consulta de apoio para repurar os quantitativos alterados em caso de teste da query (Em caso de uso substituir SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1 por esse)
+            SELECT QTD_BOLETOBAIXAEFT, QTD_BOLETODDA, QTD_MSGDDA, QTD_LOGDETUPD
+            FROM BOLETOBAIXAEFT A1, BOLDDA A2, MSGDDA A3, LOGDETUPD A4
+            */
+            /*Esse aqui é o SELECT que realmente retornará no final da execução de todo o comando*/
+            SELECT 1 AS DUMMY FROM SYSIBM.SYSDUMMY1
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_MENSAGEMDDA_BAIXA_EFETIVA_REFERENCIAS">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen do Baixa Efetiva para envio.</description>
+	    <command>
+			<![CDATA[
+			     SELECT MBF.IDMENSAGEMDDA,  
+			       MBF.NUMCODIGOBARRA, 
+			       MBF.CODTIPOBAIXAEFETIVA, 
+			       CASE 
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN 0
+			          ELSE MBF.VALORBAIXA
+			       END VALORBAIXA,
+			       BBF.NUMREFATUALBAIXAEFET, 
+			       BBF.NUMSEQATUALBAIXAEFET, 
+			       BBF.IDBOLETODDABAIXAEFET,
+			       CASE
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+			          ELSE BBO.NUMIDENTIFICADORBAIXAOPER
+			       END NUMIDENTIFICADORBAIXAOPER,
+			       CASE
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+			          ELSE BBO.CODCANALPAGAMENTO 
+			       END CODCANALPAGAMENTO,   
+			       CASE
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+			          ELSE BBO.CODMEIOPAGAMENTO
+			       END CODMEIOPAGAMENTO,
+			       CASE
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+			          ELSE BBO.CODPARTRECEBEDORBAIXAOPERACIONAL
+			       END codPartRecbdrBaixaOper,
+			        CASE
+			          WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+			          ELSE BBO.CODISPBPARTRECEBEDORBAIXAOPERACIONAL
+			       END codISPBPartRecbdrBaixaOper,
+			       B.NUMREFATUALCADBOLETO, 
+			       B.NUMIDENTIFICADORBOLETOCIP
+				FROM DDA.MENSAGEMDDABAIXAEFETIVA MBF 
+				     LEFT JOIN DDA.BOLETODDA B
+				               ON B.NUMCODIGOBARRA = MBF.NUMCODIGOBARRA
+				                   AND B.CODSITUACAOBOLETO = 1 
+				     LEFT JOIN DDA.BOLETODDABAIXAOPER BBO
+				               ON BBO.NUMCODBARRASBAIXAOPER = MBF.NUMCODIGOBARRA
+				                   AND BBO.CODSITUACAOBAIXAOPERACIONAL != 'C' 
+				                   AND BBO.VALORBAIXAOPER = MBF.VALORBAIXA
+				     LEFT JOIN DDA.BOLETODDABAIXAEFET BBF 
+				                    ON BBF.NUMCODBARRASBAIXAEFET = MBF.NUMCODIGOBARRA
+				WHERE mbf.IDMENSAGEMDDA  = <bancoob:valor valor="${idMensagem}"/>
+				ORDER BY bbf.DATAHORAPROCESSAMENTOBAIXAEFET DESC
+				FETCH FIRST 1 ROWS ONLY	
+			]]>
+	    </command>
+	</query>
+	<query name="ATUALIZAR_MENSAGEMDDA_BAIXA_EFETIVA">
+		<use-case name="Atualizar Mensagem Baixa Efetiva "></use-case>
+	    <description>Atualizar o numero de referencia do boleto e o Numero Sequencial de acordo com o idMensagemDDABaixaEfetiva</description>
+	    <command>
+				<![CDATA[
+					UPDATE DDA.MENSAGEMDDABAIXAEFETIVA
+					   SET numIdentificadorBaixaOper = <bancoob:valor valor="${numIdentificadorBaixaOper}"/>
+						   <j:if test="${numRefAtualBaixaEfetiva != null}">
+						    	,numRefAtualBaixaEfetiva = <bancoob:valor valor="${numRefAtualBaixaEfetiva}"/>
+						   </j:if>
+						   <j:if test="${numSeqAtualBaixaEfetiva != null}">
+						 		,numSeqAtualBaixaEfetiva = <bancoob:valor valor="${numSeqAtualBaixaEfetiva}"/>
+						   </j:if>
+						  	 	,codCanalPagamento = <bancoob:valor valor="${codCanalPagamento}"/>
+						  		,codMeioPagamento = <bancoob:valor valor="${codMeioPagamento}"/>
+						   <j:if test="${numRefAtualCadBoleto != null}">
+						   		,numRefAtualCadBoleto = <bancoob:valor valor="${numRefAtualCadBoleto}"/>
+						   </j:if>
+						    <j:if test="${valorBaixa != null}">
+						   		,VALORBAIXA = <bancoob:valor valor="${valorBaixa}"/>
+						   </j:if>
+						    <j:if test="${codTipoBaixaEfetiva != null}">
+						   		,CODTIPOBAIXAEFETIVA = <bancoob:valor valor="${codTipoBaixaEfetiva}"/>
+						   </j:if>
+					WHERE idMensagemDDA = <bancoob:valor valor="${idMensagemDDABaixaEfetiva}"/>
+				]]>
+	    </command>
+	</query>
+	<query name="LISTAR_MENSAGEMDDA_BAIXA_EFETIVA">
+		<use-case name="Listar Mensagem DDA "></use-case>
+	    <description>Listar MensagemDDABaixaEfetiva com JOIN no LogDetalheEnvioArquivoDDA. Utilizado na Geraçao e Postagem dos Arquivos</description>
+	    <command>
+				<![CDATA[
+				SELECT X.IDMENSAGEMDDA,  
+				       X.NUMCODIGOBARRA, 
+				       X.CODTIPOBAIXAEFETIVA, 
+				       X.VALORBAIXA,
+				       X.NUMREFATUALBAIXAEFET, 
+				       X.NUMSEQATUALBAIXAEFET,
+				       X.IDBOLETODDABAIXAEFET,
+				       X.NUMIDENTIFICADORBAIXAOPER,
+				       X.CODCANALPAGAMENTO,   
+				       X.CODMEIOPAGAMENTO,
+				       X.CODPARTRECBDRBAIXAOPER,
+				       X.CODISPBPARTRECBDRBAIXAOPER,
+				       X.NUMREFATUALCADBOLETO, 
+				       X.NUMIDENTIFICADORBOLETOCIP
+				FROM ( SELECT MBF.IDMENSAGEMDDA,  
+				              MBF.NUMCODIGOBARRA, 
+				              MBF.CODTIPOBAIXAEFETIVA, 
+				              CASE 
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN 0
+				              ELSE MBF.VALORBAIXA
+				              END VALORBAIXA,
+				              BBF.NUMREFATUALBAIXAEFET, 
+				              BBF.NUMSEQATUALBAIXAEFET,
+				              BBF.IDBOLETODDABAIXAEFET,
+				              BBO.NUMSEQATUALBAIXAOPER,
+				              CASE
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+				              ELSE BBO.NUMIDENTIFICADORBAIXAOPER
+				              END NUMIDENTIFICADORBAIXAOPER,
+				              CASE
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+				              ELSE BBO.CODCANALPAGAMENTO 
+				              END CODCANALPAGAMENTO,   
+				              CASE
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+				              ELSE BBO.CODMEIOPAGAMENTO
+				              END CODMEIOPAGAMENTO,
+				              CASE
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+				              ELSE BBO.CODPARTRECEBEDORBAIXAOPERACIONAL
+				              END CODPARTRECBDRBAIXAOPER,
+				              CASE
+				              WHEN MBF.CODTIPOBAIXAEFETIVA IN (2,3,4) THEN NULL
+				              ELSE BBO.CODISPBPARTRECEBEDORBAIXAOPERACIONAL
+				              END CODISPBPARTRECBDRBAIXAOPER,
+				              B.NUMREFATUALCADBOLETO, 
+				              B.NUMIDENTIFICADORBOLETOCIP,
+				              B.DATAHORAULTIMAATUALIZACAO,
+				              BBF.DATAHORAPROCESSAMENTOBAIXAEFET,
+				              MAX(B.DATAHORAULTIMAATUALIZACAO) OVER (PARTITION BY B.NUMCODIGOBARRA) AS DATA_BOL_MAX,
+				              MAX(BBO.NUMSEQATUALBAIXAOPER) OVER (PARTITION BY BBO.IDBOLETODDA)     AS NUMSEQ_BXOP_MAX,
+				              MAX(BBF.NUMSEQATUALBAIXAEFET) OVER (PARTITION BY BBF.IDBOLETODDA)     AS NUMSEQ_BXEF_MAX
+				       FROM DDA.MENSAGEMDDABAIXAEFETIVA MBF
+				       JOIN DDA.LOGDETALHEENVIOARQUIVODDA LOGDET ON LOGDET.IDMENSAGEMDDA = MBF.IDMENSAGEMDDA
+				       LEFT JOIN DDA.BOLETODDA B ON B.NUMCODIGOBARRA = MBF.NUMCODIGOBARRA AND
+				                                    B.CODSITUACAOBOLETO = 1
+				       LEFT JOIN DDA.BOLETODDABAIXAOPER BBO ON BBO.NUMCODBARRASBAIXAOPER = MBF.NUMCODIGOBARRA AND
+				       	                                    BBO.CODSITUACAOBAIXAOPERACIONAL != 'C'AND
+				       	                                    BBO.VALORBAIXAOPER = MBF.VALORBAIXA
+				       LEFT JOIN DDA.BOLETODDABAIXAEFET BBF ON BBF.NUMCODBARRASBAIXAEFET = MBF.NUMCODIGOBARRA
+				       WHERE LOGDET.IDLOGENVIOARQUIVODDA = <bancoob:valor valor="${idLogEnvioArquivoDDA}"/>
+				       ) X
+				WHERE X.DATAHORAULTIMAATUALIZACAO = X.DATA_BOL_MAX
+				AND (X.NUMSEQATUALBAIXAOPER IS NULL OR X.NUMSEQATUALBAIXAOPER = X.NUMSEQ_BXOP_MAX)
+				AND (X.NUMSEQATUALBAIXAEFET IS NULL OR X.NUMSEQATUALBAIXAEFET = X.NUMSEQ_BXEF_MAX)
+				ORDER BY X.DATAHORAPROCESSAMENTOBAIXAEFET DESC
+				]]>
+	    </command>
+	</query>
+	<query name="OBTER_MENSAGEM_DDA">
+		<use-case name="Motor Envio de Mensagens"></use-case>
+	    <description>Obter a mensagen DDA</description>
+	    <command>
+				<![CDATA[
+					SELECT m.idmensagemdda, m.idmensagemddaorigem, m.codTipoMensagemdda, m.dataMovimento, m.datahoramensagem, m.qtdtotreg, m.datahoraprotocolo,
+					 m.numoperacao,	m.descerroprotocolo, m.xmlmensagem, m.bolorigemsicoob, m.datahoracadastro, m.numprioridadeenvio,  m.numControleDDA,
+					 m.bolExcedeuSLA, m.idCanal, m.idInstituicaoSolicitante , m.idUsuarioSolicitante
+						FROM DDA.MENSAGEMDDA m
+					WHERE   
+						m.IDMENSAGEMDDA = <bancoob:valor valor="${idMensagem}"/>
+				]]>
+	    </command>
+	</query>
+</queries>

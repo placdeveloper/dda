@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="920" height="525"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:filtro="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.visualizarateiotarifa.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							deveLimparPesquisa="false"
+							xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.DateFormatter;
+			
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.bancoob.util.FormatUtil;
+			import br.com.bancoob.util.FormataData;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.VisualizaRateioTarifaDTO;
+			import br.com.sicoob.sisbr.tds.util.StringUtils;
+			
+			[Bindable]
+			public var selecionarTodos:Boolean = false;
+			
+			public static function formataDataExtenso(obj:Object, obj2:Object = null):String{
+				var dto:VisualizaRateioTarifaDTO = obj as VisualizaRateioTarifaDTO;
+				var arrMeses:Array = null;
+				if(dto != null){
+					
+					var df:DateFormatter = new DateFormatter();
+					var dataInicio:String = FormataData.formataData(dto.dataInicioEventos.data,"dd/MM/yyyy");
+					var dataFim:String = FormataData.formataData(dto.dataFimEventos.data,"dd/MM/yyyy");
+					
+					if(StringUtils.equals(dataInicio, dataFim)){
+						return  FormataData.formataData(dto.dataInicioEventos.data,"dd/MM/yyyy");	
+					}else{
+						return  FormataData.formataData(dto.dataInicioEventos.data,"dd/MM/yyyy") + " a " +FormataData.formataData(dto.dataFimEventos.data,"dd/MM/yyyy");
+					}
+				}else{
+					return null
+				}
+			}
+			
+			public static function formataNumero(obj:Object, obj2:Object = null):String{
+				var dto:VisualizaRateioTarifaDTO = obj as VisualizaRateioTarifaDTO;
+				return zeroParaEsquerda(dto.idRateioDDA.toString(), 4);	
+			}
+			
+			public static function formataQtdNumero(obj:Object, obj2:Object = null):String{
+				var dto:VisualizaRateioTarifaDTO = obj as VisualizaRateioTarifaDTO;
+				return dto.qtdTotalApuarado == 0 ? "" : FormatUtil.formataValor(dto.qtdTotalApuarado, "###.###.###") ;
+			}
+			
+			public static function zeroParaEsquerda (number:String, width:int):String {
+				if (number.length < width)
+					return "0" + zeroParaEsquerda(number, width-1);
+				return number;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaBanco">
+			<painellista:metodoPesquisa>pesquisaRateioTarifaDDAPaginada</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>true</painellista:deveExibirMensagemNenhumRegistro>
+				<painellista:servicoPesquisa>
+					<servico:ServicoJava id="pesquisaRateioTarifaDDAPaginada">
+						<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.RateioTarifasCIPServico</servico:source>
+						<servico:bloquearOperacao>true</servico:bloquearOperacao>
+						<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+					</servico:ServicoJava>
+				</painellista:servicoPesquisa>
+			
+				<painellista:painelFiltro>
+					<filtro:VisualizaRateioTarifaFiltroView id="painelFiltro" width="100%"/>
+				</painellista:painelFiltro>
+					
+				<painellista:tabelaPaginada>
+					<tabelapaginada:TabelaPaginadaBanco id="gridRateioTarifas" width="97%" height="100%" titulo="Rateios" tamanhoPagina="12" top="75" verticalCenter="">
+						<tabelapaginada:MetadadosTabela id="metadados">
+							
+							<mx:DataGridColumn id="colSelecionado" editable="true" dataField="selecionado" headerText="" textAlign="center" width="20" rendererIsEditor="true" editorDataField="selected" sortable="false">
+								<mx:headerRenderer>
+									<mx:Component>
+										<mx:Canvas>
+											<mx:Script>
+												<![CDATA[
+													
+												]]>
+											</mx:Script>
+											<mx:CheckBox x="10" id="headerCheckbox" click="{(outerDocument as VisualizaRateioTarifa).tratarSelecionarTodos();}" creationComplete="{(outerDocument as VisualizaRateioTarifa).definirHeaderCheckBox(headerCheckbox);}" selected="{parentDocument.selecionarTodos}" doubleClickEnabled="false"/>
+										</mx:Canvas>
+									</mx:Component>
+								</mx:headerRenderer>
+								<mx:itemRenderer>
+									<mx:Component>
+										<mx:CheckBox click="{(outerDocument as VisualizaRateioTarifa).tratarSelecionar(data, !data.selecionado);}" selectedField="selecionado" doubleClick="{(outerDocument as VisualizaRateioTarifa).tratarSelecionar(data, !data.selecionado);}" doubleClickEnabled="false"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							
+							<grid:ColunaGrid dataField="idRateioDDA" labelFunction="{formataNumero}" textAlign="center"  headerText="Código Rateio" headerWordWrap="true" wordWrap="true" sortable="false"  width="45" />
+							<grid:ColunaGrid dataField="dataHoraInclusao" textAlign="center"  headerText="Data de Inclusão" sortable="false" width="60" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" />
+							<grid:ColunaGrid dataField="descSituacaoRateio" textAlign="center" headerText="Situação"   sortable="false" width="90" />
+							<grid:ColunaGrid dataField="dataHoraAprovacao" textAlign="center" headerText="Data de Aprovação" sortable="false"  width="60"  labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}" />
+							<grid:ColunaGrid dataField="qtdTotalApuarado" labelFunction="formataQtdNumero" textAlign="center" headerText="Quantidade Total" sortable="false"  width="60"/>
+							<grid:ColunaGrid dataField="valorTotal" textAlign="center" headerText="Valor Total" sortable="false"  width="70" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+							<grid:ColunaGrid dataField="dataFimEventos" textAlign="center" headerText="Data dos Eventos" sortable="false"  width="75" labelFunction="{formataDataExtenso}" />
+						</tabelapaginada:MetadadosTabela>
+					</tabelapaginada:TabelaPaginadaBanco>
+				</painellista:tabelaPaginada>
+				<Botao id="btnDetalhar" toolTip="Detalhar Rateio" styleName="botaoCrudProcurarPeq" enabled="false" x="885" y="397" />
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	

@@ -1,0 +1,19 @@
+<validaveis:CanvasValidavel
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+		xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+		xmlns:input="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.input.*"
+		xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+		xmlns:bancoob="br.com.bancoob.componentes.*"
+		width="100%" height="60">
+
+	<titulo:SubtituloView id="tituloFiltro" texto="Filtros" />
+	
+	<mx:HBox width="100%" y="30">
+		<input:InputNumCodBarras id="inputNumCodBarras" y="30"/>
+		
+		<painellista:BotaoProcurarView id="btnProcurar" acionarComEnter="true" />
+		<bancoob:Botao id="btnLimpar" width="70" acionarComEnter="true" label="Limpar" />
+	</mx:HBox>
+	
+</validaveis:CanvasValidavel>

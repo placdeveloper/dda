@@ -1,0 +1,1 @@
+{"host":"localhost","porta":"1099","servidor":"JBOSS","jndi":"sicoobdda_processamento/AtualizarDataMovimentoJobServicoRemote","bolSequencial":true,"paramDinamico":["","","TEXTO"],"valoresParamFluxo":[],"valoresParamJob":[]}

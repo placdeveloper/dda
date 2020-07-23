@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:Modulo xmlns:mx="http://www.adobe.com/2006/mxml"
+		   xmlns:bancoob="br.com.bancoob.componentes.*"
+		   xmlns:modulo="br.com.bancoob.componentes.containers.validaveis.*"
+		   xmlns:containers="br.com.bancoob.componentes.containers.*" 
+		   xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+		   xmlns:grid="br.com.bancoob.componentes.grid.*"
+		   verticalScrollPolicy="auto" width="100%" height="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.HistoricoPagadorEletronicoDTO;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil;
+			
+			[Bindable]
+			public var selecionarRadioTodos:Boolean = false;
+			
+			public static function defaultCPFCNPJLabelFunction(objeto:Object, coluna:DataGridColumn):String{
+				var histDto:HistoricoPagadorEletronicoDTO = objeto as HistoricoPagadorEletronicoDTO;
+				if(histDto.numCpfCnpjAgregado){
+					return TabelaUtil.defaultCPFCNPJLabelFunction(objeto,coluna);
+				}else{
+					return ""
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<containers:VBoxBancoob width="99%" x="5" height="99%"> 
+		<mx:Canvas height="3"/>
+		<comum:FieldSet title="Histórico do pagador eletrônico" width="95%" height="100%" cornerRadius="5">
+			<containers:HBoxBancoob width="100%" height="100%">
+				<mx:Canvas width="5"/>
+				<grid:Grid id="gridHistPagadorEletronico" width="98%" height="99%" verticalAlign="middle">
+					<grid:columns>
+						<grid:ColunaGrid headerText="Termo" dataField="descTipoTermoPagador" sortable="false" width="300" />
+						<grid:ColunaGrid headerText="Data/Hora" dataField="dataHoraTermoDDA" sortable="false" width="150" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+						<grid:ColunaGrid headerText="CPF/CNPJ do Agregado" dataField="numCpfCnpjAgregado" sortable="false" width="150" labelFunction="{defaultCPFCNPJLabelFunction}"/>
+						<grid:ColunaGrid headerText="Nome Agregado" dataField="nomeAgregado" sortable="false" width="300"/>
+					</grid:columns>
+				</grid:Grid>
+			</containers:HBoxBancoob>
+		</comum:FieldSet>
+	</containers:VBoxBancoob>
+</bancoob:Modulo>
+

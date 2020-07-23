@@ -1,0 +1,404 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDA504"
+	xmlns="http://www.bcb.gov.br/ARQ/ADDA504.xsd" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" 
+	targetNamespace="http://www.bcb.gov.br/ARQ/ADDA504.xsd" 
+	elementFormDefault="qualified" version="9.1.0">
+
+	<!-- Definição dos Tipos Globais -->
+	<xs:include schemaLocation="ADDATIPOS.xsd"/>
+
+	<!-- Definicao da mensagem -->
+	<xs:element name="ADDADOC" type="ADDADOCComplexType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfEvento>
+					<cat:Evento>ADDA504 – Resposta à consulta no cadastro de beneficiários com retorno por arquivo</cat:Evento>
+					<cat:Descricao>Destinado ao DDA informar a Base de Beneficiários.</cat:Descricao>
+					<cat:Observacao>
+					</cat:Observacao>
+				    <cat:Servico>Consultas DDA</cat:Servico>
+					<cat:TipoFluxo>Fluxo5</cat:TipoFluxo>
+				</cat:InfEvento>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	
+	<xs:complexType name="ADDADOCComplexType">
+		<xs:sequence>
+			<xs:element name="BCARQ" type="BCARQComplexType"/>
+			<xs:element name="SISARQ" type="SISARQComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Definicao do SISMSG da mensagem -->
+	<xs:complexType name="SISARQComplexType">
+		<xs:choice>
+			<xs:element name="ADDA504" type="ADDA504ComplexType">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfMensagem>
+							<cat:Mensagem>DDA informa a Base de Beneficiários</cat:Mensagem>
+							<cat:Emissor>DDA</cat:Emissor>
+							<cat:Destinatario>Participante</cat:Destinatario>
+						</cat:InfMensagem>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	
+	<xs:complexType name="ADDA504ComplexType">
+	 <xs:sequence>
+      <xs:element name='Grupo_ADDA504_Benfcrio' type='Grupo_ADDA504_BenfcrioComplexType' minOccurs='1' maxOccurs='unbounded'>
+        <xs:annotation>
+          <xs:documentation>
+            Grupo do Beneficiário
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+	
+	
+	<xs:complexType name="Grupo_ADDA504_BenfcrioComplexType">
+		<xs:sequence>
+			<xs:element name="NumCtrlReqOr" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle de Requisição Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDDA" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Controle DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartDestinatarioPrincipal" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Destinatário Principal</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartDestinatarioAdmtd" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Destinatário Administrado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumIdentcBenfcrio" type="NumIdentcBenfcrio" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Identificação do Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumRefAtlCadBenfcrio" type="NumRefCad" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Referência Atual Cadastro Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumSeqAtlzCadBenfcrio" type="NumSeqAtlzCadDDA" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Número Sequência Atualização Cadastro Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaBenfcrio" type="TpPessoa">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Pessoa Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CNPJ_CPFBenfcrio" type="CNPJ_CPF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>CNPJ ou CPF Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nom_RzSocBenfcrio" type="Nom_RzSoc" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Razão Social Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomFantsBenfcrio" type="Nom_RzSoc" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Nome Fantasia Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SitBenfcrio" type="SitBenfcrio">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Situação Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrSitBenfcrio" type="DataHora">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Situação Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrInclBenfcrioPart" type="DataHora" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Inclusão do Beneficiário no Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrUltAltBenfcrioPart" type="DataHora" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Hora Última Alt do Beneficiário no Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SitRelctPart" type="SitRelctPart" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Situação Relacionamento com o Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtIniRelctPart" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Início Relacionamento com o Participante </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtFimRelctPart" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Fim Relacionamento com o Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtIniRelctMaisAntgBenfcrio" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Início Relacionamento Beneficiário Mais Antiga </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtIniRelctMaisRecteBenfcrio" type="Data" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Início Relacionamento Beneficiário Mais Recente</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBPartDestinatarioOrigdrAlert" type="ISPB" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Destinatário Originador do Alerta</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA504_Conv" type="Grupo_ADDA504_ConvComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Convênio</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_ADDA504_ReprtteCliBenfcrio" type="Grupo_ADDA504_ReprtteCliBenfcrioComplexType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Grupo Representante do Cliente Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA504_ConvComplexType">
+		<xs:sequence>
+			<xs:element name="ISPBPartIncorpd" type="ISPB_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>ISPB Participante Incorporado</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SitConvBenfcrioPart" type="SitConvBenfcrioPart_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Situação Convênio Beneficiário no Participante</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtIniRelctConv" type="Data_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Início Relacionamento Cobrança </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtFimRelctConv" type="Data_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Data Fim Relacionamento Cobrança </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpAgDest" type="TpAg_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Agência Destino</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AgDest" type="Agencia_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Agência Destino</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpCtDest" type="TpCt_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Conta Destino </cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CtDest" type="CtBanc_Pgto_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Conta Destino</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpProdtConv" type="TpProdtConv_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Produto Convênio</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpCartConvCobr" type="TpCartConvCobr_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo de Carteira do Convênio da Cobrança</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodCli_Conv" type="CodCli_CodErro" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Código do Cliente ou Convênio</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Grupo_ADDA504_ReprtteCliBenfcrioComplexType">
+		<xs:sequence>
+			<xs:element name="CNPJ_CPFReprtteCliBenfcrio" type="CNPJ_CPF_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>CNPJ ou CPF Representante Cliente Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TpPessoaReprtteCliBenfcrio" type="TpPessoa_CodErro">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>	
+							<cat:NomeCampo>Tipo Pessoa Representante Cliente Beneficiário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

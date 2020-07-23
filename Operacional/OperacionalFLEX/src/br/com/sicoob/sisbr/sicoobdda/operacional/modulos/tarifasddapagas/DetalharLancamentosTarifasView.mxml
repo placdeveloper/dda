@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml"
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+			xmlns:input="br.com.bancoob.componentes.input.*" 
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+			xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*"
+			width="900" horizontalScrollPolicy="off" layout="vertical"
+			paddingBottom="1" paddingTop="1" verticalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.util.TabelaUtil;
+			private const WIDTH_LABEL_1:int = 128;
+			private const WIDTH_LABEL_2:int = 100;
+			private const WIDTH_LABEL_3:int = 128;
+			private const WIDTH_LABEL_4:int = 100;
+			private const WIDTH_LABEL_5:int = 128;
+		]]>
+	</mx:Script>
+	
+	<titulo:SubtituloView texto="Lançamentos" width="100%" />
+	
+	<containers:HBoxBancoob verticalAlign="middle">
+		<Rotulo width="{WIDTH_LABEL_1}" text="Id Rateio:" textAlign="right" />
+		<Rotulo width="{WIDTH_LABEL_2}" id="lblIdRateio" />
+		
+		<Rotulo width="{WIDTH_LABEL_3}" text="Data da Conciliação:" textAlign="right" />
+		<Rotulo width="{WIDTH_LABEL_4}" id="lblDataConciliacao" />
+		
+		<Rotulo width="{WIDTH_LABEL_5}" text="Cooperativa:" textAlign="right" />
+		<Rotulo id="lblCooperativa" />
+	</containers:HBoxBancoob>
+	
+	<containers:HBoxBancoob verticalAlign="middle">
+		<Rotulo width="{WIDTH_LABEL_1}" text="Conta Corrente Debitada:" textAlign="right" />
+		<Rotulo width="{WIDTH_LABEL_2}" id="lblNumContaCorrente" />
+		
+		<Rotulo width="{WIDTH_LABEL_3}" text="Evento Tarifável:" textAlign="right" />
+		<Rotulo id="lblDescEvento" />
+	</containers:HBoxBancoob>
+	
+	<titulo:SubtituloView texto="Resultado" width="100%" />
+	
+	<containers:HBoxBancoob verticalAlign="bottom" width="100%" height="300">
+		<grid:Grid id="grid" width="98%" height="100%" sortableColumns="false" verticalScrollPolicy="on" resizableColumns="false" draggableColumns="false">
+			<grid:columns>
+				<grid:ColunaGrid id="col1" dataField="dataEvento" headerText="Dt. Evento" width="10" textAlign="center" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" />
+				<grid:ColunaGrid id="col2" dataField="quantidadeApurada" headerText="Qtd. Apurada Sicoob" textAlign="center" width="30" labelFunction="{TabelaUtil.defaultValorLabelFunction}" />
+				<grid:ColunaGrid id="col3" dataField="valorUnitario" headerText="Valor Unitário da Tarifa" textAlign="center" width="30" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+				<grid:ColunaGrid id="col4" dataField="valorTotal" headerText="Valor Total" textAlign="center" width="30" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" />
+			</grid:columns>
+		</grid:Grid>
+		
+		<Botao id="btnDetalhar" toolTip="Detalhar Movimentação" styleName="botaoCrudProcurarPeq" enabled="false" />
+	</containers:HBoxBancoob>
+	
+	<containers:HBoxBancoob verticalAlign="middle" horizontalGap="0">
+		<Rotulo width="{col1.width}" text="TOTAIS" fontWeight="bold" />
+		<Rotulo width="{col2.width}" id="lblQtdTotal" fontWeight="bold" textAlign="center" />
+		<Rotulo width="{col3.width}" />
+		<Rotulo width="{col4.width}" id="lblValorTotal" fontWeight="bold" textAlign="center" />
+	</containers:HBoxBancoob>
+	
+	<titulo:LinhaView width="100%" height="10" />
+	
+	<containers:HBoxBancoob id="hbBotoes" width="100%" horizontalAlign="right">
+		<Botao id="btnImprimir" label="Imprimir" />
+		<Botao id="btnFechar" label="Fechar" />
+	</containers:HBoxBancoob>
+	
+</BaseModulo>

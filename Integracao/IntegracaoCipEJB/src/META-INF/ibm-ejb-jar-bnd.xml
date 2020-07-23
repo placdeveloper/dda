@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<session name="MensagemDecursoBaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemDecursoBaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemDecursoBaixaOperacionalServico" />
+	</session>
+
+	<session name="ConsultaBoletoPagamentoCIPServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ConsultaBoletoPagamentoCIPServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ConsultaBoletoPagamentoCIPServico" />
+			
+			<resource-ref name="WSMQDDAXMLJmsXA" binding-name="WSMQDDAXMLJmsXA"/>
+			<message-destination-ref binding-name="queue/QL.REQ.NPC.BANCOOB.01" name="QL.REQ.NPC.BANCOOB.01"/>
+			<message-destination-ref binding-name="queue/QL.RSP.BANCOOB.NPC.01" name="QL.RSP.BANCOOB.NPC.01" />
+	</session>
+	
+	<session name="IntegracaoFilaSSPBEnvioDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.IntegracaoFilaSSPBEnvioDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/IntegracaoFilaSSPBEnvioDDAServico" />
+			
+			<resource-ref name="WSMQDDAXMLJmsXA" binding-name="WSMQDDAXMLJmsXA"/>
+			<message-destination-ref binding-name="queue/QL.REQ.DDA.BANCOOB.01" name="QL.REQ.DDA.BANCOOB.01"/>
+			<message-destination-ref binding-name="queue/QL.RSP.BANCOOB.DDA.01" name="QL.RSP.BANCOOB.DDA.01"/>
+			
+	</session>
+
+	<session name="MensagemInclusaoPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemInclusaoPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemInclusaoPagadorServico" />
+	</session>
+
+	<session name="MensagemConsultarHorariosDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultarHorariosDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultarHorariosDDAServico" />
+	</session>
+
+	<session name="MensagemConsultaBoletoPagamentoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaBoletoPagamentoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaBoletoPagamentoServico" />
+	</session>
+
+	<session name="MensagemInclusaoBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemInclusaoBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemInclusaoBoletoServico" />
+	</session>
+
+	<session name="ArquivoBaixaOperacionalContingenciaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoBaixaOperacionalContingenciaServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoBaixaOperacionalContingenciaServico" />
+	</session>
+
+	<session name="ArquivoTestaConectividadeServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoTestaConectividadeServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoTestaConectividadeServico" />
+	</session>
+
+	<session name="MensagemConsultarPagamentoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultarPagamentoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultarPagamentoServico" />
+	</session>
+
+	<session name="ArquivoBaixaEfetivaDecursoPrazoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoBaixaEfetivaDecursoPrazoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoBaixaEfetivaDecursoPrazoServico" />
+	</session>
+
+	<session name="MensagemCancelamentoBaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemCancelamentoBaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemCancelamentoBaixaOperacionalServico" />
+	</session>
+
+	<session name="MensagemDDAInclusaoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemDDAInclusaoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemDDAInclusaoServico" />
+	</session>
+
+	<session name="MensagemConsultaPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaPagadorServico" />
+	</session>
+
+	<session name="MensagemRequisicaoArquivoMensagemServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemRequisicaoArquivoMensagemServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemRequisicaoArquivoMensagemServico" />
+	</session>
+
+	<session name="MensagemConsultaEventoTarifavelServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaEventoTarifavelServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaEventoTarifavelServico" />
+	</session>
+
+	<session name="MensagemExcluirPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemExcluirPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemExcluirPagadorServico" />
+	</session>
+
+	<session name="MensagemFechamentoGradeHorariaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemFechamentoGradeHorariaServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemFechamentoGradeHorariaServico" />
+	</session>
+
+	<session name="MensagemExcluirRelacionamentoBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemExcluirRelacionamentoBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemExcluirRelacionamentoBeneficiarioServico" />
+	</session>
+
+	<session name="MensagemAberturaGradeHorariaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAberturaGradeHorariaServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAberturaGradeHorariaServico" />
+	</session>
+
+	<session name="ArquivoBaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoBaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoBaixaOperacionalServico" />
+	</session>
+
+	<session name="ArquivoInclusaoBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoInclusaoBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoInclusaoBoletoServico" />
+	</session>
+
+	<session name="MensagemCadastrarBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemCadastrarBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemCadastrarBeneficiarioServico" />
+	</session>
+
+	<session name="ArquivoManutencaoPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoManutencaoPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoManutencaoPagadorServico" />
+	</session>
+
+	<session name="ArquivoBaixaEfetivaBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoBaixaEfetivaBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoBaixaEfetivaBoletoServico" />
+	</session>
+
+	<session name="ArquivoExclusaoPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoExclusaoPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoExclusaoPagadorServico" />
+	</session>
+
+	<session name="ArquivoInclusaoPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoInclusaoPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoInclusaoPagadorServico" />
+	</session>
+
+	<session name="MensagemGEN0014ServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemGEN0014ServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemGEN0014Servico" />
+	</session>
+
+	<session name="ArquivoRecebidoCIPProcessadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoRecebidoCIPProcessadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoRecebidoCIPProcessadorServico" />
+	</session>
+
+	<session name="ProcessarEnvioMensagensDetalheServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarEnvioMensagensDetalheServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarEnvioMensagensDetalheServico" />
+	</session>
+
+	<session name="ProcessarEnvioArquivoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarEnvioArquivoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarEnvioArquivoServico" />
+	</session>
+
+	<session name="ProcessarEnvioMensagensServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarEnvioMensagensServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarEnvioMensagensServico" />
+	</session>
+
+	<session name="ArquivoConsultaBoletoPagamentoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoConsultaBoletoPagamentoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoConsultaBoletoPagamentoServico" />
+	</session>
+
+	<session name="MensagemDDAAGEN001ServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemDDAAGEN001ServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemDDAAGEN001Servico" />
+	</session>
+
+	<session name="MensagemDDA0401ServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemDDA0401ServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemDDA0401Servico" />
+	</session>
+
+	<session name="ArquivoExclusaoTerceiroAutorizadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoExclusaoTerceiroAutorizadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoExclusaoTerceiroAutorizadoServico" />
+	</session>
+
+	<session name="ReplicarBeneficiarioLegadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ReplicarBeneficiarioLegadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ReplicarBeneficiarioLegadoServico" />
+	</session>
+
+	
+	<session name="MensagemBoletoPagamentoAbertoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemBoletoPagamentoAbertoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemBoletoPagamentoAbertoServico" />
+	</session>
+
+	<session name="MensagemAlterarAceiteBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarAceiteBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarAceiteBoletoServico" />
+	</session>
+
+	<session name="ReplicarPagadorEletronicoLegadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ReplicarPagadorEletronicoLegadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ReplicarPagadorEletronicoLegadoServico" />
+	</session>
+
+	<session name="MensagemParticipanteRequisitaArquivoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemParticipanteRequisitaArquivoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemParticipanteRequisitaArquivoServico" />
+	</session>
+
+	<session name="MensagemBaixaOperacionalBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemBaixaOperacionalBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemBaixaOperacionalBoletoServico" />
+	</session>
+
+	<session name="MensagemConsultaBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaBoletoServico" />
+	</session>
+
+	<session name="MensagemSerie0200ServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemSerie0200ServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemSerie0200Servico" />
+	</session>
+
+	<session name="MensagemCadastrarReenvioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemCadastrarReenvioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemCadastrarReenvioServico" />
+	</session>
+
+	<session name="MensagemAlterarHorariosDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarHorariosDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarHorariosDDAServico" />
+	</session>
+
+	<session name="MensagemInclusaoTerceiroAutorizadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemInclusaoTerceiroAutorizadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemInclusaoTerceiroAutorizadoServico" />
+	</session>
+
+	<session name="MensagemAlterarCadastroBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarCadastroBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarCadastroBeneficiarioServico" />
+	</session>
+
+	<session name="MensagemExcluirTerceiroAutorizadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemExcluirTerceiroAutorizadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemExcluirTerceiroAutorizadoServico" />
+	</session>
+
+	<session name="ProcessarRetornoDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarRetornoDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarRetornoDDAServico" />
+	</session>
+
+	<session name="ArquivoTestaConectividadeArquivosServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoTestaConectividadeArquivosServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoTestaConectividadeArquivosServico" />
+	</session>
+
+	<session name="MensagemConsultaBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaBeneficiarioServico" />
+	</session>
+
+	<session name="MensagemDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemDDAServico" />
+	</session>
+
+	<session name="ArquivoAlteracaoBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoAlteracaoBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoAlteracaoBoletoServico" />
+	</session>
+
+	<session name="ArquivoAlteracaoPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoAlteracaoPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoAlteracaoPagadorServico" />
+	</session>
+
+	<session name="ArquivoDecursoPrazoBaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoDecursoPrazoBaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoDecursoPrazoBaixaOperacionalServico" />
+	</session>
+
+	<session name="ProcessarCargaMensagensServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarCargaMensagensServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarCargaMensagensServico" />
+	</session>
+
+	<session name="ProcessarContingenciaMensagemServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ProcessarContingenciaMensagemServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ProcessarContingenciaMensagemServico" />
+	</session>
+
+	<session name="MensagemBaixaEfetivaBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemBaixaEfetivaBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemBaixaEfetivaBoletoServico" />
+	</session>
+
+	<session name="MensagemAlterarPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarPagadorServico" />
+	</session>
+
+	<session name="MensagemAvisaArquivoDisponivelServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAvisaArquivoDisponivelServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAvisaArquivoDisponivelServico" />
+	</session>
+
+	<session name="MensagemAlterarSituacaoBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarSituacaoBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarSituacaoBeneficiarioServico" />
+	</session>
+
+	<session name="MensagemAlterarBoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemAlterarBoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemAlterarBoletoServico" />
+	</session>
+
+	<session name="MensagemConsultaExtratoProcessamentoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.MensagemConsultaExtratoProcessamentoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/MensagemConsultaExtratoProcessamentoServico" />
+	</session>
+	
+	<session name="ArquivoBoletoPagamentoAbertoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.servicos.interfaces.ArquivoBoletoPagamentoAbertoServicoLocal"
+			binding-name="ejblocal:sicoobdda_integracaocip/ArquivoBoletoPagamentoAbertoServico" />
+	</session>
+
+</ejb-jar-bnd>

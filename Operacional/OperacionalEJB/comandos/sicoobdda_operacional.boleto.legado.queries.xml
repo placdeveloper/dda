@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT command     (#PCDATA)>
+<!ELEMENT parametros  (#PCDATA)>
+<!ELEMENT paginar  (#PCDATA)>
+<!ELEMENT paginacao (#PCDATA)>
+<!ELEMENT colunaCodigo    (#PCDATA)>
+<!ELEMENT colunaDescricao    (#PCDATA)>
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+<!ELEMENT primeiraCondicao    (#PCDATA)>
+<!ELEMENT ascendente    (#PCDATA)>
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA)>
+<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+<!ATTLIST ordenacao default CDATA    #IMPLIED>
+<!ATTLIST command parametros CDATA    #IMPLIED>
+<!ATTLIST command paginar CDATA    #IMPLIED>
+<!ATTLIST use-case name CDATA    #REQUIRED>
+<!ATTLIST query name CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+<queries>
+
+	<query name="INCLUIR_TITULO_DDA">
+		<use-case name="Inclui o título na tabela título DDA"></use-case>
+		<description>Inclui o título na tabela título DDA</description>
+		<command>
+			<![CDATA[
+				DECLARE @DATA_ATUAL_MOVIMENTO datetime = (SELECT DataAtualMovimento FROM Produto WHERE IDProduto = ?) 
+				DECLARE @PAR_VALOR_ENVIO_TITULO BIGINT = (SELECT CAST(ValorPar AS BIGINT) FROM dbo.ValorParametro WITH (NOLOCK) WHERE IDParametro = 1911)
+				DECLARE @QTDE_DIAS_VENCIMENTO Integer = 3600 /* 10 ANOS */
+				DECLARE @DATA_CORTE_CIP_NPC datetime = '2017-07-01'
+				DECLARE @ESP_DOCUMENTO_BOLETO_PROPOSTA VARCHAR(3) = 'BDP'
+				
+				--------------------------------------------------------------------------------------------------------
+				-- CRIAÇÃO DA TABELA TEMPORÁRIA PARA ARMAZENAMENTO DOS MOVIMENTOS DO DIA
+				--------------------------------------------------------------------------------------------------------
+				CREATE TABLE #Movimentos (
+				    NumReg INT IDENTITY,
+				    NumCoop SMALLINT,
+				    IDProduto SMALLINT,
+				    NumCliente INT,
+				    IDModalidadeProduto SMALLINT,
+				    NumTitulo INT,
+				    DataMovimento DATETIME,
+				    TipoOperacao VARCHAR(1),
+				    CodTipoStatus SMALLINT,
+				    IdTituloBaixa Integer,
+				    CodSituacaoBoleto Smallint
+				)
+				
+				INSERT INTO #Movimentos
+				    (NumCoop,
+				    IDProduto,
+				    NumCliente,
+				    IDModalidadeProduto,
+				    NumTitulo,
+				    DataMovimento,
+				    TipoOperacao)
+				
+				SELECT  
+				    ?,
+				    T.IDProduto, 
+				    T.NumCliente, 
+				    T.IDModalidadeProduto, 
+				    T.NumTitulo, 
+				    @DATA_ATUAL_MOVIMENTO,
+				    'I' /* INCLUSÃO DE TÍTULO */
+				FROM dbo.Titulo as T WITH (NOLOCK)
+				INNER JOIN dbo.Sacado as SAC WITH (NOLOCK) ON SAC.UIDSacado = T.UIDSacado
+				WHERE T.IDProduto  = ?
+				    AND T.IDModalidadeProduto = ? 
+				    AND T.NumTitulo  = ?
+				    AND T.NumCliente = ?
+				    AND T.CodBarrasCampoFixo     IS NOT NULL
+				    AND LEFT(T.CodBarrasCampoFixo,3) = '756' /* BANCOOB */
+				    AND T.NumBancoDep            = 756 /* BANCOOB */  
+				    AND T.IDModalidadeProduto    NOT IN ( 9/*CHEQUE EM CUSTODIA*/, 11/*BANCO CORRESPONDENTE -  BANCOOB*/, 12/*COBRANÇA RETORNADA PARA SIMPLES*/)
+				    AND (SAC.BolSacadoEletronico = 1 OR ( CAST(right(T.CodBarrasCampoFixo, 10) AS BIGINT) >= (@PAR_VALOR_ENVIO_TITULO*100)))
+				    AND (SAC.BolSacadoEletronico = 1 OR (T.ValorTitulo >= @PAR_VALOR_ENVIO_TITULO))
+				    AND T.CodSitTitulo           = 1 /* COD_OPCREDITO_ENTRADA_NORMAL */
+				    AND T.DataVencimentoTitulo   < @DATA_ATUAL_MOVIMENTO + @QTDE_DIAS_VENCIMENTO /* MENOR QUE 10 ANOS */
+				    AND ((T.CodEspDocumento      = @ESP_DOCUMENTO_BOLETO_PROPOSTA AND T.DataVencimentoTitulo >= @DATA_ATUAL_MOVIMENTO) OR (T.CodEspDocumento <> @ESP_DOCUMENTO_BOLETO_PROPOSTA))
+				    AND T.DataVencimentoTitulo  >= @DATA_CORTE_CIP_NPC
+				
+				INSERT INTO TituloDDA (
+				    IDTituloLeg, /* MODALIDADE + CLIENTE + TITULO */
+				    IDProduto,
+				    NumCliente,
+				    IDModalidadeProduto,
+				    NumTitulo,
+				    DataMovimento,
+				    CodTipoOperacao, /* I = INCLUSÃO, A = ALTERAÇÃO, B = BAIXA */
+				    CodControleSacado, /* 0 = NÃO INFORMADO, 1 = ACEITO, 2 = REJEITADO */
+				    BolEnviado, /* 0 = NÃO ENVIADO, 1 = ENVIADO */
+				    CodSitTituloDDA, /* EJ = ERRO DDA, EC = ERRO NA CIP, RC = REGISTRADO NA CIP, EB = ERRO NO ENVIO PARA BASE INTEGRADORA */
+				    IdTituloBaixa,
+				    CodSituacaoBoleto)
+				SELECT  
+				    (RIGHT('00' + CONVERT(VARCHAR, Movimentos.IDModalidadeProduto), 2) + 
+				    RIGHT('00000000' + CONVERT(VARCHAR, Movimentos.NumCliente), 8) + 
+				    RIGHT('0000000000' + CONVERT(VARCHAR, Movimentos.NumTitulo), 10)) as IDTituloLeg,        
+				    Movimentos.IDProduto, 
+				    Movimentos.NumCliente, 
+				    Movimentos.IDModalidadeProduto, 
+				    Movimentos.NumTitulo, 
+				    Movimentos.DataMovimento, 
+				    movimentos.TipoOperacao,
+				    0, /* NÃO INFORMADO */
+				    1, /* ENVIADO PARA CIP */
+				    '',
+				    MOVIMENTOS.IdTituloBaixa,
+				    MOVIMENTOS.CodSituacaoBoleto
+				FROM #Movimentos AS Movimentos
+				
+				SELECT COUNT(1) FROM #Movimentos
+			]]>
+		</command>
+	</query>
+
+</queries>

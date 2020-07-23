@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="LISTAR_TIPO_GRADE_HORARIA">
+		<use-case name="Lista tipo grade horária"></use-case>
+		<description>Obtem lista de tipos de grades horárias</description>
+		<command>
+			<![CDATA[
+			    SELECT
+			        a.CODTIPOGRADEHORARIA,
+			        a.DESCTIPOGRADEHORARIA,
+			        CASE a.CODSUBTIPOGRADE 
+				       WHEN 1 THEN (SELECT s.DESCSUBTIPOGRADE FROM DDA.SUBTIPOGRADE s WHERE s.CODSUBTIPOGRADE = 1)
+			               WHEN 2 THEN (SELECT s.DESCSUBTIPOGRADE FROM DDA.SUBTIPOGRADE s WHERE s.CODSUBTIPOGRADE = 2)
+			        END DESCSUBTIPOGRADE,
+			        a.CODTIPOGRADEORIGEM 
+			    FROM
+			        DDA.TIPOGRADEHORARIA a
+			    WHERE 1=1
+				  <j:if test="${codSubTipoGrade != 0}">
+				  		AND a.CODSUBTIPOGRADE = <bancoob:valor valor="${codSubTipoGrade}"/>
+				  </j:if>
+			  	ORDER BY a.codTipoGradeHoraria 
+			]]>
+		</command>
+	</query>
+		<query name="LISTAR_TIPO_GRADE_HORARIA_SEM_GRADE_HORARIA_PERSONALIZADA">
+		<use-case name="Lista tipo grade horária sem Grade Horaria personalizada"></use-case>
+		<description>lista de tipos de grades horárias personalizada sem grade</description>
+		<command>
+			<![CDATA[
+				SELECT A.*, 
+				       B.*, 
+				       (SELECT MAX(C.DATAREFERENCIA) 
+				        FROM DDA.GRADEHORARIA C
+				        WHERE C.CODTIPOGRADEHORARIA = A.CODTIPOGRADEHORARIA) DATAULTIMAGRADE
+				FROM DDA.TIPOGRADEHORARIA A,
+				     (SELECT <bancoob:valor valor="${dataReferencia}" tipo="Date" /> DATAREFERENCIA /* PARÂMETRO DATA DO MOVIMENTO */
+				     	FROM SYSIBM.SYSDUMMY1) B
+				WHERE EXISTS (SELECT NULL
+				              FROM DDA.GRADEHORARIA GH
+				              WHERE GH.CODTIPOGRADEHORARIA = A.CODTIPOGRADEHORARIA)
+				  AND NOT EXISTS (SELECT NULL
+				                  FROM DDA.GRADEHORARIA GH
+				                  WHERE GH.CODTIPOGRADEHORARIA = A.CODTIPOGRADEHORARIA
+				                    AND GH.DATAREFERENCIA >= B.DATAREFERENCIA)
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_TIPO_GRADE_HORARIA_DDA">
+		<use-case name="Lista tipo grade horária"></use-case>
+		<description>Obtem lista de tipos de grades horárias</description>
+		<command>
+			<![CDATA[
+			    FROM
+			        TipoGradeHoraria t
+	  			WHERE t.subTipoGrade.codSubTipoGrade = <bancoob:valorOql valor="${codSubTipoGrade}"/>
+				ORDER BY t.codTipoGradeHoraria 
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_CODIGO_TIPO_GRADE_HORARIA">
+		<use-case name="Lista tipo grade horária"></use-case>
+		<description>Obtem lista de tipos de grades horárias</description>
+		<command>
+			<![CDATA[
+				FROM TipoGradeHoraria t ORDER BY t.codTipoGradeHoraria 
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_TIPO_GRADE_HORARIA">
+		<use-case name="Obter tipo grade horária"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				FROM TipoGradeHoraria t
+					WHERE  t.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}"/>
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_COUNT_TIPO_GRADE_HORARIA">
+		<use-case name="Obter tipo grade horária"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM TipoGradeHoraria t
+					WHERE  t.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}"/>
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_SUBTIPO_GRADE">
+		<use-case name="Obter tipo grade horária"></use-case>
+		<description>Obtem tipos de grade horária</description>
+		<command>
+			<![CDATA[
+				FROM SubTipoGrade s
+			]]>
+		</command>
+	</query>
+	<query name="TIPO_GRADE_EXISTE_EM_TIPO_MENSAGME">
+		<use-case name="OBTER_QTD_GRADE_HORARIA"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+				<![CDATA[
+					SELECT COUNT(*)
+					FROM 
+						TipoMensagemDDA tm
+					WHERE 
+						tm.tipoGradeHoraria.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}"/>
+				]]>
+		</command>
+	</query>
+	<query name="TIPO_GRADE_EXISTE_EM_GRADE_HORARIA">
+		<use-case name="OBTER_QTD_GRADE_HORARIA"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM 
+					GradeHoraria g
+				WHERE 
+					g.tipoGradeHoraria.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}"/>
+			]]>
+		</command>
+	</query>
+	<query name="TIPO_GRADE_HORARIA_EXISTE_EM_GRADE_ORIGEM">
+		<use-case name="OBTER_QTD_GRADE_ORIGEM"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM 
+					TipoGradeHoraria t
+				WHERE 
+					t.tipoGradeHorariaOrigem.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}"/>
+			]]>
+		</command>
+	</query>
+</queries>

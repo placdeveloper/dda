@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<session name="AtualizacaoCacheServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.AtualizacaoCacheServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/AtualizacaoCacheServico" />
+	</session>
+
+	<session name="AtualizaParametroServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.AtualizaParametroServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/AtualizaParametroServico" />
+	</session>
+
+	<session name="CacheNotificaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.CacheNotificaServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/CacheNotificaServico" />
+			
+			<resource-ref name="WSMQDDAXMLJmsTopicXA" binding-name="WSMQDDAXMLJmsTopicXA"/>
+			<message-destination-ref binding-name="topic/TP.CACHE.DDA.01" name="TP.CACHE.DDA.01"/>
+	</session>
+
+	<session name="CacheServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.CacheServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/CacheServico" />
+	</session>
+	
+	<session name="CapesServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.CapesServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/CapesServico" />
+	</session>
+	
+	<session name="DominioDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.DominioDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/DominioDDAServico" />
+	</session>
+	
+	<session name="EmailServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.EmailServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/EmailServico" />
+	</session>
+
+	<session name="InstituicaoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.InstituicaoServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/InstituicaoServico" />
+	</session>
+	
+	<session name="ParametroServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.ParametroServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/ParametroServico" />
+	</session>
+	
+	<session name="RequisicaoCacheServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.RequisicaoCacheServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/RequisicaoCacheServico" />
+	</session>
+	
+	<session name="ServidorDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.servicos.interfaces.ServidorDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/ServidorDDAServico" />
+	</session>
+	
+	<!-- TIMERS -->
+	<session name="DisparadorCacheServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.timer.interfaces.DisparadorCacheServicoLocal"
+			binding-name="ejblocal:sicoobdda_comum/DisparadorCacheServico" />
+	</session>
+	
+	
+	<!-- MDB -->
+	<message-driven name="CacheMDB">
+		<jca-adapter activation-spec-binding-name="as/TP.CACHE.DDA.01.AS" destination-binding-name="topic/TP.CACHE.DDA.01"/>
+	</message-driven>
+	
+</ejb-jar-bnd>

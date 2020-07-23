@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView  xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false" 
+								  width="780" height="420"
+								  xmlns="br.com.bancoob.componentes.*"
+								  xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								  xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								  xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								  xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+								  xmlns:bancoob="br.com.bancoob.componentes.*"
+								  xmlns:janelas="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.tipogradehoraria.janelas.*"
+								  xmlns:grid="br.com.bancoob.componentes.grid.*"
+								  xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								  xmlns:input="br.com.bancoob.componentes.input.*"
+								  xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								  paddingLeft="0" paddingRight="0" paddingBottom="0"  >
+		<mx:Style>
+		.alinhaTexto {
+			textAlign:center;
+		}
+			
+		.borda{
+			borderStyle:solid;
+			borderThickness: 1;
+		}
+		
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.EventoTarifavelDTO;
+			
+			public static const TARIFAVEL:String = "Sim";
+			public static const NAO_TARIFAVEL:String = "Não";
+			
+			public static function labelBolTarifavel(obj:Object, obj2:Object = null):String{
+				var dto:EventoTarifavelDTO = obj as EventoTarifavelDTO;
+				if(dto.bolTarifavel){
+					return TARIFAVEL
+				}else{
+					return NAO_TARIFAVEL
+				}
+			}
+		]]>
+	</mx:Script>
+	<containers:VBoxBancoob width="100%" height="100%" left="5" right="15" top="3" bottom="10" verticalScrollPolicy="off">
+		<titulo:SubtituloView id="tituloLista" texto="Lista de eventos tarifáveis" left="0" width="100%" top="0" doubleClickEnabled="false"/>
+		<containers:HBoxBancoob  width="100%">
+			<containers:HBoxBancoob  width="100%">
+				<Rotulo text="Evento Tarifável: "/>
+				<input:ComboBoxFiltro id="cmbEventoTarifavel" width="465" labelField="descEventoTarifavelExtrato" prompt=" Selecione... " somenteMaiusculas="false"/>
+			</containers:HBoxBancoob>
+
+			<containers:HBoxBancoob width="50%" horizontalAlign="right">
+				<Botao id="btnProcurar" label="Procurar"/>
+				<mx:Spacer width="5"/>
+				<Botao id="btnLimpar" label="Limpar"/>
+			</containers:HBoxBancoob>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob  width="100%">
+			<Rotulo text="Status Vigência : "/>
+			<input:Combo id="cmbStatusVigencia" width="200" labelField="label" somenteMaiusculas="false" inserirItemOpcional="true" labelItemOpcional="TODOS" />
+		</containers:HBoxBancoob>
+		
+		<titulo:SubtituloView id="tituloListaTarifas" texto="Tarifas" left="0" width="100%" top="0" doubleClickEnabled="false"/>
+		<containers:CanvasBancoob width="100%" height="100%">		
+			<grid:Grid id="gridEventoTarifavel" width="97%" height="100%" sortableColumns="false" selectable="true" wordWrap="true" variableRowHeight="true">
+				<grid:columns>
+					<grid:ColunaGrid dataField="status" headerText="Status Vigência" textAlign="left"  width="90" />
+					<grid:ColunaGrid dataField="dataInicioVigencia" headerText="Data Início Vigência" textAlign="left"  width="70" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" headerWordWrap="true" wordWrap="true"/>
+					<grid:ColunaGrid dataField="dataFimVigencia" headerText="Data Fim Vigência" textAlign="left"  width="70" labelFunction="{TabelaPaginadaUtils.defaultDateLabelFunction}" headerWordWrap="true" wordWrap="true"/>
+					<grid:ColunaGrid dataField="descTipoEventoTarifavel" headerText="Serviço" textAlign="left" headerWordWrap="true" wordWrap="true" width="70"/>
+					<grid:ColunaGrid dataField="descEventoTarifavelExtrato" headerText="Evento Tarifável" textAlign="left" headerWordWrap="true" wordWrap="true"/>
+					<grid:ColunaGrid dataField="valorCIP" headerText="Valor Cobrado CIP" textAlign="left" width="90" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" headerWordWrap="true" wordWrap="true"/>
+					<grid:ColunaGrid dataField="valorBancoob" headerText="Valor Cobrado Bancoob" textAlign="left"  width="90" labelFunction="{TabelaPaginadaUtils.defaultValorRealLabelFunction}" headerWordWrap="true" wordWrap="true"/>
+				</grid:columns>
+			</grid:Grid>
+				
+			<Botao id="btnExcluir" x="743" y="190" toolTip="Excluir" styleName="botaoCrudRemoverPeq" />
+			<Botao id="btnAlterar" x="743" y="210" toolTip="Alterar" styleName="botaoCrudAlterarPeq" />
+		</containers:CanvasBancoob>
+		
+		<titulo:LinhaView width="100%"  />
+		
+		<containers:HBoxBancoob height="35" width="100%" horizontalAlign="right" paddingTop="10">
+			<bancoob:Botao label="Imprimir" id="btnImprimir" verticalCenter="0" />
+			<bancoob:Botao label="Fechar" id="btFechar" verticalCenter="0" />
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView >

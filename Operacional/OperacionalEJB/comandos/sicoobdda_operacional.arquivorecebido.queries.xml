@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="PESQUISAR_ARQUIVO_RECEBIDO">
+		<use-case name="Pesquisar Situação Arquivo"></use-case>
+		<description>Pesquisar situação dos arquivos por filtros</description>
+		<command>
+			<![CDATA[
+			SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.ArquivoRecebidoDto(
+				lra.id, 
+				lra.tipoArquivo.descTipoArquivo,
+				lra.descNomeArquivoRecebido,
+				lra.dataHoraArquivo,
+				lra.tipoErroCip.codTipoErro,
+				lra.logEnvioArquivoDDA.id,
+				lra.tipoMensagemDDA.codTipoMensagem,
+				lra.situacaoProcessamentoArquivo.descSituacaoProcessamentoArquivo,
+				lra.dataMovimento,
+				lra.qtdRegistroArquivo
+				)FROM LogRecebimentoArquivoDDA lra
+					WHERE 1=1
+					<j:if test="${criterios.filtro.dataArquivoInicio != null}"> 
+						AND TIMESTAMP(lra.dataHoraArquivo) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataArquivoInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataArquivoFim}" tipo="DateTime" />
+					</j:if>
+			    	<j:if test="${criterios.filtro.codTipoArquivo != null}">
+			    		AND lra.tipoArquivo.codTipoArquivo =  <bancoob:valorOql valor="${criterios.filtro.codTipoArquivo}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.codTipoMensagem != null}">
+			    		AND lra.tipoMensagemDDA.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.codSituacaoProcessamentoArquivo != null}">
+			    		AND lra.situacaoProcessamentoArquivo.codSituacaoProcessamentoArquivo =  <bancoob:valorOql valor="${criterios.filtro.codSituacaoProcessamentoArquivo}" />
+			    	</j:if>
+					<j:if test="${criterios.filtro.dataMovimento != null}"> 
+						AND lra.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+					</j:if>
+					<j:if test="${criterios.filtro.descNomeArquivoRecebido != null}"> 
+						AND lra.descNomeArquivoRecebido LIKE <bancoob:valorOql valor="${criterios.filtro.descNomeArquivoRecebido}" tipo="LikeDireitaEsquerda"/>
+					</j:if>
+				ORDER BY lra.id,lra.dataMovimento ASC
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_QTD_ARQUIVO_RECEBIDO">
+		<use-case name="Obter Situação Arquivo"></use-case>
+		<description>Obter total de situações dos arquivos por filtros</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM LogRecebimentoArquivoDDA lra
+					WHERE 1=1
+					<j:if test="${criterios.filtro.dataArquivoInicio != null}"> 
+						AND TIMESTAMP(lra.dataHoraArquivo) BETWEEN <bancoob:valorOql valor="${criterios.filtro.dataArquivoInicio}" tipo="DateTime"/> AND <bancoob:valorOql valor="${criterios.filtro.dataArquivoFim}" tipo="DateTime" />
+					</j:if>
+			    	<j:if test="${criterios.filtro.codTipoArquivo != null}">
+			    		AND lra.tipoArquivo.codTipoArquivo =  <bancoob:valorOql valor="${criterios.filtro.codTipoArquivo}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.codTipoMensagem != null}">
+			    		AND lra.tipoMensagemDDA.codTipoMensagem =  <bancoob:valorOql valor="${criterios.filtro.codTipoMensagem}" />
+			    	</j:if>
+			    	<j:if test="${criterios.filtro.codSituacaoProcessamentoArquivo != null}">
+			    		AND lra.situacaoProcessamentoArquivo.codSituacaoProcessamentoArquivo =  <bancoob:valorOql valor="${criterios.filtro.codSituacaoProcessamentoArquivo}" />
+			    	</j:if>
+					<j:if test="${criterios.filtro.dataMovimento != null}"> 
+						AND lra.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" tipo="Date"/>
+					</j:if>
+					<j:if test="${criterios.filtro.descNomeArquivoRecebido != null}"> 
+						AND lra.descNomeArquivoRecebido LIKE <bancoob:valorOql valor="${criterios.filtro.descNomeArquivoRecebido}" tipo="LikeDireitaEsquerda"/>
+					</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_SITUACAO_ARQUIVO">
+		<use-case name="Listar Situação Arquivo"></use-case>
+		<description>Lista as situações dos arquivos</description>
+		<command>
+			<![CDATA[
+				FROM SituacaoProcessamentoArquivo ORDER BY descSituacaoProcessamentoArquivo ASC
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_TIPO_ARQUIVO">
+		<use-case name="Listar os tipos de arquivos"></use-case>
+		<description>Listar os tipos de arquivos</description>
+		<command>
+			<![CDATA[
+				FROM TipoArquivo ORDER BY descTipoArquivo ASC
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_LOG_DET_RECEBIMENTO_ARQUIVODDA">
+		<use-case name="Listar os Detalhamento Arquivo Recebimento"></use-case>
+		<description>Listar os Detalhamento Arquivo Recebimento</description>
+		<command>
+			<![CDATA[
+				FROM LogDetRecebimentoArquivoDDA ldra
+					WHERE  ldra.logRecebimentoArquivoDDA.id = <bancoob:valorOql valor="${criterios.filtro.idLogRecebimentoArqDDA}" />
+					<j:if test="${criterios.filtro.bolTodos == false}">
+						AND ldra.bolProcessado = <bancoob:valorOql valor="${criterios.filtro.bolProcessado}" tipo="Boolean"/>
+					</j:if>
+					<j:if test="${criterios.filtro.idLogDetRecebimentoArqDDA != null}">
+						AND ldra.id = <bancoob:valorOql valor="${criterios.filtro.idLogDetRecebimentoArqDDA}" />
+					</j:if>
+				ORDER BY ldra.id ASC
+			]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_COUNT_LISTA_LOG_DET_RECEBIMENTO_ARQUIVODDA">
+		<use-case name="Listar os Detalhamento Arquivo Recebimento"></use-case>
+		<description>Listar os Detalhamento Arquivo Recebimento</description>
+		<command>
+			<![CDATA[
+				SELECT COUNT(*)
+				FROM LogDetRecebimentoArquivoDDA ldra
+					WHERE  ldra.logRecebimentoArquivoDDA.id = <bancoob:valorOql valor="${criterios.filtro.idLogRecebimentoArqDDA}" />
+					<j:if test="${criterios.filtro.bolTodos == false}">
+						AND ldra.bolProcessado = <bancoob:valorOql valor="${criterios.filtro.bolProcessado}" tipo="Boolean"/>
+					</j:if>
+					<j:if test="${criterios.filtro.idLogDetRecebimentoArqDDA != null}">
+						AND ldra.id = <bancoob:valorOql valor="${criterios.filtro.idLogDetRecebimentoArqDDA}" />
+					</j:if>
+			]]>
+		</command>
+	</query>
+	
+	<query name="LISTAR_TIPO_MENSAGEM_AGEN_ADDA">
+		<use-case name="LISTAR TIPO MENSAGEM AGEN ADDA"></use-case>
+		<description>Listar Categoria mensagem ADDA e AGEN</description>
+		<command>
+				<![CDATA[
+					SELECT tm.CODTIPOMENSAGEMDDA, tm.DESCTIPOMENSAGEMDDA 
+						FROM DDA.TIPOMENSAGEMDDA tm, DDA.LOGRECEBIMENTOOARQUIVODDA l
+							WHERE l.CODTIPOMENSAGEM = tm.CODTIPOMENSAGEMDDA
+							        GROUP BY tm.CODTIPOMENSAGEMDDA, tm.DESCTIPOMENSAGEMDDA
+				]]>
+		</command>
+	</query>
+	<query name="OBTER_ARQUIVO_RECEBIDO">
+		<use-case name="Obter Arquivo Recebido"></use-case>
+		<description>Obter Arquivo Recebido</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.ArquivoRecebidoDto(
+					arqRecebido.id, 
+					arqRecebido.tipoArquivo.codTipoArquivo,
+					arqRecebido.dataHoraArquivo,
+					arqRecebido.tipoArquivo.descTipoArquivo,
+					arqRecebido.descNomeArquivoRecebido,
+					arqRecebido.situacaoProcessamentoArquivo.descSituacaoProcessamentoArquivo,
+					arqRecebido.tipoErroCip.codTipoErro,
+					arqRecebido.logEnvioArquivoDDA.id,
+					arqRecebido.dataMovimento,
+					arqRecebido.qtdRegistroArquivo,
+					arqRecebido.tipoMensagemDDA.codTipoMensagem,
+					arqRecebido.situacaoProcessamentoArquivo.codSituacaoProcessamentoArquivo
+					)
+					FROM LogRecebimentoArquivoDDA AS arqRecebido
+				WHERE arqRecebido.id = <bancoob:valorOql valor="${idLogRecebimentoArquivoDDA}" />
+			]]>
+		</command>
+	</query>
+	<query name="ALTERAR_SITUACAO_ARQUIVO">
+		<use-case name="ALTERAR SITUACAO ARQUIVO"></use-case>
+		<description>ALTERAR SITUACAO ARQUIVO</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.LOGRECEBIMENTOOARQUIVODDA
+				   SET CODSITUACAOPROCESSAMENTOARQUIVO = <bancoob:valor valor="${codSituacao}"/>,
+				       DATAHORAPROCESSAMENTO = CASE WHEN <bancoob:valor valor="${codSituacao}"/> = 5 THEN CURRENT TIMESTAMP END
+				WHERE IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogRecebimentoArquivoDDA}"/>
+			]]>
+		</command>
+	</query>
+		<query name="ALTERAR_QTD_REGISTROS_ARQUIVO_RECEBIDO">
+		<use-case name="Atualiza a quantidade total de registro extraído do arquivo"></use-case>
+		<description>Atualiza a quantidade total de registro extraído do arquivo.</description>
+		<command>
+			<![CDATA[
+				UPDATE DDA.LOGRECEBIMENTOOARQUIVODDA AS LR
+				   SET LR.QTDREGISTROARQUIVO = <bancoob:valor valor="${qtdTotalRegistro}"/>
+				 WHERE LR.IDLOGRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogRecebimentoArquivoDDA}"/>
+			]]>
+		</command>
+	</query>
+	<query name="ALTERAR_SITUACAO_REGISTRO">
+		<use-case name="ALTERAR SITUACAO REGISTRO"></use-case>
+		<description>ALTERAR SITUACAO ARQUIVO</description>
+		<command>
+				<![CDATA[
+					UPDATE DDA.LOGDETRECEBIMENTOOARQUIVODDA L 
+						SET L.BOLPROCESSADO = <bancoob:valor valor="${bolProcessado}" />,
+						L.NUMORDEMPROCESSAMENTO = 
+						CASE WHEN <bancoob:valor valor="${bolProcessado}" />=1 
+						  THEN -1
+						  ELSE -2
+						 END
+					WHERE L.IDLOGDETRECEBIMENTOOARQUIVODDA = <bancoob:valor valor="${idLogDetRecebimentoArquivoDDA}" />
+				]]>
+		</command>
+	</query>	
+	<query name="OBTER_DADOS_PROCESSAMENTO_ARQ">
+		<use-case name="Obter dados para o processamento do Arquivo"></use-case>
+		<description>Obter dados para o processamento do Arquivo</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.integracaocip.negocio.vo.ArquivoProcessamentoVO(
+					MIN(ldra.id),
+					MAX(ldra.id),
+				 	COUNT(ldra.id)
+					)
+					FROM LogDetRecebimentoArquivoDDA ldra
+				WHERE  ldra.logRecebimentoArquivoDDA.id = <bancoob:valorOql valor="${idLogRecebimentoArquivoDDA}" />
+			]]>
+		</command>
+	</query>
+</queries>

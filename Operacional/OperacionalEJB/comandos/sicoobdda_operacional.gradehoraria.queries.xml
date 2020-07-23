@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="LISTA_GRADE_HORARIA_POR_CODTIPOGRADEHORARIA">
+		<use-case name="LISTA_GRADE_HORARIA_POR_CODTIPOGRADEHORARIA"></use-case>
+		<description>LISTAR GRADE HORARIA</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.GradeHorariaDto (
+					g.id,
+					g.dataReferencia,
+					g.dataHoraAbertura,
+					g.dataHoraFechamento,
+					g.tipoGradeHoraria.codTipoGradeHoraria, 
+					g.tipoGradeHoraria.descTipoGradeHoraria
+					)
+				FROM GradeHoraria g
+				WHERE g.tipoGradeHoraria.codTipoGradeHoraria = <bancoob:valorOql valor="${codTipoGradeHoraria}" />
+					AND g.dataReferencia = <bancoob:valorOql valor="${dataReferencia}" tipo="date"/>
+								
+			]]>
+		</command>
+	</query>
+	<query name="REMOVER_GRADE_HORARIA">
+		<use-case name="OBTER_QTD_GRADE_HORARIA"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				DELETE FROM DDA.GRADEHORARIA g 
+					WHERE g.CODTIPOGRADEHORARIA = <bancoob:valor valor="${codTipoGradeHoraria}" /> 
+					AND g.DATAREFERENCIA = <bancoob:valor valor="${dataReferencia}" tipo="date"/>
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_GRADE_HORARIA">
+		<use-case name="OBTER_GRADE_HORARIA"></use-case>
+		<description>LISTAR GRADE HORARIA</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.GradeHorariaDto(
+					g.id,
+					g.dataReferencia,
+					g.dataHoraAbertura,
+					g.dataHoraFechamento,
+					g.tipoGradeHoraria.codTipoGradeHoraria, 
+					g.tipoGradeHoraria.descTipoGradeHoraria
+					)
+				FROM GradeHoraria g
+				WHERE g.id = <bancoob:valorOql valor="${idGradeHoraria}" />
+			]]>
+		</command>
+	</query>
+	<query name="INCLUIR_GRADE_HORARIA_ULTIMA_GRADE_VALIDA">
+		<use-case name="inclui a grade para a data do movimento com base na última grade válida"></use-case>
+		<description>inclui a grade para a data do movimento com base na última grade válida</description>
+		<command>
+			<![CDATA[
+				INSERT INTO DDA.GRADEHORARIA (CODTIPOGRADEHORARIA, DATAREFERENCIA, DATAHORAABERTURA, DATAHORAFECHAMENTO)
+                    SELECT GH.CODTIPOGRADEHORARIA,
+                           DREF.DATAREFERENCIA,
+                           CASE
+                              WHEN TGH.CODSUBTIPOGRADE = 1 THEN
+                                  CASE
+                                     WHEN DATE(TGH.DATAHORAABERTURAPADRAO) = DATE(TGH.DATAHORAFECHAMENTOPADRAO) THEN
+                                          VARCHAR_FORMAT(DREF.DATAREFERENCIA, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(TGH.DATAHORAFECHAMENTOPADRAO, 'HH24:MI:SS')
+                                     ELSE VARCHAR_FORMAT(DREF.DATAREFERENCIA + 1 DAY, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(TGH.DATAHORAFECHAMENTOPADRAO, 'HH24:MI:SS')
+                                  END
+                              ELSE VARCHAR_FORMAT(DREF.DATAREFERENCIA, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(GH.DATAHORAABERTURA, 'HH24:MI:SS')
+                           END DATAHORAABERTURA,
+                        
+                           CASE
+                              WHEN TGH.CODSUBTIPOGRADE = 1 THEN
+                                  CASE
+                                     WHEN DATE(TGH.DATAHORAABERTURAPADRAO) = DATE(TGH.DATAHORAFECHAMENTOPADRAO) THEN
+                                          VARCHAR_FORMAT(DREF.DATAREFERENCIA, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(TGH.DATAHORAFECHAMENTOPADRAO, 'HH24:MI:SS')
+                                     ELSE VARCHAR_FORMAT(DREF.DATAREFERENCIA + 1 DAY, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(TGH.DATAHORAFECHAMENTOPADRAO, 'HH24:MI:SS')
+                                  END
+                              ELSE VARCHAR_FORMAT(DREF.DATAREFERENCIA, 'YYYY-MM-DD')||' '||VARCHAR_FORMAT(GH.DATAHORAFECHAMENTO, 'HH24:MI:SS')
+                           END DATAHORAFECHAMENTO
+                  
+                    FROM DDA.GRADEHORARIA GH INNER JOIN DDA.TIPOGRADEHORARIA TGH
+                                               ON TGH.CODTIPOGRADEHORARIA = GH.CODTIPOGRADEHORARIA,
+                                             (SELECT DATE('${dataReferencia}') DATAREFERENCIA /* PARÂMETRO DATA DO MOVIMENTO */ FROM SYSIBM.SYSDUMMY1) DREF
+                                              
+                    WHERE GH.CODTIPOGRADEHORARIA = <bancoob:valor valor="${codTipoGradeHoraria}" />
+                      AND GH.DATAREFERENCIA      = <bancoob:valor valor="${dataUltimaGrade}" tipo="Date" />
+			]]>
+		</command>
+	</query>
+	<query name="LISTAR_GRADE_EXTRAPOLANDO_GRANDE_ORIGEM">
+		<use-case name="verifica se existe grade extrapolando a grande origem"></use-case>
+		<description>verifica se existe grade extrapolando a grande origem
+		</description>
+		<command>
+			<![CDATA[
+				SELECT * 
+				FROM (
+					SELECT 
+						(SELECT MAX(DATAREFERENCIA) DATAREFERENCIA 
+				              FROM DDA.GRADEHORARIA GH2 
+				              WHERE GH2.CODTIPOGRADEHORARIA = GH.CODTIPOGRADEHORARIA
+				                AND GH2.DATAREFERENCIA &lt; GH.DATAREFERENCIA) DATAULTIMAGRADE,
+			             GH.DATAREFERENCIA,
+              				 GH.CODTIPOGRADEHORARIA,
+			             MIN(GH.DATAHORAABERTURA)    DATAHORAABERTURA,
+			             MAX(GH.DATAHORAFECHAMENTO)  DATAHORAFECHAMENTO,
+			             TGH.CODTIPOGRADEORIGEM      CODTIPOGRADEHORARIAORIGEM, 
+			             MIN(GHO.DATAHORAABERTURA)   DATAHORAABERTURAORIGEM,
+			             MAX(GHO.DATAHORAFECHAMENTO) DATAHORAFECHAMENTOORIGEM
+			      	FROM DDA.GRADEHORARIA GH 
+			      		INNER JOIN DDA.TIPOGRADEHORARIA TGH 
+			      			ON TGH.CODTIPOGRADEHORARIA = GH.CODTIPOGRADEHORARIA
+                           INNER JOIN DDA.TIPOGRADEHORARIA TGHO 
+                           	ON TGHO.CODTIPOGRADEHORARIA = TGH.CODTIPOGRADEORIGEM
+                           INNER JOIN DDA.GRADEHORARIA GHO
+                           	ON  GHO.CODTIPOGRADEHORARIA = TGHO.CODTIPOGRADEHORARIA
+                                AND GHO.DATAREFERENCIA  = GH.DATAREFERENCIA
+			      	WHERE GH.DATAREFERENCIA = <bancoob:valor valor="${dataReferencia}" tipo="Date" />
+			      	GROUP BY GH.DATAREFERENCIA,
+			      		   GH.CODTIPOGRADEHORARIA,
+			               TGH.CODTIPOGRADEORIGEM
+					)
+				WHERE DATAHORAABERTURA &lt; DATAHORAABERTURAORIGEM
+				OR DATAHORAFECHAMENTO &gt; DATAHORAFECHAMENTOORIGEM
+			]]>
+		</command>
+	</query>
+	<query name="EXCLUIR_GRADES_ANTIGAS">
+		<use-case name="exclui grades antigas"></use-case>
+		<description>exclui grade horarias antigas</description>
+		<command>
+			<![CDATA[
+				DELETE FROM DDA.GRADEHORARIA
+				WHERE DATAREFERENCIA &lt;= (CURRENT_DATE - 10 DAY)
+			]]>
+		</command>
+	</query>
+		<query name="INCLUIR_GRADE_HORARIA_CIP">
+		<use-case name="Listar Boleto Terceiro Autorizado "></use-case>
+		<description>Listar Boleto Terceiro Autorizado </description>
+		<command>
+				<![CDATA[	
+				INSERT INTO DDA.GRADEHORARIA (CODTIPOGRADEHORARIA, DATAREFERENCIA, DATAHORAABERTURA, DATAHORAFECHAMENTO)
+				SELECT 
+					T.CODTIPOGRADEHORARIA,
+					D.DATAREFERENCIA,
+					CASE 
+					    WHEN DATE(T.DATAHORAABERTURAPADRAO) = DATE(T.DATAHORAFECHAMENTOPADRAO)
+					          THEN TIMESTAMP(D.DATAREFERENCIA ||' '|| VARCHAR_FORMAT(T.DATAHORAFECHAMENTOPADRAO,'HH24:MI:SS'))
+					    ELSE TIMESTAMP(D.DATAREFERENCIA ||' '|| VARCHAR_FORMAT(T.DATAHORAFECHAMENTOPADRAO,'HH24:MI:SS')) + 1 DAYS
+					END DATAHORAABERTURA,
+					CASE 
+					    WHEN DATE(T.DATAHORAABERTURAPADRAO) = DATE(T.DATAHORAFECHAMENTOPADRAO)
+					          THEN TIMESTAMP(D.DATAREFERENCIA ||' '|| VARCHAR_FORMAT(T.DATAHORAFECHAMENTOPADRAO,'HH24:MI:SS'))
+					    ELSE TIMESTAMP(D.DATAREFERENCIA ||' '|| VARCHAR_FORMAT(T.DATAHORAFECHAMENTOPADRAO,'HH24:MI:SS')) + 1 DAYS
+					END DATAHORAFECHAMENTO
+				FROM DDA.TIPOGRADEHORARIA T,
+				     (SELECT DATE('${dataReferencia}') as DATAREFERENCIA FROM SYSIBM.SYSDUMMY1) D
+				WHERE T.CODSUBTIPOGRADE = 1
+		    		AND NOT EXISTS (SELECT NULL
+				       		           FROM DDA.GRADEHORARIA G
+				            	       WHERE G.CODTIPOGRADEHORARIA = T.CODTIPOGRADEHORARIA
+				                		    AND G.DATAREFERENCIA   = D.DATAREFERENCIA)
+			
+				]]>
+		</command>
+	</query>
+	<query name="PESQUISAR_GRADE_HORARIA">
+		<use-case name="PESQUISAR_GRADE_HORARIA"></use-case>
+		<description>LISTAR GRADE HORARIA</description>
+		<command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.operacional.dto.GradeHorariaDto(
+					g.id,
+					g.dataReferencia,
+					g.dataHoraAbertura,
+					g.dataHoraFechamento,
+					g.tipoGradeHoraria.codTipoGradeHoraria,
+					g.tipoGradeHoraria.descTipoGradeHoraria
+					)
+				FROM GradeHoraria g
+				WHERE 1=1
+				<j:if test="${criterios.filtro.dataReferencia != null}"> 
+					AND DATE(g.dataReferencia) = <bancoob:valorOql valor="${criterios.filtro.dataReferencia}" tipo="date"/>
+				</j:if>
+		    	<j:if test="${criterios.filtro.codTipoGradeHoraria != null}">
+		    		AND g.tipoGradeHoraria.codTipoGradeHoraria =  <bancoob:valorOql valor="${criterios.filtro.codTipoGradeHoraria}" />
+		    	</j:if>
+				<j:if test="${criterios.filtro.gradesEmUso == true}">
+					AND EXISTS (
+						FROM TipoMensagemDDA tm 
+                   		WHERE tm.tipoGradeHoraria.codTipoGradeHoraria = g.tipoGradeHoraria.codTipoGradeHoraria 
+                   		)
+				</j:if>
+				ORDER BY g.tipoGradeHoraria.codTipoGradeHoraria, g.dataReferencia ASC
+			]]>
+		</command>
+	</query>
+	<query name="OBTER_QTD_GRADE_HORARIA">
+		<use-case name="OBTER_QTD_GRADE_HORARIA"></use-case>
+		<description>OBTER_PARAMETRO</description>
+		<command>
+			<![CDATA[
+				SELECT count(*)
+				FROM GradeHoraria g 
+				WHERE 1=1
+				<j:if test="${criterios.filtro.dataReferencia != null}"> 
+					AND DATE(g.dataReferencia) = <bancoob:valorOql valor="${criterios.filtro.dataReferencia}" tipo="date"/>
+				</j:if>
+		    	<j:if test="${criterios.filtro.codTipoGradeHoraria != null}">
+		    		AND g.tipoGradeHoraria.codTipoGradeHoraria =  <bancoob:valorOql valor="${criterios.filtro.codTipoGradeHoraria}" />
+		    	</j:if>
+				<j:if test="${criterios.filtro.gradesEmUso == true}">
+					AND EXISTS (
+						FROM TipoMensagemDDA tm 
+                   		WHERE tm.tipoGradeHoraria.codTipoGradeHoraria = g.tipoGradeHoraria.codTipoGradeHoraria 
+                   		)
+				</j:if>
+			]]>
+		</command>
+	</query>	
+</queries>

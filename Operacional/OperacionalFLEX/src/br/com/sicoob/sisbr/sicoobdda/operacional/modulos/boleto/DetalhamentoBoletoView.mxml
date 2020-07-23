@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="750" height="600" layout="absolute"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:input="br.com.bancoob.componentes.input.*" 
+								 xmlns:navegacao="br.com.bancoob.componentes.navegacao.*" 
+								 xmlns:grid="br.com.bancoob.componentes.grid.*"
+								 xmlns:campos="br.com.bancoob.componentes.campos.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+								 xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+								 xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+								 xmlns:consultaBoleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.boleto.*" 
+								 verticalScrollPolicy="off" paddingLeft="1" paddingRight="1">
+	
+	<mx:Script>
+		<![CDATA[
+			
+		]]>
+	</mx:Script>
+	
+	<navegacao:Tab id="tabDetalhamentoBoleto" x="0" backgroundAlpha="0" borderThickness="2" styleName="fonteVerticalTab"  paddingTop="0" width="100%" height="95%" focusEnabled="false">
+		<containers:CanvasBancoob id="cvAbaDadosBoleto" label="Dados Básicos do Boleto"  focusEnabled="false" width="100%" height="100%">
+			<consultaBoleto:AbaDadosBoleto id="abaDadosBasicoBoleto" width="100%" height="100%"/>
+		</containers:CanvasBancoob>
+		
+		<containers:CanvasBancoob id="cvAbaComplementaresBoleto" label="Dados Complementares do Boleto" toolTip="Dados Complementares do Boleto" focusEnabled="false" width="100%" height="100%">
+			<consultaBoleto:AbaDadosComplementaresBoleto id="abaDadosComplementaresBoleto" width="100%" height="100%"/>
+		</containers:CanvasBancoob>
+		
+		<containers:CanvasBancoob id="cvAbaBeneficiarioSacador" label="Beneficiário / Pagador / Sac. Avalista" toolTip="Beneficiário / Pagador / Sac. Avalista" focusEnabled="false" width="100%" height="100%">
+			<consultaBoleto:AbaBeneficiarioSacador id="abaBeneficiarioSacador" width="100%" height="100%"/>
+		</containers:CanvasBancoob>
+		
+		<containers:CanvasBancoob id="cvAbaBaixas" label="Baixas"  focusEnabled="false" width="100%" height="100%">
+			<consultaBoleto:AbaBaixas id="abaBaixas" width="100%" height="100%"/>
+		</containers:CanvasBancoob>
+	</navegacao:Tab>
+	
+	<componentes:BarraBotoesFormularioCadastroCobranca id="barraBotoes"  width="620" x="132" y="567"/>
+	
+	<bancoob:Botao id="btnImprimir" width="100" acionarComEnter="true" label="Imprimir"  x="550" y="578" toolTip="Imprimir"/>
+	
+</cadastro:FormularioCadastroView>

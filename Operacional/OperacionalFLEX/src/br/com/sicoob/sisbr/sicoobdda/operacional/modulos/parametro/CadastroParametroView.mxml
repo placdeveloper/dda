@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="{WIDTH_TELA}" height="485" layout="absolute"
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*" 
+			xmlns:input="br.com.bancoob.componentes.input.*" 
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns:campos="br.com.bancoob.componentes.campos.*"
+			xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+			xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+			xmlns:text="flash.text.*" xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+			xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+			verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<mx:Script>
+		<![CDATA[
+			protected var WIDTH_TELA:int = 600;
+		]]>
+	</mx:Script>
+	
+	<validaveis:CanvasValidavel id="cvPrincipal">
+		
+		<titulo:SubtituloView texto="DADOS DO PARÂMETRO" width="{WIDTH_TELA}"/>
+		
+		<containers:CanvasBancoob width="100%" height="600">
+			<Rotulo text="Código:" x="5" y="40" width="70" textAlign="right"/>
+			<input:Texto id="txtCodParametro" x="80" y="40" width="90" maxChars="99999" permitirValoreNegativos="false" agruparDigitos="false" validarObrigatorio="true"/>
+			
+			<Rotulo text="Nome:" x="160" y="40" width="70" textAlign="right"/>
+			<input:Texto id="txtNome" x="240" y="40" width="340" validarObrigatorio="true" somenteMaiusculas="false" />
+			
+			<Rotulo text="Descrição:" x="5" y="70" width="70" textAlign="right"/>
+			<input:TextoArea id="txtDescricao" x="80" y="70" width="500" validarObrigatorio="true" somenteMaiusculas="false" />
+			
+			<Rotulo text="Tipo:" x="5" y="128" width="70" textAlign="right"/>
+			<input:Combo id="cmbTipoParametro" labelField="descTipoParametro" x="80" y="123" width="200" editable="false" inserirItemOpcional="false"  somenteMaiusculas="false"/>
+			
+			<input:Check id="chkAlteracaoUsuario" label="Permite alteração do usuário." y="125" x="305" />
+			
+			<Rotulo text="Situação:" x="5" y="160" width="70" textAlign="right"/>
+			
+			<input:RadioGrupoBancoob id="grpSituacao" />
+			<input:Radio id="optAtivo" label="Ativo" y="157" x="80" groupName="grpSituacao" />
+			<input:Radio id="optInativo" label="Inativo" y="157" x="160" groupName="grpSituacao" selected="true"/>
+			
+			<Rotulo text="Parâmetro:" x="5" y="188" width="70" textAlign="right"/>
+			
+			<input:RadioGrupoBancoob id="grpGlobal" />
+			<input:Radio id="optGlobal" label="Global" groupName="grpGlobal" y="185" x="80" selected="true"/>
+			<input:Radio id="optInstituicao" label="Por instituição" groupName="grpGlobal" y="185" x="160"/>
+			
+			<Rotulo text="Administrativo:" x="0" y="216" width="75" textAlign="right"/>
+			
+			<input:RadioGrupoBancoob id="grpAdministrativo" />
+			<input:Radio id="optAdministrativoNao" label="Não" y="213" x="160" groupName="grpAdministrativo"  selected="true" />
+			<input:Radio id="optAdministrativoSim" label="Sim" y="213" x="80" groupName="grpAdministrativo" />
+			
+			<Rotulo text="Cód. Legado:" x="5" y="244" width="70" textAlign="right" />
+			<input:Texto id="txtCodLegado" x="80" y="244" width="160" maxChars="10" restrict="0-9" permitirValoreNegativos="false" agruparDigitos="false" />
+			
+			<titulo:SubtituloView texto="VALOR BASE" width="{WIDTH_TELA}" y="270" />
+			
+			<Rotulo text="Valor:" x="5" y="300" width="70"  textAlign="right"/>
+			<input:Texto id="txtValor" x="80" y="300" width="500" validarObrigatorio="true" somenteMaiusculas="false" />
+			
+			<input:RadioGrupoBancoob id="bolValor" />
+			<input:Radio id="optTrue" value="1" label="Sim" groupName="radio" y="300" x="80" />
+			<input:Radio id="optFalse" value="0" label="Não" groupName="radio" y="300" x="180" />
+			
+			<input:Data id="txtData" y="300" x="80" validarObrigatorio="true" />
+			
+			<input:Texto id="txtDecimal" y="300" x="80" restrict="0-9-,-." validarObrigatorio="true"/>
+			
+			<input:Texto id="txtNumerico" y="300" x="80" restrict="0-9" validarObrigatorio="true"/>
+			
+			<Rotulo text="Valor Texto:" x="5" y="330" width="70" textAlign="right"/>
+			<input:TextoArea id="txtValorTexto" x="80" y="330" width="500" somenteMaiusculas="false" />
+			
+			<titulo:SubtituloView texto="DATAS" width="{WIDTH_TELA}" y="380" />
+			
+			<Rotulo text="Data Criação:" y="415" x="80" width="70" textAlign="right" />
+			<input:Data id="txtDataCriacao" y="412" x="155" enabled="false" />
+			
+			<Rotulo text="Data Última Atualização:" y="415" x="300" width="120" textAlign="right" />
+			<input:Data id="txtDataAlteracao" y="412" x="430" enabled="false" />
+		</containers:CanvasBancoob>
+		
+		<Botao id="btnGravar" label="Gravar" x="320" y="460"/>
+		<Botao id="btnLimpar" label="Limpar" x="410" y="460"/>
+		<Botao id="btnFechar" label="Fechar" x="500" y="460"/>
+	</validaveis:CanvasValidavel>
+	
+</BaseModulo>

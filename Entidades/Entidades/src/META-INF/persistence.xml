@@ -1,0 +1,141 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+	version="2.1">
+
+	<persistence-unit name="emSicoobDDA_db2">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<jta-data-source>jdbc/sicoobdda_comumDS</jta-data-source>
+
+		<!-- DDA -->
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BeneficiarioDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BeneficiarioInstituicao</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.CategoriaMensagemDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.CanalPagamentoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.GradeHoraria</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoErroCip</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoMensagemDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ErroMensagemRetornoCip</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.HistoricoIfStatusBeneficiario</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.HistoricoStatusBeneficiarioDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.IFBeneficiarioAlerta</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.LogErroBeneficiarioInstituicao</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.LogDetalheEnvioArquivoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.LogEnvioArquivoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoArquivoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoBeneficiarioDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoParametroDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ParametroDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ValorParametroDDA</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDAAceite</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABeneficiario</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABeneficiarioConvenio</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABeneficiarioRepresentante</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDAPagador</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDAPagadorAgregado</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDAPagadorConta</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABoleto</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABoletoGrupoCalculo</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABoletoNotaFiscal</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABoletoTextoInfo</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDAConsultaBoleto</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDATerceiroAut</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoBaixaEfetiva</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoBaixaOperacional</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoPagamento</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewBoletoPagadorEletronico</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewInstituicao</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoGradeHoraria</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoPessoaDDAAvalista</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDABaixaEfet</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDABaixaOper</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDAGrupoCalculo</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDANotaFiscal</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDATextoInfo</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.BoletoDDATerceiroAut</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.PagadorDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.PagadorDDAAgregado</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SubTipoGrade</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.PagadorDDAConta</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoMensagemDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoTratamentoErroCip</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.LogDetRecebimentoArquivoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.LogRecebimentoArquivoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoArquivo</class>
+
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoBoletoConsultado</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoDesconto</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoJuros</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoMulta</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoModeloCalculo</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoPercentualValor</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoBoletoPagamento</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoBoleto</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.AutorizacaoValorDivergente</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewTempoMensagem</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoProcessamentoArquivo</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoBaixaOperacional</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABaixaOperacional</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MensagemDDABaixaEfetiva</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.MeioPagamento</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.CanalPagamentoDDACTR</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.HistoricoContingencia</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoContingencia</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewBoletoDDASituacao</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.HistoricoTermoPagador</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TermoPagador</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoTermoPagador</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewContingencia</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ViewPessoa</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.EventoTarifavelDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.EventoTarifavelDDATarifa</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoEventoTarifavel</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoOperacaoLog</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.TipoServicoTarifavel</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.EventoConsolidadoDDA</class>
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.RateioDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.RateioDDALancamento</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoRateioLancamento</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ExtratoDDA</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.SituacaoRateio</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.EventoConsolidadoDDADetalhe</class>
+		
+		
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.RequisicaoCache</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.AtualizacaoCache</class>
+		<class>br.com.sicoob.sisbr.sicoobdda.entidades.ServidorDDA</class>
+		<!-- DDA -->
+		
+		<exclude-unlisted-classes />
+
+		<properties>
+			<property name="hibernate.dialect" value="br.com.sicoob.sisbr.sicoobdda.entidades.dialect.SicoobDDADB2Dialect" />
+			<property name="hibernate.format_sql" value="true" />			
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.transaction.factory_class" value="org.hibernate.ejb.transaction.JoinableCMTTransactionFactory"/>
+	      	<property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.WebSphereExtendedJTATransactionLookup" />
+		</properties>
+	</persistence-unit>
+</persistence>

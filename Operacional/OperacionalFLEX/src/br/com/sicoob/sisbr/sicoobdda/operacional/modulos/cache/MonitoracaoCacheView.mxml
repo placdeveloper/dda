@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bancoob:BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="800" height="490"
+					xmlns:bancoob="br.com.bancoob.componentes.*"
+					xmlns:grid="br.com.bancoob.componentes.grid.*"
+					xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+					xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*" 
+					xmlns:cache="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.cache.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+			import br.com.bancoob.util.reflexao.ReflectionUtils;
+			
+			private static function servDestLableFunction(objeto:Object, coluna:DataGridColumn):String {     
+				var serv:Object = ReflectionUtils.recuperarPropriedade(objeto, TabelaPaginadaUtils.recuperarNomePropriedade(coluna));
+				return serv ? serv.codServidorDDA : "TODOS";
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="450">
+		
+		<cache:FiltroMonitoracaoCacheView id="filtro" />
+		
+		<titulo:SubtituloView texto="Lista de Requisição" width="100%"/>
+		<grid:Grid id="gridRequisicao" width="97%" height="100%" sortableColumns="true" selectable="true" doubleClickEnabled="true">
+			<grid:columns>
+				<grid:ColunaGrid dataField="idRequisicaoCache" headerText="ID" textAlign="center" sortable="true" width="40"/>
+				<grid:ColunaGrid dataField="dataHoraRequisicao" headerText="Data Hora" textAlign="center" width="100" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+				<grid:ColunaGrid dataField="descCache" headerText="Cache" textAlign="center" sortable="true" width="180"/>
+				<grid:ColunaGrid dataField="servidorDDARequisitante.codServidorDDA" headerText="Requisitante" textAlign="center" width="150"/>
+				<grid:ColunaGrid dataField="servidorDDADestino" headerText="Destino" textAlign="center" labelFunction="{servDestLableFunction}" width="120"/>
+			</grid:columns>
+		</grid:Grid>
+		<titulo:SubtituloView texto="Lista de Atualização" width="100%"/>
+		<grid:Grid id="gridAtualizacao" width="97%" height="100%" sortableColumns="true" doubleClickEnabled="false">
+			<grid:columns>
+				<grid:ColunaGrid dataField="idAtualizacaoCache" headerText="ID" textAlign="center" width="40"/>
+				<grid:ColunaGrid dataField="dataHoraAtualizacao" headerText="Data Hora" textAlign="center" width="100" labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+				<grid:ColunaGrid dataField="servidorDDA.codServidorDDA" headerText="Servidor" textAlign="center" width="150"/>
+				<grid:ColunaGrid dataField="servidorDDA.descPerfil" headerText="Perfil" textAlign="center" width="150"/>
+			</grid:columns>
+		</grid:Grid>
+	</mx:VBox>
+	
+	<bancoob:Botao id="btnCadastrar" toolTip="Cadastrar Requisição" styleName="botaoCrudAdicionarPeq" enabled="false" y="250" right="0"/>
+	
+	<mx:VBox width="100%" height="35" bottom="0">
+		<titulo:LinhaView width="100%"/>
+		
+		<mx:Canvas width="100%">
+			<bancoob:Botao id="btnFechar" label="FECHAR" right="10" />
+		</mx:Canvas>
+	</mx:VBox>
+
+</bancoob:BaseModulo>

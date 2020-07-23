@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="LISTA_EVENTO_TARIFAVEL">
+		<use-case name="LISTA_EVENTO_TARIFAVEL"></use-case>
+		<description>Lista os eventos tarifáveis</description>
+		<command>
+				<![CDATA[
+					FROM EventoTarifavelDDA evento
+					WHERE evento.bolTarifavel = 1 AND evento.bolAtivo = 1
+					<j:if test="${codEventoTarifavel != null}">
+						AND  evento.codEventoTarifavel = <bancoob:valorOql valor="${codEventoTarifavel}" />
+					</j:if>
+				]]>
+		</command>
+	</query>
+	
+	<query name="LISTA_EVENTO_TARIFAVEL_PARCIAL">
+		<use-case name="LISTA_EVENTO_TARIFAVEL_PARCIAL"></use-case>
+		<description>Lista os eventos tarifáveis</description>
+		<command>
+				<![CDATA[
+					SELECT new br.com.sicoob.sisbr.sicoobdda.entidades.EventoTarifavelDDA(evento.codEventoTarifavel, evento.descEventoTarifavelExtrato)
+					FROM EventoTarifavelDDA evento
+					WHERE evento.bolTarifavel = 1 AND evento.bolAtivo = 1
+				]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISA_EVENTO_TARIFAVEL">
+		<use-case name="Obter Pagador DDA Conta"></use-case>
+		<description>Obter Pagador DDA conta.</description>
+		<command>
+				<![CDATA[
+					SELECT
+					    EVEN.CODEVENTOTARIFAVEL,
+					    EVEN.DESCEVENTOTARIFAVELEXTRATO,
+					    TAR.DATAINICIOVIGENCIA,
+					    TAR.DATAFIMVIGENCIA,
+					    EVEN.BOLTARIFAVEL,
+					    TAR.VALORCIP,
+					    TAR.VALORBANCOOB,
+					    TP.DESCTIPOEVENTOTARIFAVEL,
+					    CASE
+					        WHEN TAR.DATAINICIOVIGENCIA &lt;= CURRENT DATE AND ( TAR.DATAFIMVIGENCIA IS NULL OR TAR.DATAFIMVIGENCIA &gt;= CURRENT DATE )
+					        THEN 'Vigente'
+					        WHEN TAR.DATAINICIOVIGENCIA &gt; CURRENT DATE
+					        THEN 'Programado'
+					        WHEN TAR.DATAFIMVIGENCIA &lt; CURRENT DATE
+					        THEN 'Vencido'
+					    END STATUS,
+					    TAR.IDEVENTOTARIFAVELDDATARIFA
+					FROM DDA.EVENTOTARIFAVELDDA EVEN
+					JOIN DDA.EVENTOTARIFAVELDDATARIFA TAR ON TAR.CODEVENTOTARIFAVEL = EVEN.CODEVENTOTARIFAVEL
+					JOIN DDA.TIPOEVENTOTARIFAVEL TP ON TP.CODTIPOEVENTOTARIFAVEL = EVEN.CODTIPOEVENTOTARIFAVEL
+					WHERE 1=1
+					<j:if test="${codEventoTarifavel != null}">
+						AND  EVEN.CODEVENTOTARIFAVEL = <bancoob:valor valor="${codEventoTarifavel}" />
+					</j:if>
+					
+					<j:if test="${idEventoTarifavelDDATarifa != null}">
+						AND  TAR.IDEVENTOTARIFAVELDDATARIFA = <bancoob:valor valor="${idEventoTarifavelDDATarifa}" />
+					</j:if>
+					
+					<j:if test="${codStatus == 1 }">
+						AND  TAR.DATAINICIOVIGENCIA &lt;= CURRENT DATE AND ( TAR.DATAFIMVIGENCIA IS NULL OR TAR.DATAFIMVIGENCIA &gt;= CURRENT DATE )
+					</j:if>
+					
+					<j:if test="${codStatus == 2}">
+						AND  TAR.DATAINICIOVIGENCIA &gt; CURRENT DATE
+					</j:if>
+					
+					<j:if test="${codStatus == 3}">
+						AND  TAR.DATAFIMVIGENCIA &lt; CURRENT DATE
+					</j:if>
+						AND EVEN.BOLTARIFAVEL = 1
+						AND EVEN.BOLATIVO = 1
+					ORDER BY 
+					    TAR.DATAINICIOVIGENCIA DESC
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_ULTIMO_STATUS_EVENTO_TARIFAVEL">
+		<use-case name="Obtem o ultimo status do evento tarifavel"></use-case>
+		<description>Obtem o ultimo status do evento tarifavel.</description>
+		<command>
+				<![CDATA[
+					SELECT
+					    EVEN.CODEVENTOTARIFAVEL,
+					    EVEN.DESCEVENTOTARIFAVELEXTRATO,
+					    TAR.DATAINICIOVIGENCIA,
+					    TAR.DATAFIMVIGENCIA,
+					    EVEN.BOLTARIFAVEL,
+					    TAR.VALORCIP,
+					    TAR.VALORBANCOOB,
+					    TP.DESCTIPOEVENTOTARIFAVEL,
+					    CASE
+					        WHEN TAR.DATAINICIOVIGENCIA &lt;= CURRENT DATE AND ( TAR.DATAFIMVIGENCIA IS NULL OR TAR.DATAFIMVIGENCIA &gt;= CURRENT DATE )
+					        THEN 'Vigente'
+					        WHEN TAR.DATAINICIOVIGENCIA &gt; CURRENT DATE
+					        THEN 'Programado'
+					        WHEN TAR.DATAFIMVIGENCIA &lt; CURRENT DATE
+					        THEN 'Vencido'
+					    END STATUS,
+					    TAR.IDEVENTOTARIFAVELDDATARIFA
+					FROM DDA.EVENTOTARIFAVELDDA EVEN
+					JOIN DDA.EVENTOTARIFAVELDDATARIFA TAR ON TAR.CODEVENTOTARIFAVEL = EVEN.CODEVENTOTARIFAVEL
+					JOIN DDA.TIPOEVENTOTARIFAVEL TP ON TP.CODTIPOEVENTOTARIFAVEL = EVEN.CODTIPOEVENTOTARIFAVEL
+					WHERE 1=1
+					<j:if test="${codEventoTarifavel != null}">
+						AND  EVEN.CODEVENTOTARIFAVEL = <bancoob:valor valor="${codEventoTarifavel}" />
+					</j:if>
+					
+					<j:if test="${codStatus == 1 }">
+						AND  TAR.DATAINICIOVIGENCIA &lt;= CURRENT DATE AND ( TAR.DATAFIMVIGENCIA IS NULL OR TAR.DATAFIMVIGENCIA &gt;= CURRENT DATE )
+					</j:if>
+					
+					<j:if test="${codStatus == 2}">
+						AND  TAR.DATAINICIOVIGENCIA &gt; CURRENT DATE
+					</j:if>
+					
+					<j:if test="${codStatus == 3}">
+						AND  TAR.DATAFIMVIGENCIA &lt; CURRENT DATE
+					</j:if>
+						AND EVEN.BOLTARIFAVEL = 1
+						AND EVEN.BOLATIVO = 1
+					ORDER BY 
+					    TAR.DATAINICIOVIGENCIA DESC FETCH FIRST 1 ROWS ONLY 
+				]]>
+		</command>
+	</query>
+	
+	<query name="OBTER_EVENTO_TARIFAVEL_DDA_TARIFA">
+		<use-case name="OBTER EVENTO TARIFAVELDDA TARIFA"></use-case>
+		<description>Obtendo Evento TarifavelDDA Tarifa.</description>
+		<command>
+				<![CDATA[
+					FROM EventoTarifavelDDATarifa TAR
+					JOIN TAR.eventoTarifavelDDA
+					WHERE TAR.id = <bancoob:valorOql valor="${idEventoTarifavelDDATarifa}" />
+				]]>
+		</command>
+	</query>
+	
+	<query name="EXISTE_TARIFA_PROGRAMADA">
+		<use-case name="VERIFICA SE JA EXISTE UMA PROGRAMACAO PARA UMA TARIFA"></use-case>
+		<description>Verifica se já existe uma programação para uma tarifa.</description>
+		<command>
+				<![CDATA[
+					SELECT
+					    COUNT (TAR.id)
+					FROM
+					    EventoTarifavelDDATarifa TAR
+					WHERE
+					    TAR.dataInicioVigencia &gt; CURRENT_DATE
+					AND TAR.eventoTarifavelDDA.codEventoTarifavel = <bancoob:valorOql valor="${codEventoTarifavel}" />
+					AND TAR.eventoTarifavelDDA.bolTarifavel = 1
+                    AND TAR.eventoTarifavelDDA.bolAtivo = 1
+				]]>
+		</command>
+	</query>
+	
+	<query name="EXISTE_TARIFA_VIGENTE">
+		<use-case name="VERIFICA SE EXISTE UMA VIGENCIA PARA UMA TARIFA"></use-case>
+		<description>Verifica se já existe uma vigência para uma tarifa.</description>
+		<command>
+				<![CDATA[
+					SELECT
+					    COUNT (TAR.id)
+					FROM
+					    EventoTarifavelDDATarifa TAR
+					WHERE
+					    TAR.dataInicioVigencia  &lt;= CURRENT_DATE AND ( TAR.dataFimVigencia IS NULL OR TAR.dataFimVigencia &gt;= CURRENT_DATE )
+					AND TAR.eventoTarifavelDDA.codEventoTarifavel  = <bancoob:valorOql valor="${codEventoTarifavel}" />
+					AND TAR.eventoTarifavelDDA.bolTarifavel = 1
+                    AND TAR.eventoTarifavelDDA.bolAtivo = 1
+				]]>
+		</command>
+	</query>
+	
+	<query name="EXISTE_VIGENCIA_EM_RATEIO">
+		<use-case name="VERIFICA A VIGENCIA ESTA EM RATEIO"></use-case>
+		<description>Verifica se a vigencia está com rateio.</description>
+		<command>
+				<![CDATA[
+					SELECT COUNT(ETT.id)
+					FROM EventoTarifavelDDATarifa ETT
+					WHERE ETT.id = <bancoob:valorOql valor="${idEventoTarifavelDDATarifa}" />
+					AND EXISTS ( SELECT 1
+					                 FROM EventoConsolidadoDDA EC
+					                 WHERE EC.eventoTarifavelDDA.codEventoTarifavel = <bancoob:valorOql valor="${codEventoTarifavel}" />
+					                 AND EC.dataMovimento >= ETT.dataInicioVigencia
+					                 AND ( EC.valorTarifaBancoob IS NOT NULL OR EC.rateioDDA.id IS NOT NULL ) )
+				]]>
+		</command>
+	</query>
+</queries>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<cadastro:FormularioCadastroView 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:grid="br.com.bancoob.componentes.grid.*"
+	xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+	xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	clipContent="false" verticalScrollPolicy="off" paddingLeft="1" paddingRight="1"
+	width="700" height="285">
+	<mx:Script>
+		<![CDATA[
+			
+			
+		]]>
+	</mx:Script>
+	
+	<containers:VBoxBancoob width="100%" id="vbox1">
+		
+		<titulo:SubtituloView texto="Detalhe Rateio" width="100%" />
+				<containers:CanvasBancoob width="100%">
+					<Rotulo text="Cooperativa:" width="75" x="20" fontWeight="bold" />
+					<Rotulo  id="txtCooperativa" width="100%" x="85"  textAlign="left" maxWidth="300"/>
+					
+					<Rotulo text="Conta Corrente:" width="105"  fontWeight="bold" x="285"  />
+					<mx:Label id="txtContaCorrente" width="200" x="370" />
+	
+					<Rotulo text="Código Rateio:" width="115"  fontWeight="bold" x="510" />
+					<Rotulo id="txtIdRateioDDA" width="195"  textAlign="left" x="586"/>
+				</containers:CanvasBancoob>
+			
+			
+			<containers:CanvasBancoob width="100%">
+					<Rotulo text="Sequencial Lançamento:" width="130" x="20" fontWeight="bold"/>
+					<Rotulo id="txtSeqLancamento" width="150" x="145" textAlign="left" />
+			
+					<Rotulo text="Valor Total:" width="115" x="285" fontWeight="bold" />
+					<Rotulo id="txtValorTotal" width="200" x="345" />
+	
+					<Rotulo text="Usuário:" width="115"  fontWeight="bold" x="510" />
+					<Rotulo id="txtUsuário" width="200"   textAlign="left" x="555" />
+			</containers:CanvasBancoob>
+			<containers:CanvasBancoob width="100%">
+					<Rotulo text="Data Movimento:" width="115"  fontWeight="bold" x="20"/>
+					<Rotulo id="txtDataMovimento" width="200"   textAlign="left" x="110" />
+	
+					<Rotulo text="Data do Lançamento:" width="130"  fontWeight="bold" x="285"/>
+					<Rotulo id="txtDataLancamento" width="200" textAlign="left" x="395" />
+			</containers:CanvasBancoob>
+			<containers:CanvasBancoob width="100%">
+					<Rotulo text="Evento:" width="115"  fontWeight="bold" x="20"/>
+					<Rotulo id="txtDescEventoTarifavel" width="300"   textAlign="left" x="60" />
+				
+					<Rotulo text="Situação do Lançamento:" width="130"  fontWeight="bold" x="325"/>
+					<Rotulo id="txtDescSituacaoLanc" width="200"   textAlign="left" x="450" />
+			</containers:CanvasBancoob>
+			
+			<titulo:SubtituloView id="subTitulo1" texto="Detalhe do Erro" width="100%" />
+		
+			<containers:CanvasBancoob width="100%">
+				<Rotulo text="Descrição do Erro:" width="130"  fontWeight="bold" x="20"/>
+				<Rotulo id="txtDescErroLancamento" width="100%"   textAlign="left" x="120" />				
+			</containers:CanvasBancoob>
+		
+			<titulo:SubtituloView id="subTitulo2" texto="Transferência de Débito" width="100%" />
+		
+			<containers:CanvasBancoob width="100%">
+				<containers:HBoxBancoob width="100%" >
+					<comumflex:CentraisSingulares id="compCentralSingular" width="385"/>	
+					<Botao id="btnTransferir" label="Transferir" enabled="false"/>
+				</containers:HBoxBancoob>
+			</containers:CanvasBancoob>
+		
+		<titulo:LinhaView width="100%" />
+		
+		<containers:HBoxBancoob horizontalAlign="right" width="100%" >
+			<Botao id="btnFechar" label="Fechar"/>
+		</containers:HBoxBancoob>
+	</containers:VBoxBancoob>
+</cadastro:FormularioCadastroView> 

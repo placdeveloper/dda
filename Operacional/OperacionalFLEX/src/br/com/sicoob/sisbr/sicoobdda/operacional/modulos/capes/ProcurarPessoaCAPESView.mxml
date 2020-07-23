@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" focusEnabled="false"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:bancoob="br.com.bancoob.componentes.*"
+			xmlns:procurarPessoaExterno="br.com.sicoob.capes.corporativo.componentes.procurarPessoaExterno.*"
+			paddingLeft="0" paddingRight="0" paddingBottom="0" clipContent="true"
+			width="600" height="600" >
+	<mx:Script>
+		<![CDATA[
+			import br.com.sicoob.capes.corporativo.componentes.procurarPessoaExterno.util.ConstantesProcurarPessoaExternoCAPES;
+		]]>
+	</mx:Script>
+	<procurarPessoaExterno:ProcurarPessoaExternoCAPES x="0" y="0" id="componenteProcurarPessoaCAPES" 
+													  exibirNome="true"
+													  validarObrigatorio="true"
+													  compartilhadosBancoob="true"
+													  tipoCliente="{ConstantesProcurarPessoaExternoCAPES.TIPO_CLIENTE_SOMENTE_CLIENTES}"
+													  tipoPessoa="{ConstantesProcurarPessoaExternoCAPES.TIPO_PESSOA_SOMENTE_PESSOAS_FISICAS}" />
+</BaseModulo>

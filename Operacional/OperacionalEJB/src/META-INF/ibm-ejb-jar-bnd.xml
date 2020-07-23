@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<session name="CancelamentoBaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.CancelamentoBaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/CancelamentoBaixaOperacionalServico" />
+	</session>
+
+	<session name="AgendamentoBoletoDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.AgendamentoBoletoDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/AgendamentoBoletoDDAServico" />
+	</session>
+
+	<session name="HistoricoMensagemDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.HistoricoMensagemDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/HistoricoMensagemDDAServico" />
+	</session>
+
+	<session name="ContingenciaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ContingenciaServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ContingenciaServico" />
+	</session>
+
+	<session name="MensagemDDAPagadorServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.MensagemDDAPagadorServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/MensagemDDAPagadorServico" />
+	</session>
+
+	<session name="ExcluirRelacionamentoBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ExcluirRelacionamentoBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ExcluirRelacionamentoBeneficiarioServico" />
+	</session>
+
+	<session name="BaixaOperacionalServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.BaixaOperacionalServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/BaixaOperacionalServico" />
+	</session>
+
+	<session name="CadastrarBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.CadastrarBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/CadastrarBeneficiarioServico" />
+	</session>
+
+	<session name="MonitoracaoDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.MonitoracaoDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/MonitoracaoDDAServico" />
+	</session>
+
+	<session name="ManutencaoMensagemDDABoletoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ManutencaoMensagemDDABoletoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ManutencaoMensagemDDABoletoServico" />
+	</session>
+
+	<session name="BeneficiariosAlertaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.BeneficiariosAlertaServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/BeneficiariosAlertaServico" />
+	</session>
+
+	<session name="TratamentoPendenciaErroServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.TratamentoPendenciaErroServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/TratamentoPendenciaErroServico" />
+	</session>
+
+	<session name="AlterarCadastroBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.AlterarCadastroBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/AlterarCadastroBeneficiarioServico" />
+	</session>
+
+	<session name="GradeHorariaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.GradeHorariaServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/GradeHorariaServico" />
+	</session>
+
+	<session name="OperacaoBeneficiarioDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.OperacaoBeneficiarioDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/OperacaoBeneficiarioDDAServico" />
+	</session>
+
+	<session name="AdministrativoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.AdministrativoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/AdministrativoServico" />
+	</session>
+
+	<session name="ConsultarBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ConsultarBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ConsultarBeneficiarioServico" />
+	</session>
+
+	<session name="MonitoramentoMensagensDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.MonitoramentoMensagensDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/MonitoramentoMensagensDDAServico" />
+	</session>
+
+	<session name="ArquivoEnviadoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ArquivoEnviadoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ArquivoEnviadoServico" />
+	</session>
+
+	<session name="AlterarSituacaoBeneficiarioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.AlterarSituacaoBeneficiarioServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/AlterarSituacaoBeneficiarioServico" />
+	</session>
+
+	<session name="RequisitarArquivoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.RequisitarArquivoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/RequisitarArquivoServico" />
+	</session>
+
+	<session name="PagadorEletronicoDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.PagadorEletronicoDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/PagadorEletronicoDDAServico" />
+	</session>
+
+	<session name="TipoMensagemServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.TipoMensagemServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/TipoMensagemServico" />
+	</session>
+
+	<session name="TipoErroCipServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.TipoErroCipServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/TipoErroCipServico" />
+	</session>
+
+	<session name="ArquivoRecebidoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ArquivoRecebidoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ArquivoRecebidoServico" />
+	</session>
+
+	<session name="TipoGradeHorariaServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.TipoGradeHorariaServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/TipoGradeHorariaServico" />
+	</session>
+
+	<session name="ConsultaBoletoDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.ConsultaBoletoDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/ConsultaBoletoDDAServico" />
+	</session>
+
+	<session name="InclusaoPagadorDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.InclusaoPagadorDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/InclusaoPagadorDDAServico" />
+	</session>
+	
+	<session name="EventoTarifavelDDAServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.EventoTarifavelDDAServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/EventoTarifavelDDAServico" />
+	</session>
+
+	<session name="RateioDDALancamentoServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.RateioDDALancamentoServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/RateioDDALancamentoServico" />
+	</session>
+
+	<session name="RateioTarifasCipServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.RateioTarifasCipServicoLocal"
+			binding-name="ejblocal:sicoobdda_operacional/RateioTarifasCipServico" />
+	</session>
+	
+	<session name="RelatorioServicoEJB">
+		<interface
+			class="br.com.sicoob.sisbr.sicoobdda.operacional.negocio.servicos.interfaces.RelatorioServicoRemote"
+			binding-name="sicoobdda_operacional/RelatorioServicoRemote" />
+	</session>
+
+</ejb-jar-bnd>

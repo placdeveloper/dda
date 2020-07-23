@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE queries [
+<!ELEMENT queries (query*)>
+<!ELEMENT query (use-case+, description,paginacao?,command+, projecao?, ordenacoes?)>
+<!ELEMENT use-case    (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT command     (#PCDATA) >
+<!ELEMENT parametros  (#PCDATA) >
+<!ELEMENT projecao (#PCDATA) >
+<!ELEMENT paginar  (#PCDATA) >
+<!ELEMENT paginacao (#PCDATA) >
+<!ELEMENT colunaCodigo    (#PCDATA) >
+<!ELEMENT colunaDescricao    (#PCDATA) >
+<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA) >
+<!ELEMENT primeiraCondicao    (#PCDATA) >
+<!ELEMENT ascendente    (#PCDATA) >
+<!ELEMENT ordenacoes (ordenacao+)>
+<!ELEMENT ordenacao (#PCDATA)>
+<!ELEMENT sql  (#PCDATA) >
+<!ATTLIST ordenacao chave CDATA    #REQUIRED >
+<!ATTLIST ordenacao default CDATA    #IMPLIED >
+<!ATTLIST command parametros CDATA    #IMPLIED  >
+<!ATTLIST command paginar CDATA    #IMPLIED  >
+<!ATTLIST use-case name CDATA    #REQUIRED >
+<!ATTLIST query name CDATA    #REQUIRED >
+<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+<!ATTLIST paginacao hint CDATA    #REQUIRED>
+<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED >
+]>
+
+<queries>
+	<query name="PESQUISAR_MENSAGEMDDABOLETODTO_TELA_PESQUISA">
+		<use-case name="PESQUISAR_MENSAGEMDDABOLETODTO_TELA_PESQUISA"/>
+		<description>Obtém MensagemDDABoleto baseado em filtros</description>
+		<command>
+		<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.MensagemDDABoletoDto (
+					b.id,
+					b.mensagemDDA.tipoMensagemDDA.codTipoMensagem,
+					b.mensagemDDA.dataMovimento,
+					b.numCodigoBarra
+					) FROM MensagemDDABoleto b
+					WHERE 1=1
+			<j:if test="${criterios.filtro.tipoMensagem != null}">
+				AND b.mensagemDDA.tipoMensagemDDA.codTipoMensagem = <bancoob:valorOql valor="${criterios.filtro.tipoMensagem}" />
+			</j:if>
+			<j:if test="${criterios.filtro.dataMovimento != null}">
+				AND b.mensagemDDA.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" />
+			</j:if>
+			<j:if test="${criterios.filtro.numCodigoDeBarras != null}">
+				AND b.numCodigoBarra LIKE <bancoob:valorOql valor="${criterios.filtro.numCodigoDeBarras}" tipo="LikeDireita" />
+			</j:if>
+			<j:if test="${criterios.filtro.situacaoMensagem eq 1}">
+				AND b.mensagemDDA.dataHoraMensagem IS NULL
+			</j:if>
+			<j:if test="${criterios.filtro.situacaoMensagem eq 2}">
+				AND b.mensagemDDA.id IN (SELECT tipoMsg.id FROM MensagemDDA msg 
+										JOIN msg.mensagemOrigem origem
+										JOIN msg.tipoMensagemDDA tipoMsg
+										WHERE tipoMsg.codTipoMensagem LIKE '%E'
+										GROUP BY tipoMsg.id)
+			</j:if>
+			ORDER BY b.mensagemDDA.id ASC
+		]]>
+		</command>
+	</query>
+	
+	<query name="PESQUISAR_MENSAGEMDDABOLETODTO_TELA_PESQUISA_JDBC">
+		<use-case name="Obter detalhe mensagem com lock"></use-case>
+	    <description>Obtém MensagemDDABoleto baseado em filtros (JDBC)</description>
+	    <command>
+			<![CDATA[
+			SELECT *
+			FROM (SELECT ROW_NUMBER() OVER (ORDER BY MSG.IDMENSAGEMDDA ASC) AS LINE,
+			             MSG.IDMENSAGEMDDA,
+			             MSG.CODTIPOMENSAGEMDDA,
+			             MSG.DATAMOVIMENTO,
+			             MSGBOL.NUMCODIGOBARRA 
+			      FROM DDA.MENSAGEMDDA MSG
+			      JOIN DDA.MENSAGEMDDABOLETO MSGBOL ON MSGBOL.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+			      WHERE MSG.BOLMENSAGEMPENDENTE = 1
+			      <j:if test="${tipoMensagem != null}">
+			         AND MSG.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${tipoMensagem}" />
+			      </j:if>
+			      <j:if test="${dataMovimento != null}">
+			         AND MSG.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}" />
+			      </j:if>
+			      <j:if test="${numCodigoDeBarras != null}">
+			         AND MSGBOL.NUMCODIGOBARRA LIKE <bancoob:valor valor="${numCodigoDeBarras}" tipo="LikeDireita" />
+			      </j:if>
+			      <j:if test="${situacaoMensagem != null}">
+			         AND MSG.CODSITUACAOMENSAGEMDDA = <bancoob:valor valor="${situacaoMensagem}" />
+			      </j:if>
+			      GROUP BY MSG.IDMENSAGEMDDA,
+			               MSG.CODTIPOMENSAGEMDDA,
+			               MSG.DATAMOVIMENTO,
+			               MSGBOL.NUMCODIGOBARRA ) T
+			WHERE T.LINE &gt; <bancoob:valor valor="${inicio}" />
+			FETCH FIRST 10 ROWS ONLY
+			]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_QTD_MENSAGEMDDABOLETODTO_TELA_PESQUISA_JDBC">
+		<use-case name="Obter detalhe mensagem com lock"></use-case>
+	    <description>Obter detalhe mensagem com lock.</description>
+	    <command>
+			<![CDATA[
+			SELECT 
+			COUNT(MSG.IDMENSAGEMDDA) AS QTD
+			FROM DDA.MENSAGEMDDA MSG
+			JOIN DDA.MENSAGEMDDABOLETO MSGBOL ON MSGBOL.IDMENSAGEMDDA = MSG.IDMENSAGEMDDA
+			WHERE MSG.BOLMENSAGEMPENDENTE = 1
+			<j:if test="${tipoMensagem != null}">	
+			   AND MSG.CODTIPOMENSAGEMDDA = <bancoob:valor valor="${tipoMensagem}"/> 
+			</j:if>
+			<j:if test="${dataMovimento != null}">	
+			   AND MSG.DATAMOVIMENTO = <bancoob:valor valor="${dataMovimento}"/>
+			</j:if>
+			<j:if test="${numCodigoDeBarras != null}">	
+ 			   AND MSGBOL.NUMCODIGOBARRA LIKE <bancoob:valor valor="${numCodigoDeBarras}"/>
+ 			</j:if>
+ 			<j:if test="${situacaoMensagem != null}">	
+ 			   AND MSG.CODSITUACAOMENSAGEMDDA = <bancoob:valor valor="${situacaoMensagem}"/>
+ 			</j:if>
+			]]>
+	    </command>
+	</query>
+	
+	<query name="OBTER_QTD_MENSAGEMDDABOLETODTO_TELA_PESQUISA">
+		<use-case name="OBTER_QTD_MENSAGEMDDABOLETODTO_TELA_PESQUISA"/>
+		<description>Obtém quantidade de MensagemDDABoleto baseado em filtros</description>
+		<command>
+		<![CDATA[
+				SELECT COUNT (b) FROM MensagemDDABoleto b
+				WHERE 1=1
+			<j:if test="${criterios.filtro.tipoMensagem != null}">
+				AND b.mensagemDDA.tipoMensagemDDA.codTipoMensagem = <bancoob:valorOql valor="${criterios.filtro.tipoMensagem}" />
+			</j:if>
+			<j:if test="${criterios.filtro.dataMovimento != null}">
+				AND b.mensagemDDA.dataMovimento = <bancoob:valorOql valor="${criterios.filtro.dataMovimento}" />
+			</j:if>
+			<j:if test="${criterios.filtro.numCodigoDeBarras != null}">
+				AND b.numCodigoBarra LIKE <bancoob:valorOql valor="${criterios.filtro.numCodigoDeBarras}" tipo="LikeDireita" />
+			</j:if>
+			<j:if test="${criterios.filtro.situacaoMensagem eq 1}">
+				AND b.mensagemDDA.dataHoraMensagem IS NULL
+			</j:if>
+			<j:if test="${criterios.filtro.situacaoMensagem eq 2}">
+				AND b.mensagemDDA.id IN (SELECT tipoMsg.id FROM MensagemDDA msg 
+										JOIN msg.mensagemOrigem origem
+										JOIN msg.tipoMensagemDDA tipoMsg
+										WHERE tipoMsg.codTipoMensagem LIKE '%E'
+										GROUP BY tipoMsg.id)
+			</j:if>
+		]]>
+		</command>
+	</query>
+</queries>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE queries [
+	<!ELEMENT queries (query*)>
+	<!ELEMENT query (use-case+, description,paginacao?,command+, ordenacoes?)>
+	<!ELEMENT use-case    (#PCDATA)>
+	<!ELEMENT description (#PCDATA)>
+	<!ELEMENT command     (#PCDATA)>
+	<!ELEMENT parametros  (#PCDATA)>
+	<!ELEMENT paginar  (#PCDATA)>
+	<!ELEMENT paginacao (#PCDATA)>
+	<!ELEMENT colunaCodigo    (#PCDATA)>
+	<!ELEMENT colunaDescricao    (#PCDATA)>
+	<!ELEMENT numeroOcorrenciasPorPagina    (#PCDATA)>
+	<!ELEMENT primeiraCondicao    (#PCDATA)>
+	<!ELEMENT ascendente    (#PCDATA)>
+	<!ELEMENT ordenacoes (ordenacao+)>
+	<!ELEMENT ordenacao (#PCDATA)>
+	<!ELEMENT sql  (#PCDATA)>
+	<!ATTLIST ordenacao chave CDATA    #REQUIRED>
+	<!ATTLIST ordenacao default CDATA    #IMPLIED>
+	<!ATTLIST command parametros CDATA    #IMPLIED>
+	<!ATTLIST command paginar CDATA    #IMPLIED>
+	<!ATTLIST use-case name CDATA    #REQUIRED>
+	<!ATTLIST query name CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaCodigo CDATA    #REQUIRED>
+	<!ATTLIST paginacao colunaDescricao CDATA    #REQUIRED>
+	<!ATTLIST paginacao numeroOcorrenciasPorPagina CDATA    #REQUIRED>
+	<!ATTLIST paginacao primeiraCondicao CDATA    #REQUIRED>
+	<!ATTLIST paginacao ascendente CDATA    #REQUIRED>
+	<!ATTLIST paginacao hint CDATA    #REQUIRED>
+	<!ATTLIST paginacao hintAuxiliar CDATA   #IMPLIED>
+]>
+
+<queries>
+	<query name="PESQUISAR_TIPO_ERRO_CIP_PAGINADO">
+	    <use-case name="Pesquisar Tipo Erro Cip paginado"></use-case>
+	    <description>Pesquisar Tipo Erro Cip paginado</description>
+	    <command>
+			<![CDATA[
+				SELECT new br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.TipoErroCipDto(
+					tipoErro.codTipoErro,
+					tipoErro.descTipoErro,
+					tipoTratamento.codTipoTratamentoErroCip,
+					tipoTratamento.descTipoTratamentoErroCip
+					)
+				FROM 
+					TipoErroCip as tipoErro	
+				LEFT JOIN tipoErro.tipoTratamentoErroCip as tipoTratamento
+				WHERE
+					1 = 1
+					<j:if test="${criterios.filtro.bolErroTratamentoAutomatizado}">
+					    AND tipoTratamento IS NOT NULL
+					</j:if>
+					<j:if test="${criterios.filtro.codTipoErro != null}"> 
+						AND tipoErro.codTipoErro LIKE <bancoob:valorOql valor="${criterios.filtro.codTipoErro}" tipo="LikeDireita"/>
+					</j:if>	 	
+					<j:if test="${criterios.filtro.descTipoErro != null}"> 
+						AND tipoErro.descTipoErro LIKE <bancoob:valorOql valor="${criterios.filtro.descTipoErro}" tipo="LikeDireitaEsquerda"/>
+					</j:if>
+			]]>
+		  </command>
+	</query>
+	<query name="OBTER_NUMERO_REGISTROS_TIPO_ERRO_CIP_PAGINADO">
+	    <use-case name="Obter numero de registros para pesquisa paginada"></use-case>
+	    <description>Obter numero de registros para pesquisa paginada</description>
+	    <command>
+			<![CDATA[
+				SELECT 
+					COUNT(tipoErro.codTipoErro)
+				FROM 
+					TipoErroCip as tipoErro	
+				LEFT JOIN tipoErro.tipoTratamentoErroCip as tipoTratamento
+				WHERE
+					1 = 1
+					<j:if test="${criterios.filtro.bolErroTratamentoAutomatizado}">
+					    AND tipoTratamento IS NOT NULL
+					</j:if>
+					<j:if test="${criterios.filtro.codTipoErro != null}"> 
+						AND tipoErro.codTipoErro LIKE <bancoob:valorOql valor="${criterios.filtro.codTipoErro}" tipo="LikeDireita"/>
+					</j:if>	 	
+					<j:if test="${criterios.filtro.descTipoErro != null}"> 
+						AND tipoErro.descTipoErro LIKE <bancoob:valorOql valor="${criterios.filtro.descTipoErro}" tipo="LikeDireitaEsquerda"/>
+					</j:if>
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_TIPO_ERRO_CIP">
+	    <use-case name="Obter Tipo Erro CIP"></use-case>
+	    <description>Obter Tipo Erro CIP</description>
+	    <command>
+			<![CDATA[
+				FROM 
+					TipoErroCip as tipoErro	
+				WHERE
+					1 = 1
+					<j:if test="${codTipoErro != null}"> 
+						AND tipoErro.codTipoErro LIKE <bancoob:valorOql valor="${codTipoErro}"/>
+					</j:if>	 	
+			]]>
+	    </command>
+	</query>
+	<query name="OBTER_COUNT_MENSAGEM_TIPO_ERRO_CIP">
+	    <use-case name="Obter numero de registros de mensagens vinculadas ao Tipo Erro"></use-case>
+	    <description>Obter numero de registros de mensagens vinculadas ao Tipo Erro</description>
+	    <command>
+			<![CDATA[
+				SELECT
+					COUNT(msg.id)
+				FROM 
+					ErroMensagemRetornoCip as erroMsg
+					JOIN erroMsg.mensagemDDA as msg
+					JOIN erroMsg.tipoErroCip as tipoErro
+				WHERE
+					1 = 1
+					<j:if test="${codTipoErro != null}"> 
+						AND tipoErro.codTipoErro LIKE <bancoob:valorOql valor="${codTipoErro}"/>
+					</j:if>	 	
+			]]>
+	    </command>
+	</query>
+</queries>

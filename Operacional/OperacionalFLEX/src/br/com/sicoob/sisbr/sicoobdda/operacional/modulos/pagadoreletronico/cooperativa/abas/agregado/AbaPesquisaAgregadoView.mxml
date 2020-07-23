@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="450"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+							xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*" xmlns:filtros="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.pagadoreletronico.cooperativa.abas.agregado.*">
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.util.FormatUtil;
+			import br.com.sicoob.sisbr.sicoobdda.comumflex.dto.PagadorAgregadoDTO;
+			
+			private static function retornaCpfCnpjPagador(objeto1:Object, objeto2:Object = null):String {
+				var agregadoDto:PagadorAgregadoDTO= objeto1 as PagadorAgregadoDTO;
+				return FormatUtil.formataCPFCNPJ(agregadoDto.numCpfCnpjPagador);
+			}
+			
+			private static function retornaCpfCnpjAgregado(objeto1:Object, objeto2:Object = null):String {
+				var agregadoDto:PagadorAgregadoDTO= objeto1 as PagadorAgregadoDTO;
+				return FormatUtil.formataCPFCNPJ(agregadoDto.numCpfCnpj);
+			}
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaBanco">
+			<painellista:metodoPesquisa>pesquisarPagadorAgregadoPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>true</painellista:deveExibirMensagemNenhumRegistro>
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="pesquisarPagadorAgregadoPaginado">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.PagadorEletronicoDDAServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>
+			</painellista:servicoPesquisa>
+			
+			<painellista:painelFiltro>
+				<filtros:AbaPesquisaAgregadoFiltroView id="painelFiltro" width="100%" height="60" verticalScrollPolicy="off"/>
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				<tabelapaginada:TabelaPaginadaBanco id="listaPagadorAgregado" width="97%" height="100%" titulo="Agregados" top="0" tamanhoPagina="15"  doubleClickEnabled="false">
+					<tabelapaginada:MetadadosTabela id="metadados">
+						<grid:ColunaGrid dataField="idPagadorDDA" headerText="idPagadorDDA" headerWordWrap="true"  sortable="false" width="70" visible="false"/>
+						<grid:ColunaGrid dataField="numCpfCnpj" headerText="CPF/CNPJ Agregado" headerWordWrap="true"  sortable="false" width="70" labelFunction="{retornaCpfCnpjAgregado}"/>
+						<grid:ColunaGrid dataField="nomePessoa" headerText="Nome Agregado" headerWordWrap="true"  sortable="false" width="120" />
+						<grid:ColunaGrid dataField="numCpfCnpjPagador" headerText="CPF/CNPJ Pagador" headerWordWrap="true"  sortable="false" width="70" labelFunction="{retornaCpfCnpjPagador}"/>
+						<grid:ColunaGrid dataField="nomePessoaPagador" headerText="Nome Pagador" headerWordWrap="true" sortable="false" width="120" />
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>
+			</painellista:tabelaPaginada>
+			<botoesComumFlex:BotaoImprimirCobrancaView id="btnImprimir" toolTip="Imprimir Agregados" x="920" y="310"/>
+			<Botao id="btnDetalhar" toolTip="Detalhar Pagador" styleName="botaoCrudProcurarPeq" x="920" y="{btnImprimir.y + 20}" />
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>

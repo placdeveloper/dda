@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns="http://namespace" 
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:containers="br.com.bancoob.componentes.containers.*"
+								 xmlns:input="br.com.bancoob.componentes.input.*"
+								 xmlns:componentes="br.com.bancoob.componentes.*"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+								 width="870" height="115">
+	
+	<containers:VBoxBancoob width="100%">
+		<titulo:SubtituloView texto="Filtros"/>
+		
+		<containers:HBoxBancoob>
+			<componentes:Rotulo text="Banco Originador do Alerta: "/>
+			<input:ComboBoxFiltro id="cmbBancoOriginadorAlerta" width="465" labelField="descBanco"
+								  prompt=" Selecione... " somenteMaiusculas="false"/>
+			<componentes:Rotulo text="Tipo de Pessoa: " />
+			<input:Combo id="cmbTipoPessoa" width="150" dropdownWidth="150" editable="false"
+						 inserirItemOpcional="true" labelField="label"/>
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob>
+			<componentes:Rotulo text="Status do Alerta:" width="133" textAlign="left"/>
+			<input:Combo id="cmbStatusAlerta" width="110" dropdownWidth="110" editable="false"
+						 inserirItemOpcional="true" labelField="label"/>
+			<componentes:Rotulo text="Beneficiário: "/>
+			<input:Combo id="cmbTipoBeneficiario" width="110" dropdownWidth="110" editable="false"
+						 inserirItemOpcional="true" labelField="label"/>
+			<input:InputCPFCNPJ id="textoCPFCNPJ" width="156" maxChars="18"/>
+			<input:Check id="checkBeneficiarioSicoob" label="Somente Beneficiário Sicoob"/> 
+		</containers:HBoxBancoob>
+		
+		<containers:HBoxBancoob width="100%" horizontalAlign="right">
+			<painellista:BotaoProcurarView id="btnProcurar" acionarComEnter="true"/>
+			<componentes:Botao id="btnLimpar" label="Limpar"/>
+		</containers:HBoxBancoob>
+		
+	</containers:VBoxBancoob>
+	
+</cadastro:FormularioCadastroView>

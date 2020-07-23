@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ejb-jar-bnd xmlns='http://websphere.ibm.com/xml/ns/javaee'
+	xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xsi:schemaLocation='http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-ejb-jar-bnd_1_1.xsd'
+	version='1.1'>
+
+	<session name="CancelarAdesaoSacadoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/CancelarAdesaoSacadoDDAServicoRemote" />
+	</session>
+
+	<session name="ComprovanteAdesaoSacadoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ComprovanteAdesaoSacadoDDAServicoRemote" />
+	</session>
+
+	<session name="ConsultaBoletoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ConsultaBoletoDDAServicoRemote" />
+	</session>
+
+	<session name="IncluirAdesaoSacadoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/IncluirAdesaoSacadoDDAServicoRemote" />
+	</session>
+
+	<session name="IndicadorAceiteDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/IndicadorAceiteDDAServicoRemote" />
+	</session>
+
+	<session name="ListarBoletoContaCorrenteDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ListarBoletoContaCorrenteDDAServicoRemote" />
+	</session>
+
+	<session name="ListarBoletoTerceiroAutorizadoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ListarBolTerceiroAutorizadoServicoRemote" />
+	</session>
+
+	<session name="ListarSituacaoBoletoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ListarSituacaoBoletoDDAServicoRemote" />
+	</session>
+
+	<session name="ManterDDATerceiroServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/ManterDDATerceiroServicoRemote" />
+	</session>
+
+	<session name="TermoAdesaoDDAPeloSacadoServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/TermoAdesaoDDAPeloSacadoServicoRemote" />
+	</session>
+
+	<session name="TermoAdesaoDDAPeloTipoServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/TermoAdesaoDDAPeloTipoServicoRemote" />
+	</session>
+
+	<session name="VerificaPagadorEletronicoDDAServicoEJB">
+		<interface
+			class="br.com.bancoob.srtb.servico.Transacao"
+			binding-name="sicoobdda_integracaotransacional/VerificaPagadorEletronicoDDAServicoRemote" />
+	</session>
+
+</ejb-jar-bnd>

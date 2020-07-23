@@ -1,0 +1,2704 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ADDATIPOS" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:cat="http://www.bcb.gov.br/catalogomsg" elementFormDefault="qualified"
+	version="9.1.0">
+
+	<xs:annotation>
+		<xs:documentation>
+			Definição de tipos globais do DDA.
+		</xs:documentation>
+	</xs:annotation>
+
+	<!-- Definição do ACTCDOC do arquivo PRO -->
+	<xs:complexType name="ADDADOCPROComplexType">
+		<xs:sequence>
+			<xs:element	name="BCARQ" type="BCARQComplexType"/>
+		</xs:sequence> 
+	</xs:complexType>
+	
+	<!-- Definição do ADDADOC do arquivo ERR -->
+	<xs:complexType name="ADDADOCERRComplexType"> 
+		<xs:sequence>
+			<xs:element	name="BCARQ" type="BCARQERRComplexType"/>
+			<xs:element name="ESTARQ" type="ESTARQSimpleType" minOccurs="0"/>
+		</xs:sequence> 
+	</xs:complexType>
+	
+	<!-- Definição do BCARQ do arquivo ERR -->
+  	<xs:complexType name="BCARQERRComplexType">
+    	<xs:sequence>
+      		<xs:element name="NomArq" type="NomArq_CodErro">
+        		<xs:annotation>
+          			<xs:documentation>
+          				<cat:InfCampo>
+							<cat:NomeCampo>Nome do Arquivo</cat:NomeCampo>
+            			</cat:InfCampo>
+          			</xs:documentation>
+        		</xs:annotation>
+      		</xs:element>
+    	</xs:sequence>
+  	</xs:complexType>
+
+  	<xs:complexType name="NomArq_CodErro">
+  		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NomArq" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+    	<xs:simpleContent>
+      		<xs:extension base="xs:string">
+        		<xs:attribute name="CodErro" type="CodErro" use="required"/>
+      		</xs:extension>
+    	</xs:simpleContent>
+  	</xs:complexType>
+
+	<!-- Definição do BCARQ do arquivo -->
+	<xs:complexType name="BCARQComplexType">
+		<xs:sequence>
+			<xs:element name="NomArq" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Nome do Arquivo</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlEmis" type="ControleIF">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle do Emissor</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumCtrlDestOr" type="ControleIF" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Controle do Destinatário Original</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBEmissor" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Emissor</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ISPBDestinatario" type="ISPB">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>ISPB Destinatário</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtHrDDA" type="DataHora" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Hora DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SitReqDDA" type="SitCons" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Situação Requisição DDA</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrFlagFim" type="Indr" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Flag-Fim</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtMovto" type="Data">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Data Movimento</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Grupo_Seq" type="Grupo_SeqComplexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Grupo Sequência</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Grupo_SeqComplexType">
+		<xs:sequence>
+			<xs:element name="NumSeq" type="NumSeq">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Número Sequência</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndrCont" type="Indr">
+				<xs:annotation>
+					<xs:documentation>
+						<cat:InfCampo>
+							<cat:NomeCampo>Indicador Continuidade</cat:NomeCampo>
+						</cat:InfCampo>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="Agencia">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número da agência da instituição que atua no sistema financeiro, sem dígito verificador.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Agencia_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Agencia" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Agencia">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CanPgto">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Canal de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CanPgto_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CanPgto" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CanPgto">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CEP">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código de Endereçamento Postal</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CEP_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CEP" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CEP">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CidEnd">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Cidade do Endereço.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CidEnd_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CidEnd" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CidEnd">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CNPJ_CPF">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de Identificação da Pessoa Jurídica no Cadastro Nacional de Pessoa Jurídica ou o Número no Cadastro de Pessoa Física. 2 - No caso de transferência para pessoas isentas de CNPJ ou CPF, o campo CNPJ ou CPF deve ser preenchido com zero.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="14"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CNPJ_CPF_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CNPJ_CPF" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CNPJ_CPF">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CNPJBase">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>CNPJ base: primeiras 8 posições do CNPJ.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base='xs:string'>
+	    	<xs:minLength value='8'/>
+	    	<xs:maxLength value='8'/>
+	    	<xs:pattern value='[0-9]{8}'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CNPJBase_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CNPJBase" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CNPJBase">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodCartTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código para identificar as características dos títulos dentro das modalidades de cobrança existentes no banco. </cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodCartTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodCartTit" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodCartTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodCli">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Identifica o código do cliente</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodCli_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodCli" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodCli">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodDesctTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código para identificação do critério de desconto que deve ser concedido. Base CNAB.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodDesctTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodDesctTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodDesctTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodEspTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código para identificar o tipo de título de cobrança. Base CNAB.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodEspTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodEspTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodEspTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="CodGrd">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Grade de Horário dos eventos.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="5"/>
+			<xs:maxLength value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodGrd_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodIF" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodGrd">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodIF">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código IF utilizado na compensação.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodIF_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodIF" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodIF">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodJurosTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código para identificação do tipo de pagamento de juros de mora.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodJurosTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodJurosTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodJurosTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodModlFatr">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código do modelo para apresentação da Fatura.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodModlFatr_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodModlFatr" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodModlFatr">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodMoedaCNAB">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código da moeda no padrão CNAB.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodMoedaCNAB_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodMoedaCNAB" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodMoedaCNAB">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodMsg">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código da mensagem do sistema associado ao evento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="7"/>
+			<xs:maxLength value="9"/>
+			<xs:pattern value='[A-Z]{3}[0-9]{4}(E|R1|R2|R3)?'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodMsg_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodMsg" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodMsg">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodMsg_Arq">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código da mensagem ou do arquivo.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="7"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodMsg_Arq_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodMsg_Arq" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodMsg_Arq">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CodMultaTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Código da multa do título. Códigos adotados pela	FEBRABAN.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CodMultaTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CodMultaTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CodMultaTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="ControleIF">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de Controle da IF.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ControleIF_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"ControleIF" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="ControleIF">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CtBanc_Pgto">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número da conta bancária com dígito (se este	existir), se houver valor alfanumérico, este deve ser convertido para 0.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CtBanc_Pgto_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CtBanc_Pgto" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CtBanc_Pgto">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="CtBancaria">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número da conta Bancária, com dígito	verificador. Se o dígito verificador for alfa, deverá ser substituído por “0” (zero).</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="CtBancaria_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"CtBancaria" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="CtBancaria">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Data">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>
+						Data no formato AAAA-MM-DD.
+						Onde
+						AAAA = ano,
+						MM = mes [01-12],
+						DD = dia [01-31].
+					</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date">
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Data_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Data" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Data">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="DataHora">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>
+						Data e hora no formato AAAA-MM-DDThh:mm:ss.
+						Onde
+						AAAA = ano,
+						MM = mes [01-12],
+						DD = dia [01-31],
+						hh = horas [00-23],
+						mm = minutos [00-59],
+						ss = segundos [00-59].
+					</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:dateTime">
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="DataHora_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"DataHora" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="DataHora">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="IdentcSacdrAvalst">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Identificação do sacador avalista. Expressão	regular [0-9] {1,15} que deve ser preenchido somente com números.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="15"/>
+			<xs:pattern value="[0-9]{1,15}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IdentcSacdrAvalst_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IdentcSacdrAvalst" com atributo para retorno de	codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IdentcSacdrAvalst">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="IdentdArq">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Identificador do nome de arquivo.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="225"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IdentdArq_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IdentdArq" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IdentdArq">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="IdentdNossoNum">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de Controle do Cedente para identificar o	Título.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IdentdNossoNum_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IdentdNossoNum" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IdentdNossoNum">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Indr">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador “Sim” ou “Não”.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Indr_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Indr" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Indr">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="IndrActe">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador Aceite</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndrActe_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IndrActe" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IndrActe">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>	
+
+	<xs:simpleType name="IndrIE">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador de Inclusão ou Exclusão.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndrIE_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IndrIE" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IndrIE">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="IndrIEA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador de Inclusão, Exclusão ou Alteração.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndrIEA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IndrIEA" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IndrIEA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="IndrMA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador para manter ou alterar. Na expressão regular: M - Manter; A - Alterar.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value='M|A'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndrMA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IndrMA" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IndrMA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="IndrMEA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indicador para manter, excluir ou alterar. Na expressão regular: M - Manter; E - Excluir; A - Alterar.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value='M|E|A'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="IndrMEA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"IndrMEA" com atributo para retorno de codigo de	erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="IndrMEA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="ISPB">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Identificador do participante junto ao Banco	Central.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+			<xs:pattern value="[0-9]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ISPB_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"ISPB" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="ISPB">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="MeioPgto">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Meio de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="MeioPgto_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"MeioPgto" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="MeioPgto">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="MsgECO">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Texto livre para teste de ECO.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="MsgECO_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"MsgECO" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="MsgECO">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="Nom_RzSoc">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Nome ou razão social.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Nom_RzSoc_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Nom_RzSoc" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Nom_RzSoc">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Nome">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Nome.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Nome_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Nome" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Nome">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumCodBarras">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número referente ao Código de Barra. Para preencher esse  campo, as seguintes posições devem ser observadas: 01-03 - Identificação do Banco; 04 - Código da Moeda ( Real = 9); 05 - Dígito Verificador Geral do Código de Barras;  06-09 - Fator de vencimento; 10-19 (8 inteiros e 2 decimais) Valor do Documento; 20-44 - Campo Livre.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		    <xs:minLength value='1'/>
+    		<xs:maxLength value='44'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumCodBarras_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumCodBarras" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumCodBarras">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumDocTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de Documento do Título utilizado pelo	Cedente.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumDocTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumDocTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumDocTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumIdentcBenfcrio">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de identificação do cliente beneficiário no Participante, único na base centralizada.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumIdentcBenfcrio_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumIdentcBenfcrio" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumIdentcBenfcrio">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumIdentcPagdr">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número único de identificação do pagador.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumIdentcPagdr_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumIdentcPagdr" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumIdentcPagdr">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="NumIdentcTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número único do boleto de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumIdentcTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumIdentcTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumIdentcTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumLinhaDigtvl">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número da Linha Digitável.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="47"/>
+			<xs:maxLength value="47"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumLinhaDigtvl_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumLinhaDigtvl" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumLinhaDigtvl">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumNotaFis">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número da Nota Fiscal.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumNotaFis_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumNotaFis" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumNotaFis">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumRefCad">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de referencia gerado a cada atualização do cadastro, único durante todo ciclo de vida do registro.
+					</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumRefCad_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumRefCad" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumRefCad">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumSeq">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número sequencial que indica a ordem dos	arquivos particionados.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumSeq_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumSeq" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumSeq">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumSeqAtlzCadDDA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número sequencial que indica a ordem de atualização do cadastro no DDA.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="19"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumSeqAtlzCadDDA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"NumSeqAtlzCadDDA" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="NumSeqAtlzCadDDA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="NumSeqInf">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número de sequencia da informação</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NumSeqInf_CodErro">
+	<xs:annotation>
+		<xs:documentation>
+			<cat:InfTipo>
+				<cat:DescricaoTipo>Número de sequencia da informação para retorno de codigo de erro.</cat:DescricaoTipo>
+			</cat:InfTipo>
+		</xs:documentation>
+	</xs:annotation>
+	<xs:simpleContent>
+		<xs:extension base="NumSeqInf">
+			<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+		</xs:extension>
+	</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Qtd">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Número inteiro indicando a quantidade de	documentos em referência.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Qtd_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Qtd" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Qtd">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="QtdDias">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Quantidade de Dias Úteis ou Corridos.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="QtdDias_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"QtdDias" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="QtdDias">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="QtdParcl">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Quantidade de parcelas </cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="QtdParcl_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Quantidade de parcelas </cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="QtdParcl">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="RuaRem">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Rua do imóvel.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RuaRem_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"RuaRem" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="RuaRem">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitAgrgd">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do Agregado do Sacado Eletrônico.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitAgrgd_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitAgrgd" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitAgrgd">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitBaixaOperac">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação da baixa operacional do boleto de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitBaixaOperac_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitBaixaOperac" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitBaixaOperac">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitBenfcrio">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do cliente beneficiário.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitBenfcrio_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitBenfcrio" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitBenfcrio">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitCons">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação da Consulta.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitCons_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitCons" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitCons">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitConvBenfcrioPart">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do convênio do cliente beneficiário no participante.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitConvBenfcrioPart_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitConvBenfcrioPart" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitConvBenfcrioPart">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitRelctPart">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do relacionamento do cliente beneficiário no participante.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitRelctPart_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitRelctPart" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitRelctPart">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name='SitCliPagdrDDA'>
+	  <xs:annotation>
+	    <xs:documentation>
+	      <cat:InfTipo>
+	        <cat:DescricaoTipo>Situação do cliente pagador no DDA.</cat:DescricaoTipo>
+	      </cat:InfTipo>
+	    </xs:documentation>
+	  </xs:annotation>
+	  <xs:restriction base='xs:string'>
+	    <xs:minLength value='1'/>
+	    <xs:maxLength value='1'/>
+	  </xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitCliPagdrDDA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitCliPagdrDDA" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitCliPagdrDDA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name='SitCliPagdrPart'>
+	  <xs:annotation>
+	    <xs:documentation>
+	      <cat:InfTipo>
+	        <cat:DescricaoTipo>Situação do cliente pagador no participante.</cat:DescricaoTipo>
+	      </cat:InfTipo>
+	    </xs:documentation>
+	  </xs:annotation>
+	  <xs:restriction base='xs:string'>
+	    <xs:minLength value='1'/>
+	    <xs:maxLength value='1'/>
+	  </xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitCliPagdrPart_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitCliPagdrPart" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitCliPagdrPart">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	
+	<xs:simpleType name="SitTerc">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do terceiro autorizado do boleto de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+
+	<xs:simpleType name="SitTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do título no sistema.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SitTitPgto">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Situação do boleto de pagamento para pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SitTitPgto_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"SitTitPgto" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="SitTitPgto">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TamArq">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Quantidade de bytes de um arquivo.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TamArq_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TamArq" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TamArq">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpAg">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de agência.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpAg_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpAg" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpAg">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpAutcRecbtVlrDivgte">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de autorização para recebimento de valor divergente.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpAutcRecbtVlrDivgte_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpAutcRecbtVlrDivgte" com atributo para retorno	de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpAutcRecbtVlrDivgte">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpBaixaEft">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de baixa efetiva do boleto de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpBaixaEft_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpBaixaEft" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpBaixaEft">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpBaixaOperac">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de baixa operacional do boleto de pagamento.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpBaixaOperac_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpBaixaOperac" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpBaixaOperac">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpCartConvCobr">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Determina o tipo de carteira contratado no convênio de cobrança.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpCartConvCobr_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpCartConvCobr" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpCartConvCobr">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpCons">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de consulta.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpCons_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpCons" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpCons">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="TpCt">
+    	<xs:annotation>
+      		<xs:documentation>
+        		<cat:InfTipo>
+          			<cat:DescricaoTipo>Indica o tipo da conta do cliente.</cat:DescricaoTipo>
+        		</cat:InfTipo>
+      		</xs:documentation>
+    	</xs:annotation>
+    	<xs:restriction base="xs:string">
+      		<xs:minLength value="2"/>
+      		<xs:maxLength value="2"/>
+    	</xs:restriction>
+  	</xs:simpleType>
+	<xs:complexType name="TpCt_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpCt" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpCt">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpCtDDA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indica o tipo da conta do cliente no DDA.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpCtDDA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpCtDDA" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpCtDDA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpDadFatr">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo do dado para apresentação da Fatura.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpDadFatr_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpDadFatr" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpDadFatr">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpIdentcSacdrAvalst">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de identificação do sacador avalista.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base='xs:integer'>
+    		<xs:totalDigits value='1'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpIdentcSacdrAvalst_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpIdentcSacdrAvalst" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpIdentcSacdrAvalst">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="TpHrio">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo Horário. O horário Padrão é o horário de funcionamento normal para grade de horário. O horário Eventual é informado em situações especiais de alteração da grade de horário que valem apenas para uma data de referência específica, nos demais dias vale o horário Padrão.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpHrio_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpHrio" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpHrio">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpManutTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de Manutenção do Bloqueto Eletrônico.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpManutTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpManutTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpManutTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpModlCalc">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de Modelo de Cálculo.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpModlCalc_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpModlCalc" com atributo para retorno de codigo	de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpModlCalc">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpMsg_Arq">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Indica mensagem ou arquivo. Na expressão	regular: M - Mensagem, A - Arquivo.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		    <xs:minLength value='1'/>
+    		<xs:maxLength value='1'/>
+    		<xs:pattern value='M|A'/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpMsg_Arq_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpMsg_Arq" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpMsg_Arq">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpPessoa">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de Pessoa do Destinatário.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpPessoa_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpPessoa" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpPessoa">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpPgtoTit">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de Pagamento do Título.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpPgtoTit_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpPgtoTit" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpPgtoTit">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpProdtConv">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de produto contratado pelo cliente beneficiário em um convênio no Participante.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpProdtConv_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpProdtConv" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpProdtConv">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpProprio_Terc">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo Próprio ou de Terceiros.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpProprio_Terc_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpProprio_Terc" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpProprio_Terc">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpRet">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de retorno desejado para resposta da mensagem.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpRet_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpRet" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpRet">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="TpTransc">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de transação.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpTransc_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpTransc" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpTransc">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name="TpTransm">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Tipo de transmissão.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpTransm_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpTransm" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpTransm">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:simpleType name='TpVlr_Perc'>
+	  <xs:annotation>
+	    <xs:documentation>
+	      <cat:InfTipo>
+	        <cat:DescricaoTipo>Identifica se valor ou percentual. Na expressão regular: V - Valor; P - Percentual.</cat:DescricaoTipo>
+	      </cat:InfTipo>
+	    </xs:documentation>
+	  </xs:annotation>
+	  <xs:restriction base='xs:string'>
+	    <xs:minLength value='1'/>
+	    <xs:maxLength value='1'/>
+	    <xs:pattern value='V|P'/>
+	  </xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TpVlr_Perc_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"TpVlr_Perc" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="TpVlr_Perc">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>	
+
+	<xs:simpleType name="Txt100">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Texto livre de tamanho máximo de 100 caracteres.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Txt100_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Txt100" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Txt100">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="UF">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Sigla da Unidade da Federação.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="UF_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"UF" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="UF">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Valor">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Valor. Até dezessete inteiros e dois decimais e sinalizado. Para valores menores que zero, o valor será precedido pelo sinal "-". Exemplo: para 20 negativo informe -20 . Deve ser informado o ponto separador caso tenha  decimais. Exemplo: para R$100,00 informe 100; para R$100,10 informe 100.1; para R$100,11 informe 100.11; para R$100,11 negativo informe -100.11</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="19"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Valor_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Valor" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Valor">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Vlr_PercDDA">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Valor ou Percentual, com ponto flutuante. Para conteúdo que expresse um percentual, o limite de casas decimais é 5. Para conteúdo que expresse valores em moeda Real, deve ser informado somente até a segunda casa decimal. Para conteúdo que expresse quantidade de moeda estrangeira, taxas ou Índices, pode ser informados até 5 casas decimais.Para valores menores que zero, o valor será precedido pelo sinal "-".  Exemplo: para 20 negativo informe -20 . Deve ser informado o ponto separador caso tenha  decimais. </cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+			<xs:fractionDigits value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Vlr_PercDDA_CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>"Vlr_PercDDA" com atributo para retorno de codigo de erro.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="Vlr_PercDDA">
+				<xs:attribute name="CodErro" type="CodErro" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+		
+
+	<!-- Definicao do tipo complexo generico de erro com atributo -->
+	<xs:simpleType name="CodErro">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfTipo>
+					<cat:DescricaoTipo>Codigo de erro. Vide tabela de codigo de erros no Manual de Leiautes.</cat:DescricaoTipo>
+				</cat:InfTipo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Definição do ESTARQ do arquivo -->
+	<xs:simpleType name="ESTARQSimpleType">
+		<xs:annotation>
+			<xs:documentation>
+				<cat:InfCampo>
+					<cat:NomeCampo>Cópia do SISMSG da mensagem de estímulo, quando houver</cat:NomeCampo>
+				</cat:InfCampo>
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="512000"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

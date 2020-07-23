@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:HBoxBancoob
+	width="100%"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:input="br.com.bancoob.componentes.input.*"
+	xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	
+		<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			
+			//xFields ==================================
+			[Bindable]
+			protected var _xFieldLeft:Number = 150;
+			[Bindable]
+			protected var _yAlinharComLabel:Number = 2;
+			[Bindable]
+			protected var _xFieldRight:Number = 280;
+
+			//xLabels ==================================
+			[Bindable]
+			protected var _xLabelsRight:Number = 200;
+			
+			//Widths ===================================
+			[Bindable]
+			protected var _widthCodTipoPessoa:Number = 100;
+			[Bindable]
+			protected var _widthMoeda:Number = 60;
+			[Bindable]
+			protected var _widthLabelsLeft:Number = 147;
+			[Bindable]
+			protected var _widthLabelsRight:Number = 250;
+			[Bindable]
+			protected var _widthCity:Number = 200;
+			//maxLength ================================
+			[Bindable]
+			protected var _maxLength:Number = 2;
+			//values ===================================
+			[Bindable]
+			protected var _valorMaximo:Number = 999999999999.00;
+			
+		]]>
+	</mx:Script> 
+		<containers:CanvasBancoob width="100%">
+		<input:Texto id="hiddenIdObject" visible="false" includeInLayout="false"/>
+		<Rotulo id="idVlrTotalCobr" text="Vlr Total Cobr.:" width="{_widthLabelsLeft}" y="{_yAlinharComLabel}" textAlign="right" styleName="negrito" x="560"/>
+		<comumflex:CampoNumericoDDA id="txtVlrTotalCobr" casasDecimais="2" x="{this.idVlrTotalCobr.x+this.idVlrTotalCobr.width+5}" width="5%" valorMaximo="{_valorMaximo}"/>
+			
+		<Rotulo id="idDesconto" text="Desconto:" width="{_widthLabelsLeft}" y="{_yAlinharComLabel}" textAlign="right" styleName="negrito" x="410"/>
+		<comumflex:CampoNumericoDDA id="txtDesconto" casasDecimais="2" x="{this.idDesconto.x+this.idDesconto.width+5}" width="5%" valorMaximo="{_valorMaximo}"/>
+		
+		<Rotulo id="idMulta" text="Multa:" width="{_widthLabelsLeft}" y="{_yAlinharComLabel}" textAlign="right" styleName="negrito" x="280"/>
+		<comumflex:CampoNumericoDDA id="txtMulta" casasDecimais="2" x="{this.idMulta.x+this.idMulta.width+5}" width="5%" valorMaximo="{_valorMaximo}"/>
+		
+		<Rotulo id="idJuros" text="Juros:" width="{_widthLabelsLeft}" y="{_yAlinharComLabel}" textAlign="right" styleName="negrito" x="170"/>
+		<comumflex:CampoNumericoDDA id="txtJuros" casasDecimais="2" x="{this.idJuros.x+this.idJuros.width+5}" width="5%" valorMaximo="{_valorMaximo}"/>				
+	
+		<Rotulo id="idDtValidadeCalc" text="Dt. Validade Calc.:" width="{_widthLabelsLeft}" y="{_yAlinharComLabel}" textAlign="right" styleName="negrito"/>
+		<input:Data id="txtDtValidadeCalc" dataDefault="{null}" x="{this.idDtValidadeCalc.x+this.idDtValidadeCalc.width+5}"/>			
+	
+		</containers:CanvasBancoob>
+</containers:HBoxBancoob>
+

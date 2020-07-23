@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:ListaCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" width="940" height="510"
+							xmlns:tabelapaginada="br.com.bancoob.componentes.tabelapaginada.*"
+							xmlns:containers="br.com.bancoob.componentes.containers.*"  
+							xmlns:grid="br.com.bancoob.componentes.grid.*"
+							xmlns="br.com.bancoob.componentes.*"
+							xmlns:bancoob="br.com.bancoob.componentes.*"
+							xmlns:painellista="br.com.bancoob.componentes.painellista.*"
+							xmlns:servico="br.com.bancoob.util.servico.*"
+							xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+							xmlns:arquivorecebido="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.arquivorecebido.*"
+							xmlns:botoesComumFlex="br.com.sicoob.sisbr.cobrancabancaria.comumflex.botoes.*"
+							xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+							deveLimparPesquisa="false"
+							xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*" xmlns:alterarmensagemboleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.alterarmensagemboleto.*" xmlns:manutencaomensagemddaboleto="br.com.sicoob.sisbr.sicoobdda.operacional.modulos.manutencaomensagemddaboleto.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import br.com.bancoob.componentes.tabelapaginada.TabelaPaginadaUtils;
+		]]>
+	</mx:Script>
+	
+	<cadastro:painelLista>
+		<painellista:PainelListaBancoView id="painelListaBanco">
+			<painellista:metodoPesquisa>pesquisarMensagemDDABoletoPaginado</painellista:metodoPesquisa>
+			<painellista:deveExibirMensagemNenhumRegistro>false</painellista:deveExibirMensagemNenhumRegistro>
+			<painellista:servicoPesquisa>
+				<servico:ServicoJava id="pesquisarMensagemDDABoletoPaginado">
+					<servico:source>br.com.sicoob.sisbr.sicoobdda.operacional.servicos.ManutencaoMensagemDDABoletoServico</servico:source>
+					<servico:bloquearOperacao>true</servico:bloquearOperacao>
+					<servico:mensagemEspera>Pesquisando dados...</servico:mensagemEspera>
+				</servico:ServicoJava>
+			</painellista:servicoPesquisa>
+			
+			<painellista:painelFiltro>
+				<manutencaomensagemddaboleto:ManutencaoMensagemDDABoletoFiltroView id="painelFiltro" width="100%"/>
+			</painellista:painelFiltro>
+			
+			<painellista:tabelaPaginada>
+				<tabelapaginada:TabelaPaginadaBanco id="listaMensagemDDABoleto" width="97%" height="350" titulo="Mensagens" tamanhoPagina="10" top="80" doubleClickEnabled="false">
+					<tabelapaginada:MetadadosTabela id="metadados">
+						<grid:ColunaGrid dataField="idMensagem" headerText="ID" headerWordWrap="false" wordWrap="false" sortable="false"  width="15" />
+						<grid:ColunaGrid dataField="tipoMensagem" headerText="Tipo Mensagem" headerWordWrap="true" wordWrap="false" sortable="false" width="18"/>
+						<grid:ColunaGrid dataField="dataMovimento"  headerText="Data Movimento" headerWordWrap="false" wordWrap="false" sortable="false"  width="21"  labelFunction="{TabelaPaginadaUtils.defaultDatetimeLabelFunction}"/>
+						<grid:ColunaGrid dataField="numCodigoDeBarras" headerText="Código de Barra" headerWordWrap="false" wordWrap="false" sortable="false"  width="75"/>
+					</tabelapaginada:MetadadosTabela>
+				</tabelapaginada:TabelaPaginadaBanco>
+			</painellista:tabelaPaginada>
+			
+			<Botao id="btnAlterar" toolTip="Alterar Mensagem Boleto" styleName="botaoCrudAlterarPeq"  x="905" y="388"/>
+			
+			<containers:HBoxBancoob width="100%" height="5%"  x="815" y="472">
+				<bancoob:Botao label="Fechar" id="btnFechar" verticalCenter="0"/>
+			</containers:HBoxBancoob>
+			
+		</painellista:PainelListaBancoView>
+	</cadastro:painelLista>
+</cadastro:ListaCadastroView>	
+

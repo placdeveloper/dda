@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<containers:HBoxBancoob 
+			width="100%"
+			xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   	xmlns:containers="br.com.bancoob.componentes.containers.*"
+			xmlns:componentes="br.com.bancoob.componentes.*"
+			xmlns:input="br.com.bancoob.componentes.input.*"
+			xmlns:comumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*">
+	
+	<mx:Style>
+		.negrito{
+			fontWeight:bold;
+			fontSize: 10;
+		}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			[Bindable]
+			protected var _rotuloTipo:String = "Definir Tipo: ";
+			[Bindable]
+			protected var _rotuloData:String = "Definir Data: ";
+			[Bindable]
+			protected var _rotuloValor:String = "Definir Valor: ";
+			[Bindable]
+			protected var _labelField:String = "define";
+			[Bindable]
+			protected var _labelItemOpcional:String = "define";
+		]]>
+	</mx:Script>
+	
+	<containers:CanvasBancoob width="100%">
+		<input:Texto id="hiddenIdObject" visible="false" includeInLayout="false"/> 
+		<componentes:Rotulo id="idValor" text="{_rotuloValor}" width="147" textAlign="right" styleName="negrito" y="2" x="{this.txtData.x+((this.txtData.width)/2)+20}"/>
+		<comumFlex:CampoNumericoDDA id="txtValor" x="{this.idValor.x+this.idValor.width+5}" width="10%" casasDecimais="2" permitirValoreNegativos="false" valorMaximo="999999999999.00"/>
+	
+		<componentes:Rotulo id="idData" text="{_rotuloData}" width="147" textAlign="right" styleName="negrito" y="2" x="{(this.cmbTipo.x+(this.cmbTipo.width)/2)+80}"/>
+		<input:Data id="txtData" x="{this.idData.x+this.idData.width+5}" dataDefault="{null}"/>
+	
+		<componentes:Rotulo id="idTipo" text="{_rotuloTipo}" width="147" textAlign="right" styleName="negrito" y="2"/>
+		<input:Combo id="cmbTipo" x="150" width="220" dropdownWidth="280" inserirItemOpcional="true" labelItemOpcional="{_labelItemOpcional}" labelField="{_labelField}"/>
+	</containers:CanvasBancoob>
+	
+</containers:HBoxBancoob>

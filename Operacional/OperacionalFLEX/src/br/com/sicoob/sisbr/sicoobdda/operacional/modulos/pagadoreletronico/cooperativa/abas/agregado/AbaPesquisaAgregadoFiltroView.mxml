@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<componentes:Modulo 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+	xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+	xmlns:input="br.com.bancoob.componentes.input.*" 
+	xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+	xmlns:componentes="br.com.bancoob.componentes.*"	
+	xmlns="br.com.bancoob.componentes.*"
+	xmlns:bancoob="br.com.bancoob.componentes.*"
+	xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+	xmlns:containers="br.com.bancoob.componentes.containers.*" 
+	width="100%" height="100%">
+		<mx:Style>
+		.borda{
+			borderStyle:solid;
+			borderThickness: 1;
+		}
+	</mx:Style>
+	<containers:VBoxBancoob verticalScrollPolicy="off" horizontalGap="-1" width="100%">
+		<titulo:SubtituloView id="tituloListaFiltro" texto="Filtro" width="100%" />
+		
+		<containers:CanvasBancoob  width="100%" >
+			<containers:CanvasBancoob width="100%">
+				<containers:VBoxBancoob width="100%" >
+					<containers:HBoxBancoob  width="100%"  height="30">
+						<containers:HBoxBancoob  x="0" width="100%" horizontalAlign="left"  >
+							<comumflex:CentraisSingulares id="compCentralSingular" width="385"  />
+							
+							<containers:HBoxBancoob width="100%" horizontalAlign="left" >
+								<containers:CanvasBancoob >
+									<bancoob:Rotulo x="-20" text="Agregado:" width="80" textAlign="right"/>
+									<input:Combo x="67" id="cmbCnpjCpfPagadorAgregado" width="80" toolTip="CPF/CNPJ" paddingLeft="0"/>
+									<input:InputCPFCNPJ x="156" id="txtCnpjCpfAgregado" width="130" />
+								</containers:CanvasBancoob>
+							</containers:HBoxBancoob>
+							
+							<containers:HBoxBancoob  width="100%" horizontalAlign="right"  >
+								<painellista:BotaoProcurarView id="btnProcurar"  acionarComEnter="true" />
+								<mx:Spacer width="5"/>
+								<componentes:Botao id="btnLimpar" width="70" acionarComEnter="true" label="Limpar" />
+							</containers:HBoxBancoob>
+						</containers:HBoxBancoob>
+					</containers:HBoxBancoob>
+				</containers:VBoxBancoob>
+			</containers:CanvasBancoob>
+		</containers:CanvasBancoob>
+		
+	</containers:VBoxBancoob>
+</componentes:Modulo> 

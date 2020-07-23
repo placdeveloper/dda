@@ -1,0 +1,60 @@
+<validaveis:CanvasValidavel
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns="br.com.bancoob.componentes.*"
+		xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+		xmlns:titulo="br.com.bancoob.componentes.titulo.*" 
+		xmlns:input="br.com.bancoob.componentes.input.*" 
+		xmlns:painellista="br.com.bancoob.componentes.painellista.*" 
+		xmlns:componentes="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"	
+		xmlns:bancoob="br.com.bancoob.componentes.*"
+		xmlns:containers="br.com.bancoob.componentes.containers.*"
+		xmlns:botoesComumFlex="br.com.sicoob.sisbr.sicoobdda.comumflex.botoes.*"
+		xmlns:inputDDA="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.input.*"
+		width="100%" height="200">
+	<mx:Script>
+		<![CDATA[
+			protected const LABEL_CODIGO_BARRAS:String = "Cód de Barras:";
+			protected const LABEL_LINHA_DIGITAVEL:String = "Linha Digitável:";
+		]]>
+	</mx:Script>
+
+	<titulo:SubtituloView id="tituloFiltro" texto="Filtro" width="930" />
+	
+	<bancoob:Rotulo text="Banco:" textAlign="left" width="70" y="36" x="54" />
+	<componentes:TextoCobranca x="95" y="30" id="txtNrBanco" width="40" maxChars="3"  restrict="0123456789"/>
+	<componentes:TextoCobranca x="140" y="30" id="txtNomeBanco" width="316" enabled="false"/>
+	
+	<bancoob:Rotulo id="roturloSituacaoBoleto" text="Situação do Boleto:" textAlign="left" width="100" x="0"/>
+	<input:Combo id="cmbSituacaoBoleto" x="95"  width="150" inserirItemOpcional="true" editable="false" />
+	
+	<inputDDA:InputNumCodBarras id="inputNumCodBarras" y="105"/>
+	
+	<bancoob:Rotulo id="rotuloSeuNumero" x="25"  width="100" text="Seu Número:" textAlign="left" />
+	<componentes:TextoCobranca x="94" id="txtDescSeuNumero" width="150" maxChars="15" />
+	
+	
+	<bancoob:Rotulo text="CPF/CNPJ do Beneficiário:" textAlign="right" width="150" y="30" x="511"/>
+	<input:Combo id="cmbCnpjCPFBeneficiario" width="80" x="665" y="30"  selectedIndex="0" toolTip="CPF/CNPJ" editable="false"/>
+	<input:InputCPFCNPJ id="txtCnpjCPFBeneficiario" width="135"  x="750" y="30"/> 
+	
+	<bancoob:Rotulo text="CPF/CNPJ do Pagador:" textAlign="right" width="150" y="65" x="509"/>
+	<input:Combo id="cmbCnpjCPFPagador" width="80" x="665" y="65"  toolTip="CPF/CNPJ" editable="false" selectedIndex="0" />
+	<input:InputCPFCNPJ id="txtCnpjCPFPagador" width="135"  x="750" y="65" /> 
+
+	
+	<bancoob:Rotulo x="558" y="102" width="100" text="Data Vencimento:" textAlign="right" />
+	<input:Data x="665" y="100" id="dataVencimentoInicial" width="100" dataDefault="{null}" />
+	<bancoob:Rotulo x="768" y="102" width="20" text="até" textAlign="right" />
+	<input:Data x="793" y="100" id="dataVencimentoFinal" width="100" dataDefault="{null}" />
+	
+	<bancoob:Rotulo x="488" y="137" width="170" text="Data Registro DDA:" textAlign="right" />
+	<input:Data x="665" y="135" id="dataRegistroDDAInicial" width="100" dataDefault="{null}"/>
+	<bancoob:Rotulo x="768" y="137" width="20" text="até" textAlign="right" />
+	<input:Data x="793" y="135" id="dataRegistroDDAFinal" width="100" dataDefault="{null}" />
+	
+	
+	<painellista:BotaoProcurarView id="btnProcurar" x="603" y="170" acionarComEnter="true" />
+	<bancoob:Botao id="btnConsultarCip" x="700" y="170" width="120" acionarComEnter="true" label="Consultar na CIP" />
+	<bancoob:Botao id="btnLimpar" x="825" y="170" width="70" acionarComEnter="true" label="Limpar" />
+	
+</validaveis:CanvasValidavel>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioListaPagadorAgregadoSDDA" pageWidth="801" pageHeight="25" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="801" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<style name="texto" isDefault="false" vAlign="Middle" markup="none" fontName="Arial" fontSize="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box leftPadding="1"/>
+	</style>
+	<style name="textoCentralizado" isDefault="false" style="texto" hAlign="Center" markup="none" pattern="">
+		<box leftPadding="0"/>
+	</style>
+	<style name="textoNegrito" isDefault="false" style="texto" isBold="true" isItalic="false"/>
+	<style name="textoNegritoCentralizado" isDefault="false" style="textoNegrito" hAlign="Center">
+		<box leftPadding="0"/>
+	</style>
+	<style name="borda" isDefault="false" fill="Solid">
+		<pen lineWidth="1.0"/>
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="linhaTabela" isDefault="false" style="texto" mode="Opaque" backcolor="#CCCCCC" pattern="">
+		<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{COLUMN_COUNT}.intValue() % 2 == 1)]]></conditionExpression>
+			<style isDefault="false" style="linhaTabela" mode="Opaque" backcolor="#FFFFFF" markup="none"/>
+		</conditionalStyle>
+	</style>
+	<style name="linhaTabelaTextoCentralizado" isDefault="false" style="linhaTabela" hAlign="Center">
+		<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+	</style>
+	<style name="box" isDefault="false" style="borda" mode="Opaque" forecolor="#FFFFFF" backcolor="#999999" hAlign="Center" vAlign="Middle" markup="styled" isBlankWhenNull="true" fontName="Arial" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineColor="#000000"/>
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<pen lineColor="#000000"/>
+			<topPen lineColor="#000000"/>
+			<leftPen lineColor="#000000"/>
+			<bottomPen lineColor="#000000"/>
+			<rightPen lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="textoBoxTitulo" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" hAlign="Center" vAlign="Middle" markup="none" fontSize="11" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="labelTituloColuna" isDefault="false" style="texto" fill="Solid" hAlign="Right" isBold="true"/>
+	<style name="cabecalhoTabela" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" backcolor="#999999" fill="Solid" hAlign="Left" vAlign="Middle">
+		<pen lineWidth="1.0" lineColor="#999999"/>
+	</style>
+	<style name="textoCabecalhoTabela" isDefault="false" style="texto" mode="Opaque" forecolor="#FFFFFF" hAlign="Left" vAlign="Middle" markup="none" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\SisbrIDE-4.5\\workspace\\COBRANCA\\AtendimentoBackoffice\\AtendimentoBackofficeEJB\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="totalDto" class="br.com.sicoob.sisbr.sicoobdda.comum.negocio.dto.VisualizaRateioTarifaDto"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<columnFooter>
+		<band height="25">
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToTallestObject" x="305" y="0" width="66" height="25"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{totalDto}.getQtdApuradoBancoob()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToTallestObject" x="371" y="0" width="68" height="25"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{totalDto}.getValorApuradoBancoob()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToBandHeight" x="439" y="0" width="58" height="25"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{totalDto}.getQtdApuradoCIP()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToTallestObject" x="497" y="0" width="57" height="25" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{totalDto}.getValorApuradoCIP()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToTallestObject" x="554" y="0" width="96" height="25" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[new DecimalFormat("#,##0").format($P{totalDto}.getDifQuantidade())
++ "/" + br.com.sicoob.sisbr.sicoobdda.entidades.util.FormatadorUtil.formatarValorReal(new Double($P{totalDto}.getDifValor().doubleValue()))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="textoNegrito" stretchType="RelativeToTallestObject" x="0" y="0" width="256" height="25"/>
+				<textElement/>
+				<text><![CDATA[TOTAIS:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="textoNegritoCentralizado" stretchType="RelativeToTallestObject" x="730" y="0" width="72" height="25" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{totalDto}.getValorRateioCoop()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

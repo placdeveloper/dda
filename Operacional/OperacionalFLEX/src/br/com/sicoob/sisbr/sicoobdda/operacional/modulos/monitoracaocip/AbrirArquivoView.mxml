@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cadastro:FormularioCadastroView xmlns:mx="http://www.adobe.com/2006/mxml" 
+								 xmlns:containers="br.com.bancoob.componentes.containers.*" 
+								 xmlns:componentes="br.com.bancoob.componentes.*"
+								 xmlns:bancoob="br.com.bancoob.componentes.*"
+								 xmlns:cadastro="br.com.bancoob.componentes.cadastro.*"
+								 xmlns:servico="br.com.bancoob.util.servico.*"
+								 xmlns:input="br.com.bancoob.componentes.input.*"
+								 xmlns:comum="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+								 xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+								 xmlns:botoesComumFlex="br.com.sicoob.sisbr.cobrancabancaria.comumflex.botoes.*"
+								 xmlns:upload="br.com.bancoob.sisbr.componentes.upload.*"
+								 paddingLeft="0" 
+								 paddingRight="0" 
+								 paddingBottom="0" 
+								 clipContent="true"
+								 focusEnabled="false"
+								 width="615" >
+	
+	<mx:Script>
+		<![CDATA[
+			private var files:FileReferenceList = new FileReferenceList();
+			private var fi:FileReference = new FileReference();
+			
+			private function selecionaArquivo(event:MouseEvent):void {
+				
+				var filtro : FileFilter = new FileFilter("Todos os Arquivos *.*","*");
+				
+				files.addEventListener(Event.SELECT, abrirDialogo);              
+				files.browse([filtro]);
+			}
+			
+			private function abrirDialogo(event:Event):void{
+				
+				if (files.fileList.length >= 1)
+				{               
+					for (var k:Number = 0; k < files.fileList.length; k++)
+					{
+						var referencia : FileReference = files.fileList[k];
+						tiNomeArquivo.text += referencia.name + ";";
+						
+					}
+					
+					btnDescriptografar.enabled = true;
+					
+				} 
+			}
+		]]>
+	</mx:Script>
+	
+	
+	<containers:VBoxBancoob width="100%" height="100%">
+		<comum:FieldSet id="fsSelecaoArquivo" title="Seleção do arquivo" width="100%" height="65" >
+			<mx:Canvas width="100%" height="100%">
+				<componentes:Rotulo text="Seleção do arquivo: " width="100" textAlign="right" x="5" y="6"/>
+				<mx:TextInput id="tiNomeArquivo" x="112" y="5" width="400"  />
+				<componentes:Botao id="btnPesquisar"   x="520" y="5"  label="Selecionar" click="selecionaArquivo(event)" />
+			</mx:Canvas>
+		</comum:FieldSet>
+		
+		<containers:HBoxBancoob  width="100%">
+			<containers:CanvasBancoob width="100%"/>
+			<componentes:Botao id="btnDescriptografar" label="Descriptografar"  />
+			<componentes:Botao id="btnFechar" label="Fechar" />
+		</containers:HBoxBancoob>	
+	</containers:VBoxBancoob>
+	
+	
+</cadastro:FormularioCadastroView>

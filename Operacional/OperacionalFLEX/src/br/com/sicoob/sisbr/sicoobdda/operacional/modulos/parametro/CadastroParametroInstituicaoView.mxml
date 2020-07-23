@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseModulo xmlns:mx="http://www.adobe.com/2006/mxml" width="{WIDTH_TELA}" height="630" layout="absolute"
+			xmlns:titulo="br.com.bancoob.componentes.titulo.*"
+			xmlns="br.com.bancoob.componentes.*"
+			xmlns:containers="br.com.bancoob.componentes.containers.*" 
+			xmlns:input="br.com.bancoob.componentes.input.*" 
+			xmlns:grid="br.com.bancoob.componentes.grid.*"
+			xmlns:campos="br.com.bancoob.componentes.campos.*"
+			xmlns:validaveis="br.com.bancoob.componentes.containers.validaveis.*"
+			xmlns:navegacao="br.com.bancoob.componentes.navegacao.*"
+			xmlns:text="flash.text.*" xmlns:paginacao="br.com.bancoob.componentes.paginacao.*"
+			xmlns:comumflex="br.com.sicoob.sisbr.sicoobdda.comumflex.componentes.*"
+			verticalScrollPolicy="off" horizontalScrollPolicy="off" clipContent="false">
+	<mx:Script>
+		<![CDATA[
+			protected var WIDTH_TELA:int = 720;
+		]]>
+	</mx:Script>
+	
+	<validaveis:CanvasValidavel id="cvPrincipal">
+		
+		<titulo:SubtituloView texto="COOPERATIVA" width="{WIDTH_TELA}"/>
+		
+		<containers:CanvasBancoob width="100%" height="600">
+			
+			<Rotulo id="descInstituicao" x="15" y="40" width="620"  textAlign="left"/>
+			
+			<titulo:SubtituloView texto="DADOS DO PARÂMETRO" width="{WIDTH_TELA}" y="70" />
+			
+			<Rotulo text="Cód. Parâmetro:" x="5" y="100" width="70" textAlign="right"/>
+			<input:Texto id="txtCodParametro" x="80" y="100" width="90" maxChars="9999" permitirValoreNegativos="false" agruparDigitos="false" validarObrigatorio="true"/>
+			
+			<Rotulo text="Nome:" x="160" y="100" width="70" textAlign="right"/>
+			<input:Texto id="txtNome" x="240" y="100" width="460" validarObrigatorio="true" enabled="false"/>
+			
+			<Rotulo text="Descrição:" x="5" y="130" width="70" textAlign="right"/>
+			<input:TextoArea id="txtDescricao" x="80" y="130" width="620" validarObrigatorio="true" enabled="false"/>
+			
+			<Rotulo text="Tipo:" x="5" y="188" width="70" textAlign="right"/>
+			<input:Combo id="cmbTipoParametro" labelField="descTipoParametro" x="80" y="183" width="200" editable="false" inserirItemOpcional="false" enabled="false" />
+			
+			<input:Check id="chkAlteracaoUsuario" label="Permite alteração do usuário." y="185" x="305" enabled="false" />
+			
+			<titulo:SubtituloView texto="SITUAÇÃO" width="{WIDTH_TELA}" y="210" />
+			
+			<input:RadioGrupoBancoob id="grpSituacao" />
+			<input:Radio id="optInativo" label="Inativo" y="240" x="80" groupName="grpSituacao" selected="true" enabled="false"/>
+			<input:Radio id="optAtivo" label="Ativo" y="240" x="180" groupName="grpSituacao" enabled="false" />
+			
+			<titulo:SubtituloView texto="VALOR INSTITUIÇÃO" width="{WIDTH_TELA}" y="270" />
+			
+			<Rotulo text="Valor:" x="5" y="300" width="70"  textAlign="right"/>
+			<input:Texto id="txtValor" x="80" y="300" width="500" validarObrigatorio="true" />
+			
+			<input:RadioGrupoBancoob id="bolValor" />
+			<input:Radio id="optTrue" value="1" label="Sim" groupName="radio" y="300" x="80" />
+			<input:Radio id="optFalse" value="0" label="Não" groupName="radio" y="300" x="180" />
+			
+			<input:Data id="txtData" y="300" x="80" validarObrigatorio="true" />
+			
+			<input:Texto id="txtDecimal" y="300" x="80" restrict="0-9-,-." validarObrigatorio="true"/>
+			
+			<input:Texto id="txtNumerico" y="300" x="80" restrict="0-9" validarObrigatorio="true"/>
+			
+			<titulo:SubtituloView texto="DATAS" width="{WIDTH_TELA}" y="330" />
+			
+			<Rotulo text="Data Criação:" y="365" x="80" width="70" textAlign="right" />
+			<input:Data id="txtDataCriacao" y="362" x="155" enabled="false" />
+			
+			<Rotulo text="Data Última Atualização:" y="365" x="300" width="120" textAlign="right" />
+			<input:Data id="txtDataAlteracao" y="362" x="430" enabled="false" />
+			
+			<!-- Tabela de seleção de cooperativas para agendamento-->
+			<titulo:SubtituloView texto="REPLICAR O MESMO VALOR PARA AS INSTITUIÇÕES SELECIONADAS A DIREITA" width="{WIDTH_TELA}" y="390"  />
+			<Rotulo id="lblSelectCooperativa" text="Selecione a(s) Cooperativas(s):" y="420" x="5" />
+			<containers:HBoxBancoob width="100%"  horizontalScrollPolicy="off" verticalScrollPolicy="off" y="440" x="5" >
+				
+				<containers:VBoxBancoob width="320" height="138">
+					<comumflex:CheckBoxTreeACView id="treeSelecaoDisponivel" width="310" height="120"/>
+					<Rotulo text="Lista de cooperativas" paddingTop="-8" />
+				</containers:VBoxBancoob>	
+				
+				<containers:VBoxBancoob width="95%" height="122">
+					<Botao id="addTodos"  label="&gt;&gt;" width="45" toolTip="Adicionar Todas as Instituições"/>
+					<Botao id="addSelecao" label="&gt;" width="45" toolTip="Adicionar Instituições Selecionadas" />
+					<Botao id="delSelecao" label="&lt;" width="45" toolTip="Remover Instituições Selecionadas"/>
+					<Botao id="delTodos"  label="&lt;&lt;" width="45" toolTip="Remover Todas as Instituições"/>
+				</containers:VBoxBancoob>
+				
+				<containers:VBoxBancoob width="320" height="138">
+					<comumflex:CheckBoxTreeACView id="treeSelecaoSelecionado" width="320" height="120"/>
+					<Rotulo text="Cooperativas Selecionadas" paddingTop="-8" />
+				</containers:VBoxBancoob>	
+				
+			</containers:HBoxBancoob>
+		</containers:CanvasBancoob>
+		
+		<Botao id="btnGravar" label="Gravar" x="430" y="600"/>
+		<Botao id="btnLimpar" label="Limpar" x="530" y="600"/>
+		<Botao id="btnFechar" label="Fechar" x="630" y="600"/>
+		
+	</validaveis:CanvasValidavel>
+	
+</BaseModulo>
