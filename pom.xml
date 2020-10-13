@@ -93,7 +93,7 @@
 
 		<!-- Libs TesteUnit -->
 		<concordion.version>1.4.4</concordion.version>
-		<junit.version>4.10</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<jmock-legacy.version>2.5.1</jmock-legacy.version>
 		<jmock.version>2.5.1</jmock.version>
 		<mockito.version>1.9.5</mockito.version>
