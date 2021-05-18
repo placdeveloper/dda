@@ -86,7 +86,7 @@
 		<jms.version>1.1</jms.version>
 		<log4j.version>1.2.17</log4j.version>
 		<rpc.version>1.1</rpc.version>
-		<xstream.version>1.3.1</xstream.version>
+		<xstream.version>1.4.17</xstream.version>
 		<jasperreports.version>6.0.0</jasperreports.version>
 		<jasperreports-fonts.version>3.6.2-sicoob</jasperreports-fonts.version>
 		<!-- Libs UTILs -->
