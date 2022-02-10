@@ -77,7 +77,7 @@
 		<ejb3-persistence.version>3.0</ejb3-persistence.version>
 		<granite.version>1.1.0</granite.version>
 		<hibernate-entitymanager.version>5.0.10.Final</hibernate-entitymanager.version>
-		<hibernate-core.version>5.0.10.Final</hibernate-core.version>
+		<hibernate-core.version>5.4.24.Final</hibernate-core.version>
 		<javaee-api.version>7.0</javaee-api.version>
 		<javassist.version>3.21.0-GA</javassist.version>
 		<jaxb-api.version>2.1</jaxb-api.version>
